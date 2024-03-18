@@ -23,7 +23,7 @@ public class BaseclassWeb extends WebActions {
 	@Parameters({ "executionType", "browser", "platform", "url" })
 	@BeforeClass(alwaysRun = true)
 	public void beforeClass(@Optional String executionType, @Optional  String browser, @Optional  String platform, @Optional  String applicationUrl){
-		startTestModule(testCaseName, testDescription);
+		//startTestModule(testCaseName, testDescription);
 	}
 
 	@Parameters({ "executionType", "browser", "platform", "url" })

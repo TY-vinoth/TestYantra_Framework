@@ -6,7 +6,16 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 import webObjRepo.WebElementObjs;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Properties;
+
 public class TC001_Logo_is_clickable extends BaseclassWeb {
+
+	private String Mnumber = "";
+	private Properties prop;
 
 	@Parameters({ "executionType", "browser", "platform", "url" })
 	@BeforeTest(alwaysRun = true)
@@ -20,7 +29,20 @@ public class TC001_Logo_is_clickable extends BaseclassWeb {
 
 	@Test()
 	public void WebElementObjs() {
-		new WebElementObjs(driver, test)
-				.enterPassword("type something***********");
+		prop = new Properties();
+		try {
+			prop.load(new FileInputStream(new File("./src/main/resources/config.properties")));
+			Mnumber = prop.getProperty("MobileNumber");
+			new WebElementObjs(driver, test)
+					.clickLogin()
+					.entermobileNumber(Mnumber)
+					.clickotpLogin();
+		} catch (FileNotFoundException e) {
+			hardFail();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		} finally {
+			// testTearDown();
+		}
 	}
 }

@@ -47,6 +47,7 @@ public class WebActions extends ReporterManager {
 			MutableCapabilities capabilities = new MutableCapabilities();
 			HashMap<String, Object> bstackOptions = new HashMap<>();
 			capabilities.setCapability("browserName", browser);
+			capabilities.setCapability("name",testCaseName);
 			bstackOptions.put("os", "Windows");
 			bstackOptions.put("osVersion", "11");
 			bstackOptions.put("browserVersion", "latest");
@@ -60,7 +61,7 @@ public class WebActions extends ReporterManager {
 		}
 	}
 
-	public void startApp(String executionType, String browser, String platform, String applicationUrl, String tcname) {
+	public void startApp(String executionType, String browser, String platform, String applicationUrl, String testCaseName) {
 
 		switch (browser) {
 			case "chrome":

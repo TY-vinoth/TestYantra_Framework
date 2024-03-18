@@ -14,6 +14,7 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.PointerInput;
 import org.openqa.selenium.interactions.Sequence;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -33,7 +34,7 @@ public class MobileActions extends ReporterManager {
 
     private Logger log = Logger.getLogger(this.getClass().getName());
 
-    public AppiumDriver driver;
+    public WebDriver driver;
     public DesiredCapabilities caps;
     public Properties prop;
     public static String userName = "";
@@ -53,7 +54,7 @@ public class MobileActions extends ReporterManager {
         }
     }
 
-    public void startApp(String platform, String deviceName, String OSVersion, String runIn, String bs_app_path,String testCaseName,String appPackage, String appActivity) throws MalformedURLException {
+    public void startApp(String platform, String deviceName, String OSVersion, String runIn, String bs_app_path,String testCaseName,String appPackage, String appActivity) {
 
         URL = "https://"+userName+":"+accessKey+"@hub-cloud.browserstack.com/wd/hub";
 
@@ -63,8 +64,8 @@ public class MobileActions extends ReporterManager {
             if(runIn.equalsIgnoreCase("local")) {
 
                 URL = "http://127.0.0.1:4723/wd/hub";
-                bs_app_path= "C:\\Users\\USER1\\Documents\\TY\\hrm\\Ninza-HRM-win32-x64\\Ninza-HRM.exe";
-
+                //bs_app_path= "C:\\Users\\USER1\\Documents\\TY\\hrm\\Ninza-HRM-win32-x64\\Ninza-HRM.exe";
+                bs_app_path= "C:\\Users\\USER1\\Downloads\\NINZA HRM.apk";
                 if(platform.equalsIgnoreCase("Windows")){
                     caps.setCapability("automationName", "windows");
                     caps.setCapability("platformName", "windows");
@@ -78,7 +79,6 @@ public class MobileActions extends ReporterManager {
                 if (platform.equalsIgnoreCase("Android")){
                     caps.setCapability("platformName", platform);
                     caps.setCapability("platformVersion", OSVersion);
-                    caps.setCapability("deviceName", deviceName);
                     caps.setCapability("project", "Mobile Application");
                     caps.setCapability("unicodeKeyboard", true);
                     caps.setCapability("resetKeyboard", true);
@@ -88,13 +88,14 @@ public class MobileActions extends ReporterManager {
                 else {
                     caps.setCapability("platformName", platform);
                     caps.setCapability("platformVersion", OSVersion);
-                    caps.setCapability("deviceName", deviceName);
                     caps.setCapability("automationName", "XCUITest");
                     caps.setCapability("connectHardwareKeyboard", true);
                 }
             }
 
             caps.setCapability("noReset", false);
+            caps.setCapability("deviceName", deviceName);
+            caps.setCapability("name", testCaseName);
             caps.setCapability("app", bs_app_path);
 
             if(platform.equalsIgnoreCase("Android")) {
@@ -161,7 +162,7 @@ public class MobileActions extends ReporterManager {
         }
     }
 
-    public void swipe(AppiumDriver driver, SwipeDirection direction) {
+    /*public void swipe(AppiumDriver driver, SwipeDirection direction) {
         Dimension size = driver.manage().window().getSize();
         int startX = size.width / 2;
         int startY = size.height / 2;
@@ -192,5 +193,5 @@ public class MobileActions extends ReporterManager {
 
     public enum SwipeDirection {
         UP, DOWN, LEFT, RIGHT
-    }
+    }*/
 }

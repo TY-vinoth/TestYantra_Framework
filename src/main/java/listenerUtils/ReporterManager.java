@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ConcurrentModificationException;
+import java.util.List;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -20,10 +21,10 @@ import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
 import com.aventstack.extentreports.reporter.configuration.Protocol;
 import com.aventstack.extentreports.reporter.configuration.Theme;
 import dataProvider.Initializers;
+import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
 
 public class ReporterManager extends Initializers {
-	public static ThreadLocal<ExtentTest> extentMethodNode = new ThreadLocal<>();
 	private Logger log = Logger.getLogger(this.getClass().getName());
 	protected static boolean exceptionStatus = false;
 
@@ -177,5 +178,20 @@ public class ReporterManager extends Initializers {
 		} catch (InterruptedException e) {
 			captureException(e);
 		}
+	}
+
+	public void logStepAction(String message) {
+		if (extentScenarioNode.get() != null) {
+			extentScenarioNode.get().info("<span class=\"stepSpan\"> STEP : </span>" + message);
+		} else {
+			extentMethodNode.get().info("<span class=\"stepSpan\"> STEP : </span>" + message);
+		}
+	}
+
+	public void testTearDown() {
+		if (failAnalysisThread.get().size() > 0) {
+			Assert.fail("Test Failed !! Look for above failures/exceptions and fix it !! ");
+		}
+
 	}
 }

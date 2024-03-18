@@ -9,7 +9,7 @@
 		<parameter name="browser" value="chrome"></parameter>
 		<parameter name="platform" value="win10"></parameter>
 		<parameter name="executionType" value="local"></parameter>
-		<parameter name="url" value="https://www.google.co.in/"></parameter>
+		<parameter name="url" value="https://www.medibuddy.in/"></parameter>
 		<classes>
 			<class name="projectTests.webTest.TC001_Logo_is_clickable"></class>
 		</classes>

@@ -18,13 +18,28 @@ public class WebElementObjs extends BaseclassWeb {
 
     }
 
-    @FindBy(how = How.XPATH, using = "//textarea[@class='gLFyf']/preceding-sibling::div")
-    private WebElement elePassword;
-    public WebElementObjs enterPassword(String Password) {
+    @FindBy(how = How.XPATH, using = "(.//a[contains(text(),'Login')])")
+    private WebElement eleLogin;
+    public WebElementObjs clickLogin() {
         //db.sendQuery("select * from project","project_name");
         //db.sendQueryGetColumnData("select * from project","project_name","FireFlink_79693");
-        db.sendQueryGetColumnData("select * from project","project_name","FireFlink_79693");
-        enterText(elePassword, Password);
+        //db.sendQueryGetColumnData("select * from project","project_name","FireFlink_79693");
+       click(eleLogin);
         return this;
     }
+
+    @FindBy(how = How.XPATH, using = "(.//input[@id='phone'])")
+    private WebElement elemobileNumber;
+    public WebElementObjs entermobileNumber(String MobileNumber) {
+        enterText(elemobileNumber, MobileNumber);
+        return this;
+    }
+
+    @FindBy(how = How.XPATH, using = "//button[@class='btn btn-primary loginBtn fs-16']")
+    private WebElement eleotpLogin;
+    public WebElementObjs clickotpLogin() {
+        click(eleotpLogin);
+        return this;
+    }
+
 }
