@@ -63,28 +63,37 @@ public class MobileActions extends ReporterManager {
             if(runIn.equalsIgnoreCase("local")) {
 
                 URL = "http://127.0.0.1:4723/wd/hub";
-                bs_app_path= "C:\\Users\\USER1\\Downloads\\in.medibuddy_2024-02-24.apk";
+                bs_app_path= "C:\\Users\\USER1\\Documents\\TY\\hrm\\Ninza-HRM-win32-x64\\Ninza-HRM.exe";
 
-                /*caps.setCapability("appPackage",appPackage);
-                caps.setCapability("appActivity",appActivity);*/
+                if(platform.equalsIgnoreCase("Windows")){
+                    caps.setCapability("automationName", "windows");
+                    caps.setCapability("platformName", "windows");
+
+                }else {
+                    caps.setCapability("appPackage",appPackage);
+                    caps.setCapability("appActivity",appActivity);
+                }
 
             } else if(runIn.equalsIgnoreCase("remote")) {
-                caps.setCapability("project", "Mobile Application");
-                caps.setCapability("unicodeKeyboard", true);
-                caps.setCapability("resetKeyboard", true);
-                caps.setCapability("autoDismissAlerts", true);
-                caps.setCapability("autoGrantPermissions", true);
-
-                if (platform.equals("iOS")) {
+                if (platform.equalsIgnoreCase("Android")){
+                    caps.setCapability("platformName", platform);
+                    caps.setCapability("platformVersion", OSVersion);
+                    caps.setCapability("deviceName", deviceName);
+                    caps.setCapability("project", "Mobile Application");
+                    caps.setCapability("unicodeKeyboard", true);
+                    caps.setCapability("resetKeyboard", true);
+                    caps.setCapability("autoDismissAlerts", true);
+                    caps.setCapability("autoGrantPermissions", true);
+                }
+                else {
+                    caps.setCapability("platformName", platform);
+                    caps.setCapability("platformVersion", OSVersion);
+                    caps.setCapability("deviceName", deviceName);
                     caps.setCapability("automationName", "XCUITest");
                     caps.setCapability("connectHardwareKeyboard", true);
                 }
             }
 
-            caps.setCapability("platformName", platform);
-            caps.setCapability("platformVersion", OSVersion);
-            caps.setCapability("deviceName", deviceName);
-            caps.setCapability("name", testCaseName);
             caps.setCapability("noReset", false);
             caps.setCapability("app", bs_app_path);
 
@@ -140,9 +149,9 @@ public class MobileActions extends ReporterManager {
             wait.until(ExpectedConditions.elementToBeClickable(ele));
             ele.clear();
             ele.sendKeys(data);
-			if (data.matches("^[\\w_*^)!]*$")){
-				data = "****";
-			}
+            if (data.matches("^[\\w_*^)!]*$")){
+                data = "****";
+            }
             reportStep("The data: " + data + " entered successfully in field :", "PASS");
         } catch (InvalidElementStateException e) {
             throw new InvalidElementStateException();

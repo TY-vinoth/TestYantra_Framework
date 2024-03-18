@@ -15,12 +15,9 @@
 		</classes>
 	</test>-->
 
-	<test name="Android Sample Test">
-		<parameter name="platform" value="Android"></parameter>
-		<parameter name="deviceName" value="Google Pixel 5"></parameter>
-		<parameter name="OSVersion" value="12.0"></parameter>
-		<parameter name="runIn" value="remote"></parameter>
-		<parameter name="bs_app_path" value="bs://ab6fb32bbddda4f6a2b20ba04a20010d91c4177b"></parameter>
+	<test name="Windows Sample Test">
+		<parameter name="platform" value="Windows"></parameter>
+		<parameter name="runIn" value="local"></parameter>
 		<classes>
 			<class name="projectTests.mobileTest.TC001_Logo_Is_Clickable"></class>
 		</classes>

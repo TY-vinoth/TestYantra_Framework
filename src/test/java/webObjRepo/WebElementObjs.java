@@ -21,6 +21,9 @@ public class WebElementObjs extends BaseclassWeb {
     @FindBy(how = How.XPATH, using = "//textarea[@class='gLFyf']/preceding-sibling::div")
     private WebElement elePassword;
     public WebElementObjs enterPassword(String Password) {
+        //db.sendQuery("select * from project","project_name");
+        //db.sendQueryGetColumnData("select * from project","project_name","FireFlink_79693");
+        db.sendQueryGetColumnData("select * from project","project_name","FireFlink_79693");
         enterText(elePassword, Password);
         return this;
     }

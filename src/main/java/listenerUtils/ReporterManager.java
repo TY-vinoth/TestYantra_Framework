@@ -29,7 +29,7 @@ public class ReporterManager extends Initializers {
 
 	public ExtentHtmlReporter html;
 	public static ExtentReports extent;
-	public ExtentTest test, suiteTest;
+	public static ExtentTest test, suiteTest;
 	public String testCaseName, testNodes, testDescription, category, authors, imagePath;
 
 
@@ -142,8 +142,15 @@ public class ReporterManager extends Initializers {
 		if (dbResponse == null) {
 			dbResponse = "No Data found or returned null";
 		}
-		String m = "<details><summary><font color=\"green\"><b>DBQuery</b></font></summary> " + MarkupHelper.createCodeBlock(query, CodeLanguage.valueOf(dbResponse)).getMarkup() + "</details>";
-		extentMethodNode.get().info(m);
+		if (extent != null) {
+			System.out.println("############ DB Response ###########"+ dbResponse);
+			String m = "<details><summary><font color=\"green\"><b>Database Response</b></font></summary> " +
+					MarkupHelper.createCodeBlock(dbResponse).getMarkup() +
+					"</details>";
+			test.info(m);
+		} else {
+			System.out.println("ExtentTest object is null. Cannot add database response to the report.");
+		}
 	}
 
 	protected void captureException(Exception e) {
