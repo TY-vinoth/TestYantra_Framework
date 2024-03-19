@@ -1,7 +1,9 @@
 package projectTests.mobileTest.desktopTests;
 
 import baseclassTest.BaseclassMob;
+import dataProvider.DataInputProvider;
 import mobObjRepo.desktopPages.HrmLoginPage;
+import mobUtility.MobileActions;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -22,22 +24,23 @@ public class TC001_Logo_Is_Clickable extends BaseclassMob {
     @BeforeTest(alwaysRun = true)
     public void setData() {
         testCaseName = "Homepage logo clickable";
+        dataSheetName 	= "TC001_Login";
         testDescription = "Ensure the logo exists and the page refreshes once clicked.";
         authors = "Vinoth";
         testNodes = "Nodes";
         category = "Regression";
     }
 
-    @Test()
-    public void hRMhomePage() {
+    @Test(dataProvider = "fetchData")
+    public void hRMhomePage(String UserName, String Password) {
         prop = new Properties();
         try {
             prop.load(new FileInputStream(new File("./src/main/resources/config.properties")));
             uName = prop.getProperty("hrmUsername");
             pWord = prop.getProperty("hrmPassword");
             new HrmLoginPage(driver, test)
-                    .enterUsername(uName)
-                    .enterPassword(pWord)
+                    .enterUsername(UserName)
+                    .enterPassword(Password)
                     .clicksignIn();
         } catch (FileNotFoundException e) {
             hardFail();

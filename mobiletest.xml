@@ -35,4 +35,13 @@
 		</classes>
 	</test>
 
+	<!--<test name="Windows Sample Test">
+		<parameter name="platform" value="Windows"></parameter>
+		<parameter name="runIn" value="local"></parameter>
+		<parameter name="deviceName" value="WindowsPC"></parameter>
+		<classes>
+			<class name="projectTests.mobileTest.desktopTests.TC002_GetData_from_Excel"></class>
+		</classes>
+	</test>-->
+
 </suite> <!-- Suite -->

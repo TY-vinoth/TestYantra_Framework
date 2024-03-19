@@ -142,13 +142,13 @@ public class WebActions extends ReporterManager {
 			wait.until(ExpectedConditions.elementToBeClickable(ele));
 			ele.clear();
 			ele.sendKeys(data);
-			if (data.matches("^[\\w_*^)!]*$")){
+			/*if (data.matches("^[\\w_*^)!]*$")){
 				data = "****";
-			}
+			}*/
 			reportStep("The data: " + data + " entered successfully in field :" + "", "PASS");
 		} catch (InvalidElementStateException e) {
 		} catch (WebDriverException e) {
-			reportStep("WebDriverException" + e.getMessage(), "INFO");
+			reportStep("WebDriverException" + e.getMessage(), "FAIL");
 		}
 	}
 

@@ -29,6 +29,7 @@ public class ReporterManager extends Initializers {
 	protected static boolean exceptionStatus = false;
 
 	public ExtentHtmlReporter html;
+	public String dataSheetName;
 	public static ExtentReports extent;
 	public static ExtentTest test, suiteTest;
 	public String testCaseName, testNodes, testDescription, category, authors, imagePath;

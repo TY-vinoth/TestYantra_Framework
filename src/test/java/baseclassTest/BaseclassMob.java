@@ -1,5 +1,6 @@
 package baseclassTest;
 
+import dataProvider.DataInputProvider;
 import mobUtility.MobileActions;
 import org.testng.annotations.*;
 
@@ -10,6 +11,7 @@ public class BaseclassMob extends MobileActions {
     public String testNodes;
     public String category;
     public String testCaseName;
+    public String dataSheetName;
     public String testDescription;
 
     @BeforeSuite(alwaysRun = true)
@@ -58,8 +60,13 @@ public class BaseclassMob extends MobileActions {
         endResult();
     }*/
 
-    /*@DataProvider(name="fetchData")
+    @DataProvider(name="fetchData")
     public Object[][] getData(){
         return DataInputProvider.getSheet(dataSheetName);
+    }
+
+    /*@DataProvider
+    public Object[][] fetchData() {
+        return new Object[][]{};
     }*/
 }

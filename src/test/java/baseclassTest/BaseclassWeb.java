@@ -1,6 +1,6 @@
 package baseclassTest;
 
-import dataProvider.ExcelDataProvider;
+import dataProvider.DataInputProvider;
 import org.testng.ITestResult;
 import org.testng.annotations.*;
 import webUtility.WebActions;
@@ -47,10 +47,8 @@ public class BaseclassWeb extends WebActions {
 		endResult();
 	}
 
-	/*@DataProvider(name = "getDataFromExcel")
-	public Object[][] excelDataProvider(Method method) {
-		ExcelDataProvider excelDataProvider = new ExcelDataProvider();
-		Object[][] dataProvider = excelDataProvider.getExcelData();
-		return dataProvider;
-	}*/
+	@DataProvider(name="fetchData")
+	public Object[][] getData(){
+		return DataInputProvider.getSheet(dataSheetName);
+	}
 }

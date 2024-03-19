@@ -4,6 +4,7 @@ import baseclassTest.BaseclassMob;
 import com.aventstack.extentreports.ExtentTest;
 import io.appium.java_client.pagefactory.AndroidBy;
 import io.appium.java_client.pagefactory.AndroidFindBy;
+import mobUtility.MobileActions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
@@ -14,7 +15,7 @@ import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 
 public class HrmLoginPage extends BaseclassMob {
-
+    MobileActions mob = new MobileActions();
     public HrmLoginPage(WebDriver driver, ExtentTest test) {
         this.driver = driver;
         this.test = test;
@@ -55,6 +56,14 @@ public class HrmLoginPage extends BaseclassMob {
             default:
                 throw new IllegalArgumentException("Unsupported platform: " + platform);
         }*/
+        return this;
+    }
+
+    @FindBy(how = How.XPATH, using ="//a[@text='Projects']")
+    private WebElement eleProjects;
+    public HrmLoginPage clickProjects() {
+        hardWait(2000);
+        click(eleProjects);
         return this;
     }
 }

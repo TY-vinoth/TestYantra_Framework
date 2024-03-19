@@ -66,7 +66,6 @@ public class MobileActions extends ReporterManager {
                 URL = "http://127.0.0.1:4723/wd/hub";
                 bs_app_path= "C:\\Users\\USER1\\Documents\\TY\\hrm\\Ninza-HRM-win32-x64\\Ninza-HRM.exe";
                 //bs_app_path= "C:\\Users\\USER1\\Downloads\\NINZA HRM.apk";
-                //bs_app_path="C:\\Users\\USER1\\Downloads\\in.medibuddy_2024-02-24.apk";
                 if(platform.equalsIgnoreCase("Windows")){
                     caps.setCapability("automationName", "windows");
                     caps.setCapability("platformName", "windows");

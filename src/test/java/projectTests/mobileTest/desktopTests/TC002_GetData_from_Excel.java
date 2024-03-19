@@ -1,7 +1,7 @@
-package projectTests.mobileTest.appTests;
+package projectTests.mobileTest.desktopTests;
 
 import baseclassTest.BaseclassMob;
-import mobObjRepo.appPages.HrmLoginPage;
+import mobObjRepo.desktopPages.HrmLoginPage;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -12,7 +12,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
-public class TC001_Logo_Is_Clickable extends BaseclassMob {
+public class TC002_GetData_from_Excel extends BaseclassMob {
 
     private String uName = "";
     private String pWord = "";
@@ -39,7 +39,8 @@ public class TC001_Logo_Is_Clickable extends BaseclassMob {
             new HrmLoginPage(driver, test)
                     .enterUsername(uName)
                     .enterPassword(pWord)
-                    .clicksignIn();
+                    .clicksignIn()
+                    .clickProjects();
         } catch (FileNotFoundException e) {
             hardFail();
         } catch (IOException e) {

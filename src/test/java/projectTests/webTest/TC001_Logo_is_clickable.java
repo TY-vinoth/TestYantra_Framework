@@ -2,6 +2,7 @@ package projectTests.webTest;
 
 import baseclassTest.BaseclassWeb;
 import org.testng.annotations.BeforeTest;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 import webObjRepo.WebElementObjs;
@@ -14,29 +15,40 @@ import java.util.Properties;
 
 public class TC001_Logo_is_clickable extends BaseclassWeb {
 
-	private String Mnumber = "";
+	private String uName = "";
+	private String pWord = "";
 	private Properties prop;
 
 	@Parameters({ "executionType", "browser", "platform", "url" })
 	@BeforeTest(alwaysRun = true)
 	public void setData() {
 		testCaseName = "Homepage logo clickable";
+		dataSheetName 	= "getDataExcel";
 		testDescription = "Ensure the logo exists and the page refreshes once clicked.";
 		authors = "Vinoth";
 		browserName = "chrome";
 		runGroup = "Automation";
 	}
 
-	@Test()
-	public void WebElementObjs() {
+	@Test(dataProvider = "fetchData")
+	public void WebElementObjs(String ProjectName) {
 		prop = new Properties();
 		try {
 			prop.load(new FileInputStream(new File("./src/main/resources/config.properties")));
-			Mnumber = prop.getProperty("MobileNumber");
+			uName = prop.getProperty("hrmUsername");
+			pWord = prop.getProperty("hrmPassword");
 			new WebElementObjs(driver, test)
+					.enterUserName(uName)
+					.enterpassWord(pWord)
 					.clickLogin()
-					.entermobileNumber(Mnumber)
-					.clickotpLogin();
+					.clickProjects()
+					.clickcreateProjects()
+					.enterprojectsName(ProjectName)
+					.entercreatedBy(ProjectName)
+					.clickprojecStatus()
+					.clickaddProject()
+					.clickProjects()
+					.entersearchProject(ProjectName);
 		} catch (FileNotFoundException e) {
 			hardFail();
 		} catch (IOException e) {
