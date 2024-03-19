@@ -64,16 +64,17 @@ public class MobileActions extends ReporterManager {
             if(runIn.equalsIgnoreCase("local")) {
 
                 URL = "http://127.0.0.1:4723/wd/hub";
-                //bs_app_path= "C:\\Users\\USER1\\Documents\\TY\\hrm\\Ninza-HRM-win32-x64\\Ninza-HRM.exe";
-                bs_app_path= "C:\\Users\\USER1\\Downloads\\NINZA HRM.apk";
+                bs_app_path= "C:\\Users\\USER1\\Documents\\TY\\hrm\\Ninza-HRM-win32-x64\\Ninza-HRM.exe";
+                //bs_app_path= "C:\\Users\\USER1\\Downloads\\NINZA HRM.apk";
+                //bs_app_path="C:\\Users\\USER1\\Downloads\\in.medibuddy_2024-02-24.apk";
                 if(platform.equalsIgnoreCase("Windows")){
                     caps.setCapability("automationName", "windows");
                     caps.setCapability("platformName", "windows");
 
-                }else {
+                }/*else {
                     caps.setCapability("appPackage",appPackage);
                     caps.setCapability("appActivity",appActivity);
-                }
+                }*/
 
             } else if(runIn.equalsIgnoreCase("remote")) {
                 if (platform.equalsIgnoreCase("Android")){
@@ -93,7 +94,7 @@ public class MobileActions extends ReporterManager {
                 }
             }
 
-            caps.setCapability("noReset", false);
+            caps.setCapability("noReset", true);
             caps.setCapability("deviceName", deviceName);
             caps.setCapability("name", testCaseName);
             caps.setCapability("app", bs_app_path);
@@ -161,37 +162,4 @@ public class MobileActions extends ReporterManager {
             throw new InvalidElementStateException();
         }
     }
-
-    /*public void swipe(AppiumDriver driver, SwipeDirection direction) {
-        Dimension size = driver.manage().window().getSize();
-        int startX = size.width / 2;
-        int startY = size.height / 2;
-        int endX = startX;
-        int endY = startY;
-
-        switch (direction) {
-            case UP:
-                endY = (int) (size.height * 0.2);
-                break;
-            case DOWN:
-                endY = (int) (size.height * 0.8);
-                break;
-            case LEFT:
-                endX = (int) (size.width * 0.2);
-                break;
-            case RIGHT:
-                endX = (int) (size.width * 0.8);
-                break;
-        }
-
-        TouchAction touchAction = new TouchAction((PerformsTouchActions) driver);
-        touchAction.press(PointOption.point(startX, startY))
-                .moveTo(PointOption.point(endX, endY))
-                .release()
-                .perform();
-    }
-
-    public enum SwipeDirection {
-        UP, DOWN, LEFT, RIGHT
-    }*/
 }

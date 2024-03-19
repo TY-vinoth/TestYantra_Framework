@@ -12,27 +12,27 @@
 		<parameter name="runIn" value="remote"></parameter>
 		<parameter name="bs_app_path" value="bs://f0aa39a3916beadf8ad7f83f7fe8fb94f7089c9a"></parameter>
 		<classes>
-			<class name="projectTests.mobileTest.TC001_Logo_Is_Clickable"></class>
+			<class name="projectTests.mobileTest.appTests.TC001_Logo_Is_Clickable"></class>
 		</classes>
 	</test>-->
 
 	<!--<test name="local Sample Test">
 		<parameter name="platform" value="Android"></parameter>
-		<parameter name="deviceName" value="emulator-5554"></parameter>
-		<parameter name="OSVersion" value="14.0"></parameter>
+		<parameter name="deviceName" value="emulator-5556"></parameter>
+		<parameter name="OSVersion" value="10.0"></parameter>
 		<parameter name="runIn" value="local"></parameter>
 		<classes>
-			<class name="projectTests.mobileTest.TC001_Logo_Is_Clickable"></class>
+			<class name="projectTests.mobileTest.appTests.TC001_Logo_Is_Clickable"></class>
 		</classes>
 	</test>-->
 
-	<!--<test name="Windows Sample Test">
+	<test name="Windows Sample Test">
 		<parameter name="platform" value="Windows"></parameter>
 		<parameter name="runIn" value="local"></parameter>
 		<parameter name="deviceName" value="WindowsPC"></parameter>
 		<classes>
-			<class name="projectTests.mobileTest.TC001_Logo_Is_Clickable"></class>
+			<class name="projectTests.mobileTest.desktopTests.TC001_Logo_Is_Clickable"></class>
 		</classes>
-	</test>-->
+	</test>
 
 </suite> <!-- Suite -->

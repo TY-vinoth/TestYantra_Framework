@@ -1,7 +1,7 @@
-package projectTests.mobileTest;
+package projectTests.mobileTest.appTests;
 
 import baseclassTest.BaseclassMob;
-import mobObjRepo.MobElementObjs;
+import mobObjRepo.appPages.HrmLoginPage;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -35,7 +35,7 @@ public class TC001_Logo_Is_Clickable extends BaseclassMob {
             prop.load(new FileInputStream(new File("./src/main/resources/config.properties")));
             uName = prop.getProperty("hrmUsername");
             pWord = prop.getProperty("hrmPassword");
-            new MobElementObjs(driver, test)
+            new HrmLoginPage(driver, test)
                     .enterUsername(uName)
                     .enterPassword(pWord)
                     .clicksignIn();
