@@ -345,8 +345,8 @@ public class JDBCconnection extends ReporterManager {
             connection = connect();
             stmt = connection.createStatement();
             rs = stmt.executeQuery(query);
-            /*ResultSetMetaData rsMetaData = rs.getMetaData();
-            int count = rsMetaData.getColumnCount();*/
+            ResultSetMetaData rsMetaData = rs.getMetaData();
+            int count = rsMetaData.getColumnCount();
             while (rs.next()) {
                 String columnValue = rs.getString(columnName);
                 boolean isMatch = columnValue.equals(expectedData);

@@ -116,7 +116,7 @@ public class ReporterManager extends Initializers {
 	}
 
 	public void reportStep(String desc, String status) {
-		System.out.println("Mobile Application : " + desc + " " + status);
+		System.out.println("Elements ---->  : " + desc + " " + status);
 		reportStep(desc, status, true);
 	}
 

@@ -47,8 +47,17 @@ public class TC001_Logo_is_clickable extends BaseclassWeb {
 					.entercreatedBy(ProjectName)
 					.clickprojecStatus()
 					.clickaddProject()
-					.clickProjects()
-					.entersearchProject(ProjectName);
+					.apiExtractProjectName(ProjectName)
+					.DBVerificationProjectName(ProjectName)
+					.launchMobile_Apps()
+					.enterMobUsername(uName)
+					.enterMobPassword(pWord)
+					.clickMobsignIn()
+					.launchDesktop()
+					.enterDTUsername(uName)
+					.enterDTPassword(pWord)
+					.clickDTsignIn();
+
 		} catch (FileNotFoundException e) {
 			hardFail();
 		} catch (IOException e) {
