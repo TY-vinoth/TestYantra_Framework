@@ -10,8 +10,9 @@ import java.util.Random;
 
 public class WriteExcel {
 
-    public void writeDatafromexcel() {
-   // public static void main(String[] args) throws Exception {
+    //public String writeDatafromexcel() {
+        public static void main(String[] args) throws Exception {
+        String projectName = null;
         try {
             // Create a new Workbook
             Workbook workbook = WorkbookFactory.create(new FileInputStream("./dataSheet/getDataExcel.xlsx"));
@@ -27,8 +28,8 @@ public class WriteExcel {
 
             Cell cell4 = row1.createCell(1);
 
-            String randomNumber =  RandomStringUtils.randomNumeric(5);
-            String projectName=Project_Prefix + randomNumber;
+            String randomNumber = RandomStringUtils.randomNumeric(5);
+            projectName = Project_Prefix + randomNumber;
             // Set values for the Cells
             cell4.setCellValue(projectName);
 
@@ -43,5 +44,6 @@ public class WriteExcel {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        //return projectName;
     }
 }

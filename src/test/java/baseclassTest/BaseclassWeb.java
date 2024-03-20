@@ -48,7 +48,7 @@ public class BaseclassWeb extends WebActions {
 	}
 
 	@DataProvider(name="fetchData")
-	public Object[][] getData(){
+	public String[][] getData(){
 		return DataInputProvider.getSheet(dataSheetName);
 	}
 }

@@ -15,6 +15,8 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
+import org.testng.Assert;
+
 import java.time.Duration;
 
 import static io.restassured.RestAssured.given;
@@ -170,6 +172,29 @@ public class WebElementObjs extends BaseclassWeb {
     private WebElement elesignIn;
     public WebElementObjs clickMobsignIn() {
         click(elesignIn);
+        return this;
+    }
+
+    @FindBy(how = How.ID, using ="com.tyss.rmgyantra:id/navigation_bar_item_small_label_view")
+    private WebElement eleMobprojects;
+    public WebElementObjs clickMobprojects() {
+        click(eleMobprojects);
+        return this;
+    }
+
+    @FindBy(how = How.ID, using ="com.tyss.rmgyantra:id/searchEditText")
+    private WebElement eleMobSearchprojects;
+    public WebElementObjs enterMobSearchprojects(String ProjectName) {
+        enterText(eleMobSearchprojects, ProjectName);
+        return this;
+    }
+
+    @FindBy(how = How.ID, using ="com.tyss.rmgyantra:id/projectNameTextView")
+    private WebElement eleMobVerifyprojects;
+    public WebElementObjs enterMobVerifyprojects(String ProjectName) {
+        enterText(eleMobVerifyprojects, ProjectName);
+        String str = eleMobVerifyprojects.getText();
+        Assert.assertEquals(str, ProjectName);
         return this;
     }
 

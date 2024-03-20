@@ -1,10 +1,8 @@
 package projectTests.webTest;
 
 import baseclassTest.BaseclassWeb;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Parameters;
-import org.testng.annotations.Test;
+import dataProvider.DataInputProvider;
+import org.testng.annotations.*;
 import webObjRepo.WebElementObjs;
 
 import java.io.File;
@@ -31,7 +29,7 @@ public class TC001_Logo_is_clickable extends BaseclassWeb {
 	}
 
 	@Test(dataProvider = "fetchData")
-	public void WebElementObjs(String ProjectName) {
+	public void WebElementObjs(@Optional String columnData, String ProjectName) {
 		prop = new Properties();
 		try {
 			prop.load(new FileInputStream(new File("./src/main/resources/config.properties")));
@@ -53,6 +51,9 @@ public class TC001_Logo_is_clickable extends BaseclassWeb {
 					.enterMobUsername(uName)
 					.enterMobPassword(pWord)
 					.clickMobsignIn()
+					.clickMobprojects()
+					.enterMobSearchprojects(ProjectName)
+					.enterMobVerifyprojects(ProjectName)
 					.launchDesktop()
 					.enterDTUsername(uName)
 					.enterDTPassword(pWord)
