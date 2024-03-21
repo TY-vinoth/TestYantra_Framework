@@ -16,6 +16,11 @@ public class TC001_Logo_is_clickable extends BaseclassWeb {
 	private String uName = "";
 	private String pWord = "";
 	private Properties prop;
+	private String platform = "";
+	private String osVersion = "";
+	private String deviceName = "";
+	private String desktop = "";
+	private String windowsDevice = "";
 
 	@Parameters({ "executionType", "browser", "platform", "url" })
 	@BeforeTest(alwaysRun = true)
@@ -35,6 +40,12 @@ public class TC001_Logo_is_clickable extends BaseclassWeb {
 			prop.load(new FileInputStream(new File("./src/main/resources/config.properties")));
 			uName = prop.getProperty("hrmUsername");
 			pWord = prop.getProperty("hrmPassword");
+			platform = prop.getProperty("platform");
+			osVersion = prop.getProperty("OSVersion");
+			deviceName = prop.getProperty("deviceName");
+			desktop = prop.getProperty("windowPlatform");
+			windowsDevice = prop.getProperty("windowsDeviceName");
+
 			new WebElementObjs(driver, test)
 					.enterUserName(uName)
 					.enterpassWord(pWord)
@@ -46,14 +57,14 @@ public class TC001_Logo_is_clickable extends BaseclassWeb {
 					.clickprojecStatus()
 					.clickaddProject()
 					.entersearchProject(ProjectName)
-					.launchMobile_Apps()
+					.launchMobile_Apps(platform,osVersion,deviceName)
 					.enterMobUsername(uName)
 					.enterMobPassword(pWord)
 					.clickMobsignIn()
 					.clickMobprojects()
 					.enterMobSearchprojects(ProjectName)
 					.enterMobVerifyprojects(ProjectName)
-					.launchDesktop()
+					.launchDesktop(desktop, windowsDevice)
 					.enterDTUsername(uName)
 					.enterDTPassword(pWord)
 					.clickDTsignIn();

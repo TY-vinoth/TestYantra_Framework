@@ -21,8 +21,8 @@ public class DesktopElementObjs extends BaseclassWeb {
 
     @FindBy(how = How.XPATH, using = "//input[@placeholder='Search by Project Id']")
     private WebElement elelaunchDesktop;
-    public DesktopElementObjs launchDesktop() {
-        driver=launchApp("Windows","WindowsPC","","local","");
+    public DesktopElementObjs launchDesktop(String platform, String deviceName) {
+        driver=launchApp(platform,deviceName,"","local","");
         PageFactory.initElements(new AppiumFieldDecorator(driver, Duration.ofSeconds(10)),this);
         return this;
     }
