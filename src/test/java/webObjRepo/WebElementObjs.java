@@ -104,8 +104,10 @@ public class WebElementObjs extends BaseclassWeb {
 
     @FindBy(how = How.XPATH, using = "//input[@placeholder='Search by Project Id']")
     private WebElement elesearchProject;
-    public WebElementObjs DBVerificationProjectName(String projectName) {
+    public MobileElementObjs entersearchProject(String projectName) {
         enterText(elesearchProject, projectName);
+
+        extractProjectName(projectName);
 
         String dbresponse = db.sendQueryGetColumnData("select * from project", "project_name", projectName).toString();
 
@@ -114,10 +116,10 @@ public class WebElementObjs extends BaseclassWeb {
         }else{
             System.out.println("Project Name was not present in the DB");
         }
-        return this;
+        return new MobileElementObjs(driver, test);
     }
 
-    @FindBy(how = How.XPATH, using = "//input[@placeholder='Search by Project Id']")
+    /*@FindBy(how = How.XPATH, using = "//input[@placeholder='Search by Project Id']")
     private WebElement baseURI;
     public WebElementObjs apiExtractProjectName(String ProjectName) {
         try {
@@ -143,9 +145,9 @@ public class WebElementObjs extends BaseclassWeb {
             reportStep("Project Name was not present", "FAIL");
         }
         return this;
-    }
+    }*/
 
-    @FindBy(how = How.XPATH, using = "//input[@placeholder='Search by Project Id']")
+    /*@FindBy(how = How.XPATH, using = "//input[@placeholder='Search by Project Id']")
     private WebElement elelaunchApp;
     public WebElementObjs launchMobile_Apps() {
         driver=launchApp("Android","RZ8T5144KRA","13.0","local","bs_app_path");
@@ -196,9 +198,9 @@ public class WebElementObjs extends BaseclassWeb {
         String str = eleMobVerifyprojects.getText();
         Assert.assertEquals(str, ProjectName);
         return this;
-    }
+    }*/
 
-    @FindBy(how = How.XPATH, using = "//input[@placeholder='Search by Project Id']")
+    /*@FindBy(how = How.XPATH, using = "//input[@placeholder='Search by Project Id']")
     private WebElement elelaunchDesktop;
     public WebElementObjs launchDesktop() {
         driver=launchApp("Windows","WindowsPC","","local","");
@@ -226,19 +228,6 @@ public class WebElementObjs extends BaseclassWeb {
     public WebElementObjs clickDTsignIn() {
         hardWait(2000);
         click(eleDTsignIn);
-        /*Platform platform = ((RemoteWebDriver) driver).getCapabilities().getPlatformName();
-        hardWait(3000);
-        switch (platform) {
-            case ANDROID:
-                WebElement ele = driver.findElement(By.xpath("//android.widget.Button[@text='SIGN IN']"));
-                click(ele);
-                break;
-            case WINDOWS:
-                click(elesignIn);
-                break;
-            default:
-                throw new IllegalArgumentException("Unsupported platform: " + platform);
-        }*/
         return this;
-    }
+    }*/
 }
