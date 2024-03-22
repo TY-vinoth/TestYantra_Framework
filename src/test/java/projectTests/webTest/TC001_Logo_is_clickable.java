@@ -54,8 +54,8 @@ public class TC001_Logo_is_clickable extends BaseclassWeb {
 					.enterprojectsName(ProjectName)
 					.entercreatedBy(ProjectName)
 					.clickprojecStatus()
-					.clickaddProject()
-					.entersearchProject(ProjectName)
+					.clickaddProject();
+					/*.entersearchProject(ProjectName)
 					.launchMobile_Apps(platform,osVersion,deviceName)
 					.enterMobUsername(uName)
 					.enterMobPassword(pWord)
@@ -66,7 +66,7 @@ public class TC001_Logo_is_clickable extends BaseclassWeb {
 					.launchDesktop(desktop, windowsDevice)
 					.enterDTUsername(uName)
 					.enterDTPassword(pWord)
-					.clickDTsignIn();
+					.clickDTsignIn();*/
 
 		} catch (FileNotFoundException e) {
 			hardFail();

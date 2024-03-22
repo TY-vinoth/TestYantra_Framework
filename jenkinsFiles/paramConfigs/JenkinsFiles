@@ -28,4 +28,5 @@ pipeline {
                 echo 'Build failed. Slack notification sent to channel '
             }
         }
+    }
 }
