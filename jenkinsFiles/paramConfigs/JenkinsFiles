@@ -1,31 +1,38 @@
-pipeline {
+pipeline{
     agent any
-    stages {
-        stage('Checkout') {
-            steps {
-                // Checkout source code from Git repository
-                git branch: 'main', url: 'https://github.com/TY-vinoth/TestYantra_Framework.git'
-            }
-        }
-        stage('Build') {
-            steps {
-                // Build Maven project
-                sh 'mvn clean package'
-            }
-        }
+    tools{
+        maven 'MAVEN_JENKINS'
     }
-    post {
-            always {
-                cleanWs()
+    stages{
+        stage("checkout from github"){
+            steps{
+                git branch: 'feature/Vinoth_Framework',
+                url:'https://github.com/TY-vinoth/TestYantra_Framework.git'
+                echo 'pulled from github successfully'
             }
-            success {
-                echo 'Build successful. Slack notification sent to channel '
+        }
+        stage("compile the code to executable format"){
+            steps{
+                sh "mvn compile"
+                echo 'converted the code from human readable to machine readable '
             }
-            unstable {
-                echo 'I am unstable :/'
+        }
+        stage("testing the code"){
+            steps{
+                sh "mvn test"
+                echo 'run and execute the test cases written in selenium'
             }
-            failure {
-                echo 'Build failed. Slack notification sent to channel '
+        }
+        stage("code review to check quality of code"){
+            steps{
+                sh "mvn pmd:pmd"
+                echo 'code review done'
+            }
+        }
+        stage("convert the code to package"){
+            steps{
+                sh "mvn clean package"
+                echo 'convert the files to war file'
             }
         }
     }
