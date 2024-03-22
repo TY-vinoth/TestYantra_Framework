@@ -4,9 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ConcurrentModificationException;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 import java.util.logging.Logger;
 
 import com.aventstack.extentreports.ExtentReports;
@@ -14,14 +12,16 @@ import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.MediaEntityBuilder;
 import com.aventstack.extentreports.MediaEntityModelProvider;
 import com.aventstack.extentreports.Status;
-import com.aventstack.extentreports.markuputils.CodeLanguage;
 import com.aventstack.extentreports.markuputils.ExtentColor;
 import com.aventstack.extentreports.markuputils.MarkupHelper;
 import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
 import com.aventstack.extentreports.reporter.configuration.Protocol;
 import com.aventstack.extentreports.reporter.configuration.Theme;
+import com.github.wnameless.json.flattener.JsonFlattener;
 import dataProvider.Initializers;
-import org.openqa.selenium.WebDriver;
+import io.restassured.RestAssured;
+import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 import org.testng.Assert;
 
 public class ReporterManager extends Initializers {
@@ -194,5 +194,45 @@ public class ReporterManager extends Initializers {
 			Assert.fail("Test Failed !! Look for above failures/exceptions and fix it !! ");
 		}
 
+	}
+
+	public Map<String, Object> jiraTicket(String result, String bugSummary, String description) {
+
+		String URI = "https://vinothkumar-e.atlassian.net";
+		Map<String, Object> headers = new HashMap<>();
+
+		headers.put("Content-Type", "application/json");
+		headers.put("Accept", "application/json");
+		headers.put("Authorization", "ATATT3xFfGF0T9qkJVd4y0M2GT9HbrBRNoBIKYM1XYc7CMyBqkSU4QKCupodFJ32hby4Hkpj2CbKQELzoexz5ArS6GNp1MLrqz7Z7F7bK--dVKjYXMhwrJAQn4omhIEvf2rE5mCH0yLEYgdw5CodZIbhRD5KZXF1nYbJbZhTJFMonbR98UnogZw=BFE37C7D");
+
+		String projectId = "TES";
+
+		String body = "{\n" +
+				"    \"fields\": {\n" +
+				"       \"project\":\n" +
+				"       {\n" +
+				"          \"key\": \"" + projectId + "\"\n" +
+				"       },\n" +
+				"       \"summary\": \"" + bugSummary + "\",\n" +
+				"       \"description\": \"" + description + "\",\n" +
+				"       \"issuetype\": {\n" +
+				"          \"name\": \"Task\"\n" +
+				"       }\n" +
+				"   }\n" +
+				"}";
+		Map<String, Object> rep = new HashMap<>();
+		try {
+			RestAssured.baseURI = URI;
+			RestAssured.useRelaxedHTTPSValidation();
+			RequestSpecification requestSpecification = RestAssured.given().request().headers(headers).body(body);
+			Response response = requestSpecification.post("rest/api/2/issue/").then().extract().response();
+			rep = JsonFlattener.flattenAsMap(response.asString());
+			System.out.println(("Jira Ticket Created , TicketID : " + rep.get("self").toString()));
+			failAnalysisThread.get().add("JIRA ID: +" + rep.get("self").toString() + "");
+		} catch (Exception e) {
+			System.out.println("Failed to create Jira Ticket");
+			captureException(e);
+		}
+		return rep;
 	}
 }

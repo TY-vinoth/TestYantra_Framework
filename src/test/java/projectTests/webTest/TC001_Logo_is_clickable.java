@@ -1,7 +1,6 @@
 package projectTests.webTest;
 
 import baseclassTest.BaseclassWeb;
-import dataProvider.DataInputProvider;
 import org.testng.annotations.*;
 import webObjRepo.WebElementObjs;
 

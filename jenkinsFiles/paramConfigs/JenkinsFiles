@@ -1,0 +1,27 @@
+pipeline {
+    agent any
+    stages {
+        stage('Checkout') {
+            steps {
+                // Checkout source code from Git repository
+                git branch: 'main', url: 'https://github.com/TY-vinoth/TestYantra_Framework.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                // Build Maven project
+                sh 'mvn clean package'
+            }
+        }
+    }
+    post {
+        success {
+            // Notify on success
+            slackSend color: '#36a64f', message: "Build successful! ${env.BUILD_URL}"
+        }
+        failure {
+            // Notify on failure
+            slackSend color: '#FF0000', message: "Build failed! ${env.BUILD_URL}"
+        }
+    }
+}
