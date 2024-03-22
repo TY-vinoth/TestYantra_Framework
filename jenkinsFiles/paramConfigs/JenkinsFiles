@@ -15,13 +15,17 @@ pipeline {
         }
     }
     post {
-        success {
-            // Notify on success
-            slackSend color: '#36a64f', message: "Build successful! ${env.BUILD_URL}"
+            always {
+                cleanWs()
+            }
+            success {
+                echo 'Build successful. Slack notification sent to channel '
+            }
+            unstable {
+                echo 'I am unstable :/'
+            }
+            failure {
+                echo 'Build failed. Slack notification sent to channel '
+            }
         }
-        failure {
-            // Notify on failure
-            slackSend color: '#FF0000', message: "Build failed! ${env.BUILD_URL}"
-        }
-    }
 }
