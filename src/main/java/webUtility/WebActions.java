@@ -53,7 +53,7 @@ public class WebActions extends ReporterManager {
 		}
 	}
 
-	private void remoteExecution() {
+	/*private void remoteExecution() {
 		try {
 			MutableCapabilities capabilities = new MutableCapabilities();
 			HashMap<String, Object> bstackOptions = new HashMap<>();
@@ -70,9 +70,11 @@ public class WebActions extends ReporterManager {
 		} catch (Exception e) {
 			reportStep("[" + browser + "] hasn't launched successfully in BrowserStack", "FAIL");
 		}
-	}
+	}*/
 
-	public void startApp(String executionType, String browser, String platform, String applicationUrl, String testCaseName) {
+	public WebDriver startApp(String executionType, String browser, String platform, String applicationUrl, String testCaseName) {
+
+		URL = "https://" + BSUserName + ":" + BSPassword + "@hub-cloud.browserstack.com/wd/hub";
 
 		switch (browser) {
 			case "chrome":
@@ -82,7 +84,22 @@ public class WebActions extends ReporterManager {
 						ChromeOptions options = new ChromeOptions();
 						options.addArguments("--remote-allow-origins=*");
 					} else {
-						remoteExecution();
+						try {
+							MutableCapabilities capabilities = new MutableCapabilities();
+							HashMap<String, Object> bstackOptions = new HashMap<>();
+							capabilities.setCapability("browserName", browser);
+							capabilities.setCapability("name", testCaseName);
+							bstackOptions.put("os", "Windows");
+							bstackOptions.put("osVersion", "11");
+							bstackOptions.put("browserVersion", "latest");
+							bstackOptions.put("consoleLogs", "info");
+							capabilities.setCapability("bstack:options", bstackOptions);
+
+							driver = new WindowsDriver(new URL(URL), capabilities);
+							reportStep("[" + browser + "] launched successfully in BrowserStack", "PASS");
+						} catch (Exception e) {
+							reportStep("[" + browser + "] hasn't launched successfully in BrowserStack", "FAIL");
+						}
 					}
 					driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
 					log.warning("Launching URL --> " + applicationUrl);
@@ -102,7 +119,7 @@ public class WebActions extends ReporterManager {
 						FirefoxOptions options = new FirefoxOptions();
 						options.addArguments("--remote-allow-origins=*");
 					} else {
-						remoteExecution();
+						//remoteExecution();
 					}
 					driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
 					log.warning("Launching URL --> " + applicationUrl);
@@ -115,7 +132,8 @@ public class WebActions extends ReporterManager {
 				}
 				break;
 		}
-	}
+        return driver;
+    }
 
 	public long takeScreenShot() {
 

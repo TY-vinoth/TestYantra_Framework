@@ -151,9 +151,9 @@
                 <configuration>
                     <parallel>tests</parallel>
                     <threadCount>2</threadCount>
-                    <reuseForks>true</reuseForks>
+                    <!--<reuseForks>true</reuseForks>-->
                     <suiteXmlFiles>
-                        <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
+                        <suiteXmlFile>testng.xml</suiteXmlFile>
                     </suiteXmlFiles>
                     <redirectTestOutputToFile>true</redirectTestOutputToFile>
                 </configuration>
