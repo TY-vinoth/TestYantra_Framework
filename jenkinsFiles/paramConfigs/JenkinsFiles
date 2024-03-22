@@ -1,39 +1,47 @@
-pipeline{
+pipeline {
     agent any
-    tools{
-        maven 'MAVEN_HOME'
+
+    tools {
+        // Install the Maven version configured as "M3" and add it to the path.
+        maven "MAVEN_HOME"
     }
-    stages{
-        stage("checkout from github"){
-            steps{
-                git branch: 'feature/Vinoth_Framework',
-                url:'https://github.com/TY-vinoth/TestYantra_Framework.git'
-                echo 'pulled from github successfully'
+    stages {
+        stage('checkout from github') {
+            steps {
+                // Get some code from a GitHub repository
+                git 'https://github.com/TY-vinoth/TestYantra_Framework.git'
             }
         }
-        stage("compile the code to executable format"){
+        stage("compile the code"){
             steps{
-                sh "mvn compile"
-                echo 'converted the code from human readable to machine readable '
+                bat "mvn compile"
+                echo 'converted the code from human readable to machine readable'
             }
         }
-        stage("testing the code"){
+        stage("Run Tests"){
             steps{
-                sh "mvn test"
-                echo 'run and execute the test cases written in selenium'
+                bat "mvn test"
+                echo 'Tests are pickedup Successfully'
             }
         }
-        stage("code review to check quality of code"){
+        stage("create build"){
             steps{
-                sh "mvn pmd:pmd"
-                echo 'code review done'
+                bat "mvn package"
             }
         }
-        stage("convert the code to package"){
-            steps{
-                sh "mvn clean package"
-                echo 'convert the files to war file'
-            }
+    }
+    post {
+        always {
+            cleanWs()
+        }
+        success {
+            echo 'Build successful. Slack notification sent to channel'
+        }
+        unstable {
+            echo 'I am unstable :/'
+        }
+        failure {
+            echo 'Build failed. Slack notification sent to channel'
         }
     }
 }
