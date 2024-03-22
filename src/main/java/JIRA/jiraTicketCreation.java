@@ -18,7 +18,7 @@ public class jiraTicketCreation implements ITestListener {
         Map<String, Object> headers = new HashMap<>();
         headers.put("Content-Type", "application/json");
         headers.put("Accept", "application/json");
-        headers.put("Authorization", "ATATT3xFfGF0Bui--ht1vIcNruEIiVWf5XU6gba_LrT-GTXjPiY63bBaSNbIn97kRMJKSQ0-I7rMA6rf2UqWsmx5-rsKo74eGR1r0lHvNpl15IEHpiq9SLquA6NtAcQnQ6gSOKL2irdPmzsaPHIBTXNt3217V6U8Y78p80RIyMF9HkfggeB-ckY=700EF9FF");
+        //headers.put("Authorization", "ATATT3xFfGF0Bui--ht1vIcNruEIiVWf5XU6gba_LrT-GTXjPiY63bBaSNbIn97kRMJKSQ0-I7rMA6rf2UqWsmx5-rsKo74eGR1r0lHvNpl15IEHpiq9SLquA6NtAcQnQ6gSOKL2irdPmzsaPHIBTXNt3217V6U8Y78p80RIyMF9HkfggeB-ckY=700EF9FF");
 
         String projectKey = "TES"; // Ensure this is the correct project key
 
