@@ -12,21 +12,21 @@ pipeline {
                 git 'https://github.com/TY-vinoth/TestYantra_Framework.git'
             }
         }
-        stage("compile the code"){
+        stage("Build"){
             steps{
-                bat "mvn compile"
+                bat 'mvn clean install'
                 echo 'converted the code from human readable to machine readable'
             }
         }
-        stage("Run Tests"){
+        stage("Tests"){
             steps{
-                bat "mvn test -DsuiteXmlFile=testng.xml"
+                bat 'mvn test'
                 echo 'Tests are pickedup Successfully'
             }
         }
         stage("create build"){
             steps{
-                bat "mvn package"
+                bat 'mvn package'
             }
         }
     }
