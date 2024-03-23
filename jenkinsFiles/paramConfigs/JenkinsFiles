@@ -9,18 +9,18 @@ pipeline {
         stage('checkout from github') {
             steps {
                 // Get some code from a GitHub repository
-                git 'https://github.com/TY-vinoth/TestYantra_Framework.git'
+                git branch: 'feature/Vinoth_Framework', url: 'https://github.com/TY-vinoth/TestYantra_Framework.git'
             }
         }
         stage("Build"){
             steps{
-                bat 'mvn clean install'
+                bat "mvn clean install"
                 echo 'converted the code from human readable to machine readable'
             }
         }
         stage("Test"){
             steps{
-                bat 'mvn test -DsuiteXmlFile=testng.xml'
+                bat "mvn clean test -Dsuite=testng.xml"
                 echo 'Tests are pickedup Successfully'
             }
         }
