@@ -18,21 +18,16 @@ pipeline {
                 echo 'converted the code from human readable to machine readable'
             }
         }
-        stage("Tests"){
+        stage("Test"){
             steps{
                 bat 'mvn test -DsuiteXmlFile=testng.xml'
                 echo 'Tests are pickedup Successfully'
             }
         }
-        stage("create build"){
-            steps{
-                bat 'mvn package'
-            }
-        }
     }
     post {
         always {
-            cleanWs()
+            deleteDir() //Delete workspace after the build is done
         }
         success {
             echo 'Build successful. Slack notification sent to channel'
