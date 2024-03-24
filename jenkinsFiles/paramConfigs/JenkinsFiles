@@ -2,9 +2,15 @@ pipeline {
     agent any
 
     tools {
-        // Install the Maven version configured as "M3" and add it to the path.
+        // Install the Maven version configured as "MAVEN_HOME" and add it to the path.
         maven "MAVEN_HOME"
     }
+    parameters {
+        choice(choices: ['none', 'remote', 'local'], name: 'executionType')
+        choice(choices: ['none', 'Android', 'iOS', 'Web', 'API', 'Windows'], description: 'Platform type', name: 'platformType')
+        choice(choices: ['none', 'chrome', 'firefox', 'safari'], description: 'Browser type', name: 'browser_type')
+    }
+
     stages {
         stage('checkout from github') {
             steps {
@@ -12,10 +18,17 @@ pipeline {
                 git branch: 'feature/Vinoth_Framework', url: 'https://github.com/TY-vinoth/TestYantra_Framework.git'
             }
         }
-        stage("Build & Test"){
-            steps{
+        stage("Build & Test") {
+            when {
+                allOf {
+                    expression { params.executionType != 'none' }
+                    expression { params.platformType != 'none' }
+                    expression { params.browser_type != 'none' }
+                }
+            }
+            steps {
                 bat "mvn test -Dsuite=testng.xml"
-                echo 'Tests are pickedup Successfully'
+                echo 'Tests are picked up successfully'
             }
         }
     }
