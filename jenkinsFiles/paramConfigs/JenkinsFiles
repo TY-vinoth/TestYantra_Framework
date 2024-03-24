@@ -20,7 +20,7 @@ pipeline {
         }
         stage("Test"){
             steps{
-                bat "mvn clean test -Dsuite=testng.xml"
+                bat "mvn test -Dsuite=testng.xml"
                 echo 'Tests are pickedup Successfully'
             }
         }
