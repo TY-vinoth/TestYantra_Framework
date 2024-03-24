@@ -12,12 +12,6 @@ pipeline {
                 git branch: 'feature/Vinoth_Framework', url: 'https://github.com/TY-vinoth/TestYantra_Framework.git'
             }
         }
-        stage("Build"){
-            steps{
-                bat "mvn clean install"
-                echo 'converted the code from human readable to machine readable'
-            }
-        }
         stage("Test"){
             steps{
                 bat "mvn clean test -Dsuite=testng.xml"
