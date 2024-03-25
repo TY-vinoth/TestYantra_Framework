@@ -34,18 +34,18 @@ pipeline {
                         """
                 }
             }
-            stage("Build & Test") {
-                when {
-                    allOf {
-                        expression { params.executionType != 'none' }
-                        expression { params.platformType != 'none' }
-                        expression { params.browser_type != 'none' }
-                    }
+        }
+        stage("Build & Test") {
+            when {
+                allOf {
+                    expression { params.executionType != 'none' }
+                    expression { params.platformType != 'none' }
+                    expression { params.browser_type != 'none' }
                 }
-                steps {
-                    bat "mvn test -Dsuite=testng.xml"
-                    echo 'Tests are picked up successfully'
-                }
+            }
+            steps {
+                bat "mvn test -Dsuite=testng.xml"
+                echo 'Tests are picked up successfully'
             }
         }
         post {
