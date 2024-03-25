@@ -48,19 +48,19 @@ pipeline {
                 echo 'Tests are picked up successfully'
             }
         }
-        post {
-            always {
-                deleteDir() //Delete workspace after the build is done
-            }
-            success {
-                echo 'Build successful. Slack notification sent to channel'
-            }
-            unstable {
-                echo 'I am unstable :/'
-            }
-            failure {
-                echo 'Build failed. Slack notification sent to channel'
-            }
+    }
+    post {
+        always {
+            deleteDir() //Delete workspace after the build is done
+        }
+        success {
+            echo 'Build successful. Slack notification sent to channel'
+        }
+        unstable {
+            echo 'I am unstable :/'
+        }
+        failure {
+            echo 'Build failed. Slack notification sent to channel'
         }
     }
 }
