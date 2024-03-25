@@ -24,9 +24,9 @@ public class TC001_Logo_is_clickable extends BaseclassWeb {
 	@Parameters({ "executionType", "browser", "platform", "url" })
 	@BeforeTest(alwaysRun = true)
 	public void setData() {
-		testCaseName = "Homepage logo clickable";
+		testCaseName = "Verify user can able to create and add the project in HRM";
 		dataSheetName 	= "getDataExcel";
-		testDescription = "Ensure the logo exists and the page refreshes once clicked.";
+		testDescription = "User should be able to create and add the project in HRM";
 		authors = "Vinoth";
 		browserName = "chrome";
 		runGroup = "Automation";
@@ -73,7 +73,7 @@ public class TC001_Logo_is_clickable extends BaseclassWeb {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		} finally {
-			// testTearDown();
+			 //testTearDown();
 		}
 	}
 }

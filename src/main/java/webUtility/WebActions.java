@@ -37,7 +37,7 @@ public class WebActions extends ReporterManager {
 	public WebDriver driver;
 	public String BSUserName, BSPassword, browser, URL;
 	public DesiredCapabilities caps;
-	private Logger log = Logger.getLogger(this.getClass().getName());
+	private final Logger log = Logger.getLogger(this.getClass().getName());
 
 
 	public WebActions() {
@@ -53,26 +53,21 @@ public class WebActions extends ReporterManager {
 		}
 	}
 
-	/*private void remoteExecution() {
-		try {
-			MutableCapabilities capabilities = new MutableCapabilities();
-			HashMap<String, Object> bstackOptions = new HashMap<>();
-			capabilities.setCapability("browserName", browser);
-			capabilities.setCapability("name", testCaseName);
-			bstackOptions.put("os", "Windows");
-			bstackOptions.put("osVersion", "11");
-			bstackOptions.put("browserVersion", "latest");
-			bstackOptions.put("consoleLogs", "info");
-			capabilities.setCapability("bstack:options", bstackOptions);
+	private MutableCapabilities getCapabilities(String browser, String testCaseName) {
+		MutableCapabilities capabilities = new MutableCapabilities();
+		HashMap<String, Object> bstackOptions = new HashMap<>();
+		capabilities.setCapability("browserName", browser);
+		capabilities.setCapability("name", testCaseName);
+		bstackOptions.put("os", "Windows");
+		bstackOptions.put("osVersion", "11");
+		bstackOptions.put("browserVersion", "latest");
+		bstackOptions.put("consoleLogs", "info");
+		capabilities.setCapability("bstack:options", bstackOptions);
+		return capabilities;
+	}
 
-			driver = new RemoteWebDriver(new URL("https://" + BSUserName + ":" + BSPassword + "@hub-cloud.browserstack.com/wd/hub"), capabilities);
-			reportStep("[" + browser + "] launched successfully in BrowserStack", "PASS");
-		} catch (Exception e) {
-			reportStep("[" + browser + "] hasn't launched successfully in BrowserStack", "FAIL");
-		}
-	}*/
-
-	public WebDriver startApp(String executionType, String browser, String platform, String applicationUrl, String testCaseName) {
+	public WebDriver startApp(@Optional String executionType, @Optional String browser,
+						 @Optional String platform, @Optional String applicationUrl, @Optional String testCaseName) {
 
 		URL = "https://" + BSUserName + ":" + BSPassword + "@hub-cloud.browserstack.com/wd/hub";
 
@@ -83,19 +78,10 @@ public class WebActions extends ReporterManager {
 						driver = new ChromeDriver();
 						ChromeOptions options = new ChromeOptions();
 						options.addArguments("--remote-allow-origins=*");
-					} else {
+					} else if (executionType.equalsIgnoreCase("remote")){
 						try {
-							MutableCapabilities capabilities = new MutableCapabilities();
-							HashMap<String, Object> bstackOptions = new HashMap<>();
-							capabilities.setCapability("browserName", browser);
-							capabilities.setCapability("name", testCaseName);
-							bstackOptions.put("os", "Windows");
-							bstackOptions.put("osVersion", "11");
-							bstackOptions.put("browserVersion", "latest");
-							bstackOptions.put("consoleLogs", "info");
-							capabilities.setCapability("bstack:options", bstackOptions);
-
-							driver = new WindowsDriver(new URL(URL), capabilities);
+							MutableCapabilities capabilities = getCapabilities(browser, testCaseName);
+							driver = new RemoteWebDriver(new URL(URL), capabilities);
 							reportStep("[" + browser + "] launched successfully in BrowserStack", "PASS");
 						} catch (Exception e) {
 							reportStep("[" + browser + "] hasn't launched successfully in BrowserStack", "FAIL");

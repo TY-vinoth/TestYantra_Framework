@@ -25,13 +25,16 @@ public class JDBCconnection extends ReporterManager {
     private static final long connectionWaitTime = -1;
     private static String dbUserName = "root@%";
     private static String dbPassword = "root";
+    private static String dbHost = "106.51.90.215";
+    private static String dbName = "projects";
+    private static String connectionUrl="jdbc:mysql://" + dbHost + ":" + connectionPort + "/" + dbName;
 
-    static {
-        dataSource = new BasicDataSource();
-        String dbHost = "106.51.90.215";
-        String dbName = "projects";
+
+
+    public static DataSource getDataSource() {
+
         try {
-            String connectionUrl="jdbc:mysql://" + dbHost + ":" + connectionPort + "/" + dbName;
+            connectionUrl="jdbc:mysql://" + dbHost + ":" + connectionPort + "/" + dbName;
             dataSource.setUrl(connectionUrl);
             connection = DriverManager.getConnection(connectionUrl, dbUserName, dbPassword);
             dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
@@ -41,10 +44,9 @@ public class JDBCconnection extends ReporterManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-    public static DataSource getDataSource() {
         return dataSource;
     }
+
     public static Connection connect() throws SQLException {
         if (connection == null || connection.isClosed()) try {
             connection = getDataSource().getConnection();
@@ -299,7 +301,8 @@ public class JDBCconnection extends ReporterManager {
         ResultSet rs = null;
         List<Map<String, Object>> table = new ArrayList<>();
         try {
-            connection = connect();
+//            connection = connect();
+            connection = DriverManager.getConnection(connectionUrl, dbUserName, dbPassword);
             stmt = connection.createStatement();
             rs = stmt.executeQuery(query);
             ResultSetMetaData rsMetaData = rs.getMetaData();
