@@ -6,8 +6,8 @@ pipeline {
         maven "MAVEN_HOME"
     }
     parameters {
-        choice(choices: ['none', 'remote', 'local'], name: 'executionType')
-        choice(choices: ['none', 'Android', 'iOS', 'Web', 'API', 'Windows'], description: 'Platform type', name: 'platformType')
+        choice(choices: ['none', 'remote', 'local'], name: 'execution_type')
+        choice(choices: ['none', 'Android', 'iOS', 'Web', 'API', 'Windows'], description: 'Platform type', name: 'platform_type')
         choice(choices: ['none', 'chrome', 'firefox', 'safari'], description: 'Browser type', name: 'browser_type')
     }
 
@@ -29,8 +29,8 @@ pipeline {
             steps {
                 dir('TestYantra_Framework') {
                     bat """
-                            jq --arg a "${platform}" '.platform = $a' resources/config.properties > "tmp" && mv "tmp" resources/config.properties"
-                            jq --arg a "${browser}" '.browser = $a' resources/config.properties > "tmp" && mv "tmp" resources/config.properties"
+                            jq --arg a "${platform_type}" '.platform = $a' resources/config.properties > "tmp" && mv "tmp" resources/config.properties"
+                            jq --arg a "${browser_type}" '.browser = $a' resources/config.properties > "tmp" && mv "tmp" resources/config.properties"
                         """
                 }
             }
