@@ -8,15 +8,15 @@ import com.jcraft.jsch.Session;
 import org.testng.Assert;
 
 import javax.sql.DataSource;
+import java.io.File;
+import java.io.FileInputStream;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class JDBCconnection extends ReporterManager {
 
     private static Connection connection = null;
+    private Properties prop;
     private static Session session = null;
     private static BasicDataSource dataSource;
     private static int connectionPort = 3333;
