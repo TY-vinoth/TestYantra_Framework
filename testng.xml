@@ -7,7 +7,7 @@
 	</listeners>-->
 	<test name="Automation Sample Test">
 		<parameter name="browser" value="chrome"></parameter>
-		<parameter name="platform" value="win10"></parameter>
+		<parameter name="platform" value="web"></parameter>
 		<parameter name="executionType" value="remote"></parameter>
 		<parameter name="url" value="http://106.51.90.215:8084/"></parameter>
 		<classes>
