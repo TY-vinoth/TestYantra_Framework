@@ -29,8 +29,8 @@ pipeline {
             steps {
                 dir('TestYantra_Framework') {
                     bat """
-                    jq --arg a "Web" ".platform = \$a" resources/config.properties > "tmp" && move "tmp" resources/config.properties
-                    jq --arg a "chrome" ".browser = \$a" resources/config.properties > "tmp" && move "tmp" resources/config.properties
+                    jq --arg a "${platform_type}" '.platform = \$a' resources/config.properties > "tmp" && move "tmp" resources/config.properties
+                    jq --arg a "${browser_type}" '.browser = \$a' resources/config.properties > "tmp" && move "tmp" resources/config.properties
                     """
                 }
             }
