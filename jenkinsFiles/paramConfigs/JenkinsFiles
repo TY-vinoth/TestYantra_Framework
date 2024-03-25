@@ -21,25 +21,25 @@ pipeline {
         stage('Value Modification') {
             when {
                 allOf {
-                    expression { params.executionType != 'none' }
-                    expression { params.platformType != 'none' }
+                    expression { params.execution_type != 'none' }
+                    expression { params.platform_type != 'none' }
                     expression { params.browser_type != 'none' }
                 }
             }
             steps {
                 dir('TestYantra_Framework') {
                     bat """
-                            jq --arg a "${platform_type}" '.platform = $a' resources/config.properties > "tmp" && mv "tmp" resources/config.properties"
-                            jq --arg a "${browser_type}" '.browser = $a' resources/config.properties > "tmp" && mv "tmp" resources/config.properties"
-                        """
+                            jq --arg a "${params.platform_type}" '.platform = $a' resources/config.properties > "tmp" && mv "tmp" resources/config.properties"
+                            jq --arg a "${params.browser_type}" '.browser = $a' resources/config.properties > "tmp" && mv "tmp" resources/config.properties"
+                    """
                 }
             }
         }
         stage("Build & Test") {
             when {
                 allOf {
-                    expression { params.executionType != 'none' }
-                    expression { params.platformType != 'none' }
+                    expression { params.execution_type != 'none' }
+                    expression { params.platform_type != 'none' }
                     expression { params.browser_type != 'none' }
                 }
             }
