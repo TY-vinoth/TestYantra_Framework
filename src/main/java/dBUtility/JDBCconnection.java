@@ -10,31 +10,41 @@ import org.testng.Assert;
 import javax.sql.DataSource;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.*;
 import java.util.*;
 
 public class JDBCconnection extends ReporterManager {
 
     private static Connection connection = null;
-    private Properties prop;
+    private static Properties prop;
     private static Session session = null;
     private static BasicDataSource dataSource;
-    private static int connectionPort = 3333;
+    private static String connectionPort = "";
     private static final int openConnections = 10;
     private static final int idleConnections = 3;
     private static final long connectionWaitTime = -1;
-    private static String dbUserName = "root@%";
-    private static String dbPassword = "root";
-    private static String dbHost = "106.51.90.215";
-    private static String dbName = "projects";
-    private static String connectionUrl="jdbc:mysql://" + dbHost + ":" + connectionPort + "/" + dbName;
+    private static String dbUserName = "";
+    private static String dbPassword = "";
+    private static String dbHost = "";
+    private static String dbName = "";
 
-
-
-    public static DataSource getDataSource() {
+    static {
+        prop = new Properties();
+        try {
+            prop.load(new FileInputStream(new File("./src/main/resources/config.properties")));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        dbUserName = prop.getProperty("dbUserName");
+        dbPassword = prop.getProperty("dbPassword");
+        dbHost = prop.getProperty("dbHost");
+        dbName = prop.getProperty("dbName");
+        connectionPort = prop.getProperty("dbPort");
 
         try {
-            connectionUrl="jdbc:mysql://" + dbHost + ":" + connectionPort + "/" + dbName;
+            dataSource = new BasicDataSource();
+            String connectionUrl="jdbc:mysql://" + dbHost + ":" + connectionPort + "/" + dbName;
             dataSource.setUrl(connectionUrl);
             connection = DriverManager.getConnection(connectionUrl, dbUserName, dbPassword);
             dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
@@ -44,9 +54,10 @@ public class JDBCconnection extends ReporterManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    public static DataSource getDataSource() {
         return dataSource;
     }
-
     public static Connection connect() throws SQLException {
         if (connection == null || connection.isClosed()) try {
             connection = getDataSource().getConnection();
@@ -62,6 +73,8 @@ public class JDBCconnection extends ReporterManager {
         Statement stmt = null;
         try {
             connection = connect();
+            String connectionUrl="jdbc:mysql://" + dbHost + ":" + connectionPort + "/" + dbName;
+            connection = DriverManager.getConnection(connectionUrl, dbUserName, dbPassword);
             stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery(query);
             while (rs.next()) {
@@ -301,8 +314,7 @@ public class JDBCconnection extends ReporterManager {
         ResultSet rs = null;
         List<Map<String, Object>> table = new ArrayList<>();
         try {
-//            connection = connect();
-            connection = DriverManager.getConnection(connectionUrl, dbUserName, dbPassword);
+            connection = connect();
             stmt = connection.createStatement();
             rs = stmt.executeQuery(query);
             ResultSetMetaData rsMetaData = rs.getMetaData();
