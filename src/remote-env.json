@@ -1,5 +1,5 @@
 {
-  "execution_type": "remote",
+  "execution_type": "local",
   "pipeline_execution": "false",
   "db_config": {
     "dbHost": "106.51.90.215",

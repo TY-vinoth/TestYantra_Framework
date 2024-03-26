@@ -4,7 +4,7 @@
     "system_os_version": "10",
     "browser": "chrome",
     "headless": "false",
-    "browser_version": "91",
+    "browser_version": "latest",
     "url": "https://google.co.in/"
   }
 }

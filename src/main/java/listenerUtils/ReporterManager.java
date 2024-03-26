@@ -28,10 +28,13 @@ import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.testng.Assert;
+import org.testng.ITestContext;
+import org.testng.annotations.BeforeSuite;
+import org.testng.xml.XmlTest;
 
 public class ReporterManager extends Initializers {
 	private Logger log = Logger.getLogger(this.getClass().getName());
-	protected static boolean exceptionStatus = false;
+	private static RemoteEnvPojo tre;
 
 	public ExtentHtmlReporter html;
 	public String dataSheetName;
@@ -65,11 +68,11 @@ public class ReporterManager extends Initializers {
 
 
 
-    public long takeScreenShot() {
-        return 0;
-    }
+	public long takeScreenShot() {
+		return 0;
+	}
 
-    public void reportStep(String desc, String status, boolean bSnap) {
+	public void reportStep(String desc, String status, boolean bSnap) {
 
 		Properties prop = new Properties();
 		try {
@@ -141,7 +144,7 @@ public class ReporterManager extends Initializers {
 			}
 		}
 	}
-	
+
 	public void endTestcase(){
 		extent.removeTest(test);
 	}
@@ -244,7 +247,7 @@ public class ReporterManager extends Initializers {
 	}
 
 	public void setTestEnvironment(String fileName,String jsonFilePath,String jsonDirectory,String url,
-					 String browser,String osVersion,String browserVersion,String executionType,String platform, String pipeline_execution) {
+								   String browser,String osVersion,String browserVersion,String executionType,String platform, String pipeline_execution) {
 		try {
 			Gson pGson = new GsonBuilder().registerTypeAdapter(Throwable.class, new ThrowableTypeAdapter()).setPrettyPrinting().create();
 			JsonElement testEnvElement = null;
@@ -307,6 +310,34 @@ public class ReporterManager extends Initializers {
 				tEnv().setJsonDirectory("src/test/resources/TestData");
 			}
 
+		} catch (Exception e) {
+			captureException(e);
+		}
+	}
+
+	@BeforeSuite(alwaysRun = true)
+	protected void suiteInitialization (ITestContext iTestContext, XmlTest xmlTest){
+		try {
+			log.info("Test Execution Started for Suite : " + iTestContext.getSuite().getName());
+			Gson pGson = new GsonBuilder().registerTypeAdapter(Throwable.class, new ThrowableTypeAdapter()).setPrettyPrinting().create();
+			JsonElement element1 = JsonParser.parseReader(new FileReader("tenv/remote-env.json"));
+			tre = pGson.fromJson(element1, RemoteEnvPojo.class);
+			executionType = tre.getExecution_type();
+			pipelineExecution = tre.getPipeline_execution();
+
+			if (executionType == null) {
+				executionType = "local";
+			}
+			if (extent != null) {
+				extent.setSystemInfo("testExecutionType", executionType);
+			}
+			try {
+				fw = new ThreadLocal<>();
+			} catch (Exception e) {
+				captureException(e);
+			}
+		} catch (FileNotFoundException fe) {
+			captureException(fe);
 		} catch (Exception e) {
 			captureException(e);
 		}
