@@ -1,0 +1,10 @@
+{
+  "web": {
+    "system_os": "Windows",
+    "system_os_version": "10",
+    "browser": "chrome",
+    "headless": "false",
+    "browser_version": "91",
+    "url": "https://google.co.in/"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "execution_type": "remote",
+  "pipeline_execution": "false",
+  "db_config": {
+    "dbHost": "106.51.90.215",
+    "dbUserName": "root@%",
+    "dbPassword": "root",
+    "dbName": "projects"
+  }
+}

@@ -1,9 +1,6 @@
 package listenerUtils;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -18,7 +15,15 @@ import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
 import com.aventstack.extentreports.reporter.configuration.Protocol;
 import com.aventstack.extentreports.reporter.configuration.Theme;
 import com.github.wnameless.json.flattener.JsonFlattener;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import dataProvider.Initializers;
+import dataProvider.bean.exceptions.ThrowableTypeAdapter;
+import dataProvider.bean.remoteenv.RemoteEnvPojo;
+import dataProvider.bean.testenv.TestEnv;
+import dataProvider.bean.testenv.TestEnvPojo;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -57,6 +62,8 @@ public class ReporterManager extends Initializers {
 		test = suiteTest.createNode(testNodes);
 		return test;
 	}
+
+
 
     public long takeScreenShot() {
         return 0;
@@ -234,5 +241,74 @@ public class ReporterManager extends Initializers {
 			captureException(e);
 		}
 		return rep;
+	}
+
+	public void setTestEnvironment(String fileName,String jsonFilePath,String jsonDirectory,String url,
+					 String browser,String osVersion,String browserVersion,String executionType,String platform, String pipeline_execution) {
+		try {
+			Gson pGson = new GsonBuilder().registerTypeAdapter(Throwable.class, new ThrowableTypeAdapter()).setPrettyPrinting().create();
+			JsonElement testEnvElement = null;
+			try {
+				if (fileName != null) {
+					testEnvElement = JsonParser.parseReader(new FileReader(fileName));
+				} else {
+					testEnvElement = JsonParser.parseReader(new FileReader("tenv/test-env.json"));
+				}
+			} catch (FileNotFoundException e) {
+				captureException(e);
+			}
+			JsonElement remoteEnvElement = JsonParser.parseReader(new FileReader("tenv/remote-env.json"));
+			RemoteEnvPojo tRemoteEnv = pGson.fromJson(remoteEnvElement, RemoteEnvPojo.class);
+
+			TestEnvPojo tLocalEnv = pGson.fromJson(testEnvElement, TestEnvPojo.class);
+			envThreadLocal.set(new TestEnv());
+
+			tEnv().setExecution_type(tRemoteEnv.getExecution_type());
+			tEnv().setPipeline_execution(tRemoteEnv.getPipeline_execution());
+
+			if (tLocalEnv.getWeb() != null) {
+				tEnv().setWebSystemOS(tLocalEnv.getWeb().getSystemOs());
+				tEnv().setWebSystemOSVersion(tLocalEnv.getWeb().getSystemOsVersion());
+				tEnv().setWebBrowser(tLocalEnv.getWeb().getBrowser());
+				tEnv().setWebHeadless(tLocalEnv.getWeb().getHeadless());
+				tEnv().setWebBrowserVersion(tLocalEnv.getWeb().getBrowserVersion());
+				tEnv().setWebUrl(tLocalEnv.getWeb().getWebUrl());
+			}
+
+			if (tRemoteEnv.getDb_config() != null) {
+				tEnv().setDbHost(tRemoteEnv.getDb_config().get("dbHost").getAsString());
+				tEnv().setDbUserName(tRemoteEnv.getDb_config().get("dbUserName").getAsString());
+				tEnv().setDbPassword(tRemoteEnv.getDb_config().get("dbPassword").getAsString());
+				tEnv().setDbName(tRemoteEnv.getDb_config().get("dbName").getAsString());
+			}
+
+			if (browser != null) {
+				tEnv().setWebBrowser(browser);
+			}
+			if (executionType != null) {
+				tEnv().setExecution_type(executionType);
+			}
+			if (pipeline_execution != null) {
+				tEnv().setPipeline_execution(pipeline_execution);
+			}
+			if (browserVersion != null) {
+				tEnv().setWebBrowserVersion(browserVersion);
+			}
+			if (url != null) {
+				tEnv().setWebUrl(url);
+			}
+			if (jsonFilePath != null) {
+				log.info("JSON File Path Set to " + jsonFilePath);
+				tEnv().setJsonFilePath(jsonFilePath);
+			}
+			if (jsonDirectory != null) {
+				tEnv().setJsonDirectory(jsonDirectory);
+			} else {
+				tEnv().setJsonDirectory("src/test/resources/TestData");
+			}
+
+		} catch (Exception e) {
+			captureException(e);
+		}
 	}
 }

@@ -21,7 +21,8 @@ public class TC001_Logo_is_clickable extends BaseclassWeb {
 	private String desktop = "";
 	private String windowsDevice = "";
 
-	@Parameters({ "executionType", "browser", "platform", "url" })
+	@Parameters({ "fileName", "jsonFilePath", "jsonDirectory", "url",
+			"browser", "osVersion", "browserVersion", "executionType", "platform", "pipeline_execution" })
 	@BeforeTest(alwaysRun = true)
 	public void setData() {
 		testCaseName = "Verify user can able to create and add the project in HRM";

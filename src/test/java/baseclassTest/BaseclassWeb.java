@@ -16,19 +16,32 @@ public class BaseclassWeb extends WebActions {
 		startResult();
 	}
 
-	@Parameters({ "executionType", "browser", "platform", "url" })
+	@Parameters({ "fileName", "jsonFilePath", "jsonDirectory", "url",
+			"browser", "osVersion", "browserVersion", "executionType", "platform", "pipeline_execution" })
 	@BeforeClass(alwaysRun = true)
-	public void beforeClass(@Optional String executionType, @Optional  String browser, @Optional  String platform, @Optional  String applicationUrl){
-		//startTestModule(testCaseName, testDescription);
+	public void beforeClass(@Optional String fileName,@Optional String jsonFilePath,@Optional String jsonDirectory,@Optional String url,
+							@Optional String browser,@Optional String osVersion,@Optional String browserVersion,@Optional String executionType,
+							@Optional String platform,@Optional String pipeline_execution){
 	}
 
-	@Parameters({ "executionType", "browser", "platform", "url" })
+	@Parameters({ "fileName", "jsonFilePath", "jsonDirectory", "url",
+			"browser", "osVersion", "browserVersion", "executionType", "platform", "pipeline_execution" })
 	@BeforeMethod(alwaysRun = true)
-	public void beforeMethod(@Optional String executionType, @Optional  String browser, @Optional  String platform, @Optional  String applicationUrl) {
-		test = startTestModule(testCaseName + " // [" + applicationUrl + "] - [" + browser + " - " + platform + "]", testDescription);
+	public void beforeMethod(@Optional String fileName,@Optional String jsonFilePath,@Optional String jsonDirectory,@Optional String url,
+							 @Optional String browser,@Optional String osVersion,@Optional String browserVersion,@Optional String executionType,
+							 @Optional String platform, @Optional String pipeline_execution) {
+		test = startTestModule(testCaseName + " // [" + url + "] - [" + browser + " - " + platform + "]", testDescription);
 		test.assignCategory(runCategory);
 		test.assignAuthor(authors);
-		startApp(executionType, browser, platform, applicationUrl, testCaseName);
+		startApp(fileName, jsonFilePath, jsonDirectory, url,
+				browser, osVersion,  browserVersion, executionType, platform, pipeline_execution);
+
+		try{
+			setTestEnvironment(fileName, jsonFilePath, jsonDirectory, url,
+					 browser, osVersion,  browserVersion, executionType, platform, pipeline_execution);
+		}catch (Exception e){
+
+		}
 	}
 
 

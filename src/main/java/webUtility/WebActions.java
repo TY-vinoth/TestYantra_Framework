@@ -1,6 +1,14 @@
 package webUtility;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import dataProvider.bean.exceptions.ThrowableTypeAdapter;
+import dataProvider.bean.remoteenv.RemoteEnvPojo;
+import dataProvider.bean.testenv.TestEnv;
+import dataProvider.bean.testenv.TestEnvPojo;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.windows.WindowsDriver;
@@ -66,8 +74,9 @@ public class WebActions extends ReporterManager {
 		return capabilities;
 	}
 
-	public WebDriver startApp(@Optional String executionType, @Optional String browser,
-						 @Optional String platform, @Optional String applicationUrl, @Optional String testCaseName) {
+	public WebDriver startApp(@Optional String fileName,@Optional String jsonFilePath,@Optional String jsonDirectory,@Optional String url,
+							  @Optional String browser,@Optional String osVersion,@Optional String browserVersion,@Optional String executionType,
+							  @Optional String platform,@Optional String pipeline_execution) {
 
 		URL = "https://" + BSUserName + ":" + BSPassword + "@hub-cloud.browserstack.com/wd/hub";
 
@@ -88,8 +97,8 @@ public class WebActions extends ReporterManager {
 						}
 					}
 					driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
-					log.warning("Launching URL --> " + applicationUrl);
-					driver.get(applicationUrl);
+					log.warning("Launching URL --> " + url);
+					driver.get(url);
 					driver.manage().window().maximize();
 					reportStep("[" + browser + "] launched successfully", "PASS");
 				} catch (Exception e) {
@@ -108,8 +117,8 @@ public class WebActions extends ReporterManager {
 						//remoteExecution();
 					}
 					driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
-					log.warning("Launching URL --> " + applicationUrl);
-					driver.get(applicationUrl);
+					log.warning("Launching URL --> " + url);
+					driver.get(url);
 					driver.manage().window().maximize();
 					reportStep("[" + browser + "] launched successfully", "PASS");
 				} catch (Exception e) {
@@ -353,5 +362,68 @@ public class WebActions extends ReporterManager {
 		}
 		return;
 	}
+
+	/*public void setTestEnvironment(String testEnvPath, String fileName, String jsonFilePath, String jsonDirectory,String url,
+								   String browser, String osVersion,  String browserVersion,String  executionType, String platform) {
+		try {
+			Gson pGson = new GsonBuilder().registerTypeAdapter(Throwable.class, new ThrowableTypeAdapter()).setPrettyPrinting().create();
+			JsonElement testEnvElement = null;
+			try {
+				if (fileName != null) {
+					testEnvElement = JsonParser.parseReader(new FileReader(fileName));
+				} else {
+					testEnvElement = JsonParser.parseReader(new FileReader("tenv/test-env.json"));
+				}
+			} catch (FileNotFoundException e) {
+				captureException(e);
+			}
+			JsonElement remoteEnvElement = JsonParser.parseReader(new FileReader("tenv/remote-env.json"));
+			RemoteEnvPojo tRemoteEnv = pGson.fromJson(remoteEnvElement, RemoteEnvPojo.class);
+
+			TestEnvPojo tLocalEnv = pGson.fromJson(testEnvElement, TestEnvPojo.class);
+			envThreadLocal.set(new TestEnv());
+
+			tEnv().setExecution_type(tRemoteEnv.getExecution_type());
+			tEnv().setPipeline_execution(tRemoteEnv.getPipeline_execution());
+
+			if (tLocalEnv.getWeb() != null) {
+				tEnv().setWebSystemOS(tLocalEnv.getWeb().getSystemOs());
+				tEnv().setWebSystemOSVersion(tLocalEnv.getWeb().getSystemOsVersion());
+				tEnv().setWebBrowser(tLocalEnv.getWeb().getBrowser());
+				tEnv().setWebHeadless(tLocalEnv.getWeb().getHeadless());
+				tEnv().setWebBrowserVersion(tLocalEnv.getWeb().getBrowserVersion());
+				tEnv().setWebUrl(tLocalEnv.getWeb().getWebUrl());
+			}
+
+			if (tRemoteEnv.getDb_config() != null) {
+				tEnv().setDbHost(tRemoteEnv.getDb_config().get("dbHost").getAsString());
+				tEnv().setDbUserName(tRemoteEnv.getDb_config().get("dbUserName").getAsString());
+				tEnv().setDbPassword(tRemoteEnv.getDb_config().get("dbPassword").getAsString());
+				tEnv().setDbName(tRemoteEnv.getDb_config().get("dbName").getAsString());
+			}
+
+			if (browser != null) {
+				tEnv().setWebBrowser(browser);
+			}
+			if (browserVersion != null) {
+				tEnv().setWebBrowserVersion(browserVersion);
+			}
+			if (url != null) {
+				tEnv().setWebUrl(url);
+			}
+			if (jsonFilePath != null) {
+				log.info("JSON File Path Set to " + jsonFilePath);
+				tEnv().setJsonFilePath(jsonFilePath);
+			}
+			if (jsonDirectory != null) {
+				tEnv().setJsonDirectory(jsonDirectory);
+			} else {
+				tEnv().setJsonDirectory("src/test/resources/TestData");
+			}
+
+		} catch (Exception e) {
+			captureException(e);
+		}
+	}*/
 
 }

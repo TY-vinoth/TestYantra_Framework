@@ -3,7 +3,7 @@ package dataProvider;
 import JIRA.jiraTicketCreation;
 import com.aventstack.extentreports.ExtentTest;
 import dBUtility.JDBCconnection;
-import dataProvider.bean.TestEnv;
+import dataProvider.bean.testenv.TestEnv;
 
 import java.util.List;
 
