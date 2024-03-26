@@ -43,7 +43,7 @@ import static org.testng.Assert.assertEquals;
 public class WebActions extends ReporterManager {
 
 	public WebDriver driver;
-	public String BSUserName, BSPassword, browser, URL;
+	public String BSUserName, BSPassword, browser, URL, platform;
 	public DesiredCapabilities caps;
 	private final Logger log = Logger.getLogger(this.getClass().getName());
 
@@ -79,6 +79,10 @@ public class WebActions extends ReporterManager {
 							  @Optional String platform,@Optional String pipeline_execution) {
 
 		URL = "https://" + BSUserName + ":" + BSPassword + "@hub-cloud.browserstack.com/wd/hub";
+
+		executionType = System.getProperty("local","remote");
+		browser = System.getProperty("browser","chrome");
+		platform = System.getProperty("Android","web");
 
 		switch (browser) {
 			case "chrome":

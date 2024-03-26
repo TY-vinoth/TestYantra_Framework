@@ -14,6 +14,7 @@ public class TC001_Logo_is_clickable extends BaseclassWeb {
 
 	private String uName = "";
 	private String pWord = "";
+	public String execution_Type="";
 	private Properties prop;
 	private String platform = "";
 	private String osVersion = "";
@@ -45,6 +46,7 @@ public class TC001_Logo_is_clickable extends BaseclassWeb {
 			deviceName = prop.getProperty("deviceName");
 			desktop = prop.getProperty("windowPlatform");
 			windowsDevice = prop.getProperty("windowsDeviceName");
+
 
 			new WebElementObjs(driver, test)
 					.enterUserName(uName)

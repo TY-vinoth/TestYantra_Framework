@@ -39,6 +39,7 @@ public class TC001_Logo_Is_Clickable extends BaseclassMob {
             uName = prop.getProperty("hrmUsername");
             pWord = prop.getProperty("hrmPassword");
             new HrmLoginPage(driver, test)
+
                     .enterUsername(UserName)
                     .enterPassword(Password)
                     .clicksignIn();
