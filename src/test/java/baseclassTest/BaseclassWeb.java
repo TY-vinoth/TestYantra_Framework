@@ -19,18 +19,18 @@ public class BaseclassWeb extends WebActions {
 	}
 
 	@Parameters({ "fileName", "jsonFilePath", "jsonDirectory", "url",
-			"browser", "osVersion", "browserVersion", "executionType", "platform", "pipeline_execution" })
+			"browser", "osVersion", "browserVersion", "execution_type", "platform", "pipeline_execution" })
 	@BeforeClass(alwaysRun = true)
 	public void beforeClass(@Optional String fileName,@Optional String jsonFilePath,@Optional String jsonDirectory,@Optional String url,
-							@Optional String browser,@Optional String osVersion,@Optional String browserVersion,@Optional String executionType,
+							@Optional String browser,@Optional String osVersion,@Optional String browserVersion,@Optional String execution_type,
 							@Optional String platform,@Optional String pipeline_execution){
 	}
 
 	@Parameters({ "fileName", "jsonFilePath", "jsonDirectory", "url",
-			"browser", "osVersion", "browserVersion", "executionType", "platform", "pipeline_execution" })
+			"browser", "osVersion", "browserVersion", "execution_type", "platform", "pipeline_execution" })
 	@BeforeMethod(alwaysRun = true)
 	public void beforeMethod(@Optional String fileName,@Optional String jsonFilePath,@Optional String jsonDirectory,@Optional String url,
-							 @Optional String browser,@Optional String osVersion,@Optional String browserVersion,@Optional String executionType,
+							 @Optional String browser,@Optional String osVersion,@Optional String browserVersion,@Optional String execution_type,
 							 @Optional String platform, @Optional String pipeline_execution) {
 
 
@@ -38,11 +38,11 @@ public class BaseclassWeb extends WebActions {
 		test.assignCategory(runCategory);
 		test.assignAuthor(authors);
 		startApp(fileName, jsonFilePath, jsonDirectory, url,
-				browser, osVersion,  browserVersion, executionType, platform, pipeline_execution);
+				browser, osVersion,  browserVersion, execution_type, platform, pipeline_execution);
 
 		try{
 			setTestEnvironment(fileName, jsonFilePath, jsonDirectory, url,
-					 browser, osVersion,  browserVersion, executionType, platform, pipeline_execution);
+					 browser, osVersion,  browserVersion, execution_type, platform, pipeline_execution);
 		}catch (Exception e){
 
 		}

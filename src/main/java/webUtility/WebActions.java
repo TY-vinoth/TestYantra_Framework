@@ -75,23 +75,24 @@ public class WebActions extends ReporterManager {
 	}
 
 	public WebDriver startApp(@Optional String fileName,@Optional String jsonFilePath,@Optional String jsonDirectory,@Optional String url,
-							  @Optional String browser,@Optional String osVersion,@Optional String browserVersion,@Optional String executionType,
+							  @Optional String browser,@Optional String osVersion,@Optional String browserVersion,@Optional String execution_type,
 							  @Optional String platform,@Optional String pipeline_execution) {
 
 		URL = "https://" + BSUserName + ":" + BSPassword + "@hub-cloud.browserstack.com/wd/hub";
 
-		executionType = System.getProperty("execution_type","remote");
+
+		execution_type = System.getProperty("execution_type","remote");
 		browser = System.getProperty("browser_type","chrome");
 		platform = System.getProperty("platform_type","web");
 
 		switch (browser) {
 			case "chrome":
 				try {
-					if (executionType.equalsIgnoreCase("local")) {
+					if (execution_type.equalsIgnoreCase("local")) {
 						driver = new ChromeDriver();
 						ChromeOptions options = new ChromeOptions();
 						options.addArguments("--remote-allow-origins=*");
-					} else if (executionType.equalsIgnoreCase("remote")){
+					} else if (execution_type.equalsIgnoreCase("remote")){
 						try {
 							MutableCapabilities capabilities = getCapabilities(browser, testCaseName);
 							driver = new RemoteWebDriver(new URL(URL), capabilities);
@@ -112,7 +113,7 @@ public class WebActions extends ReporterManager {
 				break;
 			case "firefox":
 				try {
-					if (executionType.equalsIgnoreCase("local")) {
+					if (execution_type.equalsIgnoreCase("local")) {
 						WebDriverManager.firefoxdriver().setup();
 						driver = new FirefoxDriver();
 						FirefoxOptions options = new FirefoxOptions();
@@ -368,7 +369,7 @@ public class WebActions extends ReporterManager {
 	}
 
 	/*public void setTestEnvironment(String testEnvPath, String fileName, String jsonFilePath, String jsonDirectory,String url,
-								   String browser, String osVersion,  String browserVersion,String  executionType, String platform) {
+								   String browser, String osVersion,  String browserVersion,String  execution_type, String platform) {
 		try {
 			Gson pGson = new GsonBuilder().registerTypeAdapter(Throwable.class, new ThrowableTypeAdapter()).setPrettyPrinting().create();
 			JsonElement testEnvElement = null;
