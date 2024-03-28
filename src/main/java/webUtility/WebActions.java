@@ -1,14 +1,6 @@
 package webUtility;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-import dataProvider.bean.exceptions.ThrowableTypeAdapter;
-import dataProvider.bean.remoteenv.RemoteEnvPojo;
-import dataProvider.bean.testenv.TestEnv;
-import dataProvider.bean.testenv.TestEnvPojo;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.windows.WindowsDriver;
@@ -28,14 +20,12 @@ import org.openqa.selenium.remote.DriverCommand;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.sikuli.script.FindFailed;
-import org.sikuli.script.Match;
-import org.sikuli.script.Pattern;
-import org.sikuli.script.Screen;
+import org.sikuli.script.*;
 import org.testng.annotations.Optional;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -81,9 +71,9 @@ public class WebActions extends ReporterManager {
 		return capabilities;
 	}
 
-	public WebDriver startApp(@Optional String fileName,@Optional String jsonFilePath,@Optional String jsonDirectory,@Optional String url,
-							  @Optional String browser,@Optional String osVersion,@Optional String browserVersion,@Optional String execution_type,
-							  @Optional String platform,@Optional String pipeline_execution) {
+	public WebDriver startApp(@Optional String fileName, @Optional String jsonFilePath, @Optional String jsonDirectory, @Optional String url,
+							  @Optional String browser, @Optional String osVersion, @Optional String browserVersion, @Optional String execution_type,
+							  @Optional String platform, @Optional String pipeline_execution) {
 
 		URL = "https://" + BSUserName + ":" + BSPassword + "@hub-cloud.browserstack.com/wd/hub";
 
@@ -99,7 +89,7 @@ public class WebActions extends ReporterManager {
 						driver = new ChromeDriver();
 						ChromeOptions options = new ChromeOptions();
 						options.addArguments("--remote-allow-origins=*");
-					} else if (execution_type.equalsIgnoreCase("remote")){
+					} else if (execution_type.equalsIgnoreCase("remote")) {
 						try {
 							MutableCapabilities capabilities = getCapabilities(browser, testCaseName);
 							driver = new RemoteWebDriver(new URL(URL), capabilities);
@@ -352,14 +342,13 @@ public class WebActions extends ReporterManager {
 			js.executeScript("arguments[0].style.border='4px solid red'", ele);
 			text = ele.getText();
 
-			if(text.length() > target_len) {
+			if (text.length() > target_len) {
 
 				reportStep("Testing element " + text.replaceAll(text, ele.getTagName()) + " has been highlighted.", "SKIP");
 
 				hardWait(500);
 				js.executeScript("arguments[0].style.border='0px solid blue'", ele);
-			}
-			else {
+			} else {
 
 				reportStep("Testing element " + text + " has been highlighted.", "SKIP");
 
@@ -375,7 +364,7 @@ public class WebActions extends ReporterManager {
 		return;
 	}
 
-	public void clarTextField() {
+	public void sikuli_clarTextField() {
 		try {
 			Robot robot = new Robot();
 			robot.keyPress(KeyEvent.VK_CONTROL);
@@ -391,7 +380,7 @@ public class WebActions extends ReporterManager {
 		}
 	}
 
-	public void sikuliClickAction(String str) {
+	public void sikuli_clickAction(String str) {
 		try {
 			Screen screen = new Screen();
 			Pattern imageLocator = new Pattern(str);
@@ -400,11 +389,11 @@ public class WebActions extends ReporterManager {
 			if (screen.exists(str) != null) {
 				Match match = screen.exists(imageLocator);
 				String extractedText = match.text();
-				reportStep("Text Value of : "+ extractedText +" is ", "PASS");
+				reportStep("Text Value of : " + extractedText + " is ", "PASS");
 				System.out.println("ImagePath: " + str);
 				screen.click(imageLocator);
 				hardWait(1000);
-				clarTextField();
+				sikuli_clarTextField();
 				hardWait(5000);
 			} else {
 				System.out.println("Image not Found");
@@ -416,7 +405,7 @@ public class WebActions extends ReporterManager {
 		}
 	}
 
-	public void sikuliEnterText(String imagePath, String value) {
+	public void sikuli_enterText(String imagePath, String value) {
 		try {
 			Screen screen = new Screen();
 			Pattern imageLocator = new Pattern(imagePath);
@@ -425,7 +414,7 @@ public class WebActions extends ReporterManager {
 				System.out.println("ImagePath: " + imagePath);
 				screen.click(imageLocator);
 				hardWait(1000);
-				clarTextField();
+				sikuli_clarTextField();
 				screen.type(value);
 				hardWait(5000);
 			} else {
@@ -438,19 +427,70 @@ public class WebActions extends ReporterManager {
 		}
 	}
 
-	public void getText(String str) {
+	public void sikuli_getText(String str) {
 		try {
 			Screen screen = new Screen();
 			Pattern pattern = new Pattern(str);
 			Match match = screen.exists(pattern);
 			if (match != null) {
 				String extractedText = screen.text();
-				reportStep("Text Value of : "+ extractedText +" is ", "PASS");
+				reportStep("Text Value of : " + extractedText + " is ", "PASS");
 			} else {
 				System.out.println("Image not found");
 			}
 		} catch (Exception e) {
-			reportStep("GetText got Failed:","FAIL");
+			reportStep("GetText got Failed:", "FAIL");
 		}
 	}
+
+	public void sikuli_ImageComparison(String str) {
+		try {
+			Screen screen = new Screen();
+			Pattern baselineImage = new Pattern(str);
+			ScreenImage currentScreen = screen.capture();
+			Finder finder = new Finder(currentScreen);
+			finder.find(baselineImage);
+			if (finder.hasNext()) {
+				System.out.println("Images are similar.");
+			} else {
+				System.out.println("Images are not similar.");
+			}
+			finder.destroy();
+			reportStep("Images are similar:", "PASS");
+		} catch (Exception e) {
+			reportStep("Images are not similar:", "FAIL");
+		}
+	}
+
+
+	public boolean sikuli_Existing_ImageComparison(String str) {
+
+		try {
+			Screen screen = new Screen();
+			Pattern staticImage = new Pattern(str);
+			ScreenImage currentScreenshot = screen.capture();
+			System.out.println("*****************" + currentScreenshot);
+			Match match = screen.find(staticImage);
+			System.out.println("*****************" + match);
+			if (match != null) {
+				System.out.println("Static image found on the screen.");
+					BufferedImage img1 = staticImage.getImage().get();
+					BufferedImage img2 = currentScreenshot.getImage();
+
+					if (img1.getWidth() != img2.getWidth() || img1.getHeight() != img2.getHeight()) {
+
+						for (int y = 0; y < img1.getHeight(); y++) {
+							for (int x = 0; x < img1.getWidth(); x++) {
+								if (img1.getRGB(x, y) != img2.getRGB(x, y)) {
+									return false;
+								}
+							}
+						}
+					}
+				}
+		} catch (Exception e) {
+
+		}
+        return false;
+    }
 }

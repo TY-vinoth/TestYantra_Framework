@@ -16,25 +16,37 @@ public class FlutterApps extends BaseclassWeb {
 
     public FlutterApps clickssignin() {
         String imagePath = "C:\\Users\\USER1\\Documents\\Vinoth_Docs\\TestYantra_Framework\\TestYantra_Framework\\sikuliImages\\Signin.png";
-        sikuliClickAction(imagePath);
+        sikuli_clickAction(imagePath);
         return this;
     }
 
     public FlutterApps clicksettings() {
         String imagePath = "C:\\Users\\USER1\\Documents\\Vinoth_Docs\\TestYantra_Framework\\TestYantra_Framework\\sikuliImages\\updated.png";
-        sikuliClickAction(imagePath);
+        sikuli_clickAction(imagePath);
         return this;
     }
 
     public FlutterApps enterrenameValue(String str) {
         String imagePath = "C:\\Users\\USER1\\Documents\\Vinoth_Docs\\TestYantra_Framework\\TestYantra_Framework\\sikuliImages\\RenameValue.png";
-        sikuliEnterText(imagePath, str);
+        sikuli_enterText(imagePath, str);
         return this;
     }
 
     public FlutterApps clickeok() {
         String imagePath = "C:\\Users\\USER1\\Documents\\Vinoth_Docs\\TestYantra_Framework\\TestYantra_Framework\\sikuliImages\\ok.png";
-        sikuliClickAction(imagePath);
+        sikuli_clickAction(imagePath);
+        return this;
+    }
+
+    public FlutterApps compareImages() {
+        String imagePath = "C:\\Users\\USER1\\Documents\\Vinoth_Docs\\TestYantra_Framework\\TestYantra_Framework\\sikuliImages\\imageCompare.png";
+        sikuli_ImageComparison(imagePath);
+        return this;
+    }
+
+    public FlutterApps compareImagesWithExisting() {
+        String imagePath = "C:\\Users\\USER1\\Documents\\Vinoth_Docs\\TestYantra_Framework\\TestYantra_Framework\\sikuliImages\\imageCompare.png";
+        sikuli_Existing_ImageComparison(imagePath);
         return this;
     }
 }

@@ -16,10 +16,11 @@ public class TC001_Logo_is_clickable extends BaseclassWeb {
 	private String pWord = "";
 	public String execution_Type="";
 	private Properties prop;
-	private String platform = "";
+	private String android = "";
 	private String osVersion = "";
 	private String deviceName = "";
-	private String desktop = "";
+	private String window = "";
+	//private String desktop = "";
 	private String windowsDevice = "";
 
 	@Parameters({ "fileName", "jsonFilePath", "jsonDirectory", "url",
@@ -41,10 +42,11 @@ public class TC001_Logo_is_clickable extends BaseclassWeb {
 			prop.load(new FileInputStream(new File("./src/main/resources/config.properties")));
 			uName = prop.getProperty("hrmUsername");
 			pWord = prop.getProperty("hrmPassword");
-			platform = prop.getProperty("platform");
+			android = prop.getProperty("platform");
+			window = prop.getProperty("desktop");
 			osVersion = prop.getProperty("OSVersion");
 			deviceName = prop.getProperty("deviceName");
-			desktop = prop.getProperty("windowPlatform");
+			//desktop = prop.getProperty("windowPlatform");
 			windowsDevice = prop.getProperty("windowsDeviceName");
 
 
@@ -58,18 +60,18 @@ public class TC001_Logo_is_clickable extends BaseclassWeb {
 					.entercreatedBy(ProjectName)
 					.clickprojecStatus()
 					.clickaddProject()
-					.entersearchProject(ProjectName);
-					/*.launchMobile_Apps(platform,osVersion,deviceName)
+					.entersearchProject(ProjectName)
+					.launchMobile_Apps(android,osVersion,deviceName)
 					.enterMobUsername(uName)
 					.enterMobPassword(pWord)
 					.clickMobsignIn()
 					.clickMobprojects()
 					.enterMobSearchprojects(ProjectName)
 					.enterMobVerifyprojects(ProjectName)
-					.launchDesktop(desktop, windowsDevice)
+					.launchDesktop(window, windowsDevice)
 					.enterDTUsername(uName)
 					.enterDTPassword(pWord)
-					.clickDTsignIn();*/
+					.clickDTsignIn();
 
 		} catch (FileNotFoundException e) {
 			hardFail();

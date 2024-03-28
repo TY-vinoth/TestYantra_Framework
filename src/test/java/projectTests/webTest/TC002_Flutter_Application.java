@@ -49,16 +49,17 @@ public class TC002_Flutter_Application extends BaseclassWeb {
 
 			new FlutterApps(driver, test)
 					.clickssignin()
-					.clicksettings()
+					.compareImagesWithExisting();
+					/*.clicksettings()
 					.enterrenameValue("Vinoth")
-					.clickeok();
+					.clickeok();*/
 
 		} catch (FileNotFoundException e) {
 			hardFail();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		} finally {
-			 //testTearDown();
+			//testTearDown();
 		}
 	}
 }
