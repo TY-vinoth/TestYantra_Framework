@@ -28,13 +28,20 @@ import org.openqa.selenium.remote.DriverCommand;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.sikuli.script.FindFailed;
+import org.sikuli.script.Match;
+import org.sikuli.script.Pattern;
+import org.sikuli.script.Screen;
 import org.testng.annotations.Optional;
 
+import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
 import java.util.*;
+import java.util.List;
 import java.util.logging.Logger;
 
 import static io.restassured.RestAssured.given;
@@ -81,9 +88,9 @@ public class WebActions extends ReporterManager {
 		URL = "https://" + BSUserName + ":" + BSPassword + "@hub-cloud.browserstack.com/wd/hub";
 
 
-		execution_type = System.getProperty("execution_type","remote");
+		/*execution_type = System.getProperty("execution_type","remote");
 		browser = System.getProperty("browser_type","chrome");
-		platform = System.getProperty("platform_type","web");
+		platform = System.getProperty("platform_type","web");*/
 
 		switch (browser) {
 			case "chrome":
@@ -132,8 +139,8 @@ public class WebActions extends ReporterManager {
 				}
 				break;
 		}
-        return driver;
-    }
+		return driver;
+	}
 
 	public long takeScreenShot() {
 
@@ -368,67 +375,82 @@ public class WebActions extends ReporterManager {
 		return;
 	}
 
-	/*public void setTestEnvironment(String testEnvPath, String fileName, String jsonFilePath, String jsonDirectory,String url,
-								   String browser, String osVersion,  String browserVersion,String  execution_type, String platform) {
+	public void clarTextField() {
 		try {
-			Gson pGson = new GsonBuilder().registerTypeAdapter(Throwable.class, new ThrowableTypeAdapter()).setPrettyPrinting().create();
-			JsonElement testEnvElement = null;
-			try {
-				if (fileName != null) {
-					testEnvElement = JsonParser.parseReader(new FileReader(fileName));
-				} else {
-					testEnvElement = JsonParser.parseReader(new FileReader("tenv/test-env.json"));
-				}
-			} catch (FileNotFoundException e) {
-				captureException(e);
-			}
-			JsonElement remoteEnvElement = JsonParser.parseReader(new FileReader("tenv/remote-env.json"));
-			RemoteEnvPojo tRemoteEnv = pGson.fromJson(remoteEnvElement, RemoteEnvPojo.class);
-
-			TestEnvPojo tLocalEnv = pGson.fromJson(testEnvElement, TestEnvPojo.class);
-			envThreadLocal.set(new TestEnv());
-
-			tEnv().setExecution_type(tRemoteEnv.getExecution_type());
-			tEnv().setPipeline_execution(tRemoteEnv.getPipeline_execution());
-
-			if (tLocalEnv.getWeb() != null) {
-				tEnv().setWebSystemOS(tLocalEnv.getWeb().getSystemOs());
-				tEnv().setWebSystemOSVersion(tLocalEnv.getWeb().getSystemOsVersion());
-				tEnv().setWebBrowser(tLocalEnv.getWeb().getBrowser());
-				tEnv().setWebHeadless(tLocalEnv.getWeb().getHeadless());
-				tEnv().setWebBrowserVersion(tLocalEnv.getWeb().getBrowserVersion());
-				tEnv().setWebUrl(tLocalEnv.getWeb().getWebUrl());
-			}
-
-			if (tRemoteEnv.getDb_config() != null) {
-				tEnv().setDbHost(tRemoteEnv.getDb_config().get("dbHost").getAsString());
-				tEnv().setDbUserName(tRemoteEnv.getDb_config().get("dbUserName").getAsString());
-				tEnv().setDbPassword(tRemoteEnv.getDb_config().get("dbPassword").getAsString());
-				tEnv().setDbName(tRemoteEnv.getDb_config().get("dbName").getAsString());
-			}
-
-			if (browser != null) {
-				tEnv().setWebBrowser(browser);
-			}
-			if (browserVersion != null) {
-				tEnv().setWebBrowserVersion(browserVersion);
-			}
-			if (url != null) {
-				tEnv().setWebUrl(url);
-			}
-			if (jsonFilePath != null) {
-				log.info("JSON File Path Set to " + jsonFilePath);
-				tEnv().setJsonFilePath(jsonFilePath);
-			}
-			if (jsonDirectory != null) {
-				tEnv().setJsonDirectory(jsonDirectory);
-			} else {
-				tEnv().setJsonDirectory("src/test/resources/TestData");
-			}
-
-		} catch (Exception e) {
-			captureException(e);
+			Robot robot = new Robot();
+			robot.keyPress(KeyEvent.VK_CONTROL);
+			robot.keyPress(KeyEvent.VK_A);
+			robot.keyRelease(KeyEvent.VK_CONTROL);
+			robot.keyRelease(KeyEvent.VK_A);
+			robot.keyPress(KeyEvent.VK_BACK_SLASH);
+			robot.keyRelease(KeyEvent.VK_BACK_SLASH);
+			reportStep("Text Field has been cleared Successfully", "PASS");
+		} catch (AWTException e) {
+			e.printStackTrace();
+			reportStep("Text Field hasn't cleared Successfully", "FAIL");
 		}
-	}*/
+	}
 
+	public void sikuliClickAction(String str) {
+		try {
+			Screen screen = new Screen();
+			Pattern imageLocator = new Pattern(str);
+			screen.wait(imageLocator, 10);
+
+			if (screen.exists(str) != null) {
+				Match match = screen.exists(imageLocator);
+				String extractedText = match.text();
+				reportStep("Text Value of : "+ extractedText +" is ", "PASS");
+				System.out.println("ImagePath: " + str);
+				screen.click(imageLocator);
+				hardWait(1000);
+				clarTextField();
+				hardWait(5000);
+			} else {
+				System.out.println("Image not Found");
+			}
+			reportStep("The Location : " + imageLocator + " is clicked ", "PASS");
+		} catch (
+				FindFailed e) {
+			reportStep("The Location : " + str + " is not clicked ", "PASS");
+		}
+	}
+
+	public void sikuliEnterText(String imagePath, String value) {
+		try {
+			Screen screen = new Screen();
+			Pattern imageLocator = new Pattern(imagePath);
+			screen.wait(imageLocator, 10);
+			if (screen.exists(imagePath) != null) {
+				System.out.println("ImagePath: " + imagePath);
+				screen.click(imageLocator);
+				hardWait(1000);
+				clarTextField();
+				screen.type(value);
+				hardWait(5000);
+			} else {
+				System.out.println("Image not Found");
+			}
+			reportStep("The Location : " + imageLocator + " is entered ", "PASS");
+		} catch (
+				FindFailed e) {
+			reportStep("The Location : " + value + " is not entered ", "FAIL");
+		}
+	}
+
+	public void getText(String str) {
+		try {
+			Screen screen = new Screen();
+			Pattern pattern = new Pattern(str);
+			Match match = screen.exists(pattern);
+			if (match != null) {
+				String extractedText = screen.text();
+				reportStep("Text Value of : "+ extractedText +" is ", "PASS");
+			} else {
+				System.out.println("Image not found");
+			}
+		} catch (Exception e) {
+			reportStep("GetText got Failed:","FAIL");
+		}
+	}
 }

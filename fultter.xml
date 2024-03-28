@@ -9,9 +9,9 @@
 		<parameter name="browser" value="chrome"></parameter>
 		<parameter name="platform" value="web"></parameter>
 		<parameter name="execution_type" value="local"></parameter>
-		<parameter name="url" value="http://106.51.90.215:8084/"></parameter>
+		<parameter name="url" value="https://flutter.github.io/samples/web/web_dashboard/"></parameter>
 		<classes>
-			<class name="projectTests.webTest.TC001_Logo_is_clickable"></class>
+			<class name="projectTests.webTest.TC002_Flutter_Application"></class>
 		</classes>
 	</test>
  </suite> <!-- Suite -->

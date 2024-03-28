@@ -24,5 +24,4 @@ public class Initializers {
     public static JDBCconnection db = new JDBCconnection();
     public static jiraTicketCreation jira = new jiraTicketCreation();
     public static ThreadLocal<BufferedWriter> fw;
-
 }
