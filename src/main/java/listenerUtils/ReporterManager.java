@@ -255,12 +255,12 @@ public class ReporterManager extends Initializers {
 				if (fileName != null) {
 					testEnvElement = JsonParser.parseReader(new FileReader(fileName));
 				} else {
-					testEnvElement = JsonParser.parseReader(new FileReader("tenv/test-env.json"));
+					testEnvElement = JsonParser.parseReader(new FileReader("C:\\Users\\USER1\\Documents\\Vinoth_Docs\\TestYantra_Framework\\TestYantra_Framework\\tenv\\test-env.json"));
 				}
 			} catch (FileNotFoundException e) {
 				captureException(e);
 			}
-			JsonElement remoteEnvElement = JsonParser.parseReader(new FileReader("tenv/remote-env.json"));
+			JsonElement remoteEnvElement = JsonParser.parseReader(new FileReader("C:\\Users\\USER1\\Documents\\Vinoth_Docs\\TestYantra_Framework\\TestYantra_Framework\\tenv\\test-env.json"));
 			RemoteEnvPojo tRemoteEnv = pGson.fromJson(remoteEnvElement, RemoteEnvPojo.class);
 
 			TestEnvPojo tLocalEnv = pGson.fromJson(testEnvElement, TestEnvPojo.class);
@@ -320,7 +320,7 @@ public class ReporterManager extends Initializers {
 		try {
 			log.info("Test Execution Started for Suite : " + iTestContext.getSuite().getName());
 			Gson pGson = new GsonBuilder().registerTypeAdapter(Throwable.class, new ThrowableTypeAdapter()).setPrettyPrinting().create();
-			JsonElement element1 = JsonParser.parseReader(new FileReader("tenv/remote-env.json"));
+			JsonElement element1 = JsonParser.parseReader(new FileReader("C:\\Users\\USER1\\Documents\\Vinoth_Docs\\TestYantra_Framework\\TestYantra_Framework\\tenv\\remote-env.json"));
 			tre = pGson.fromJson(element1, RemoteEnvPojo.class);
 			executionType = tre.getExecution_type();
 			pipelineExecution = tre.getPipeline_execution();
