@@ -342,4 +342,25 @@ public class ReporterManager extends Initializers {
 			captureException(e);
 		}
 	}
+
+	public void author_ScenarioName(String author, String scenario) {
+		try {
+			captureScenarioAndAuthor(author, scenario);
+		} catch (Exception e) {
+			captureException(e);
+		}
+	}
+
+	private void captureScenarioAndAuthor(String author, String scenario) {
+		if (extentMethodNode.get() != null) {
+			extentMethodNode.get().assignAuthor(author);
+			extentMethodNode.get().getModel().setDescription(scenario);
+			extentMethodNode.get().info("<span class=\"scenarioSpan\"> SCENARIO : </span>" + scenario);
+		}
+		if (extentScenarioNode.get() != null) {
+			extentScenarioNode.get().assignAuthor(author);
+			extentScenarioNode.get().getModel().setDescription(scenario);
+			extentScenarioNode.get().info("<span class=\"scenarioSpan\"> SCENARIO : </span>" + scenario);
+		}
+	}
 }

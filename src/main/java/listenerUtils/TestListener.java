@@ -18,6 +18,9 @@ public class TestListener extends ReporterManager implements IAnnotationTransfor
     public boolean retry(ITestResult result) {
 
         if (counter < retryLimit) {
+            System.out.println("******************************************************************************************");
+            System.out.println("Retrying test Execution has applied : " + result.getName() + " with " + result.getMethod().getTestClass() + "status " + " for the " + (retryLimit+1) + " time(s).");
+            System.out.println("******************************************************************************************");
             counter++;
             return true;
         }

@@ -21,6 +21,7 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.sikuli.script.*;
+import org.testng.Assert;
 import org.testng.annotations.Optional;
 
 import java.awt.*;
@@ -169,10 +170,12 @@ public class WebActions extends ReporterManager {
 			wait.until(ExpectedConditions.elementToBeClickable(ele));
 			ele.clear();
 			ele.sendKeys(data);
-			//borderElement(ele);
-			/*if (data.matches("^[\\w_*^)!]*$")){
+			if(platform == null){
+				borderElement(ele);
+			}
+			if (data.matches("^[\\w_*^)!]*$")){
 				data = "****";
-			}*/
+			}
 			reportStep("The data: " + data + " entered successfully in field :" + "", "PASS");
 		} catch (InvalidElementStateException e) {
 		} catch (WebDriverException e) {
@@ -186,7 +189,9 @@ public class WebActions extends ReporterManager {
 		try {
 			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 			wait.until(ExpectedConditions.elementToBeClickable(ele));
-			//borderElement(ele);
+			if(platform == null){
+				borderElement(ele);
+			}
 			text = ele.getText();
 			ele.click();
 			reportStep("The element : " + text + " is clicked ", "PASS");
@@ -341,28 +346,21 @@ public class WebActions extends ReporterManager {
 			JavascriptExecutor js = (JavascriptExecutor) driver;
 			js.executeScript("arguments[0].style.border='4px solid red'", ele);
 			text = ele.getText();
-
 			if (text.length() > target_len) {
-
-				reportStep("Testing element " + text.replaceAll(text, ele.getTagName()) + " has been highlighted.", "SKIP");
-
-				hardWait(500);
+				reportStep("Testing element " + text.replaceAll(text, ele.getTagName()) + " has been highlighted.", "PASS");
+				hardWait(100);
 				js.executeScript("arguments[0].style.border='0px solid blue'", ele);
 			} else {
-
-				reportStep("Testing element " + text + " has been highlighted.", "SKIP");
-
-				hardWait(500);
+				reportStep("Testing element " + text + " has been highlighted.", "PASS");
+				hardWait(100);
 				js.executeScript("arguments[0].style.border='0px solid blue'", ele);
 			}
-			hardWait(500);
+			//hardWait(500);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			reportStep("Testing element " + text + " hasn't been highlighted.", "SKIP");
 		}
-		return;
-	}
+    }
 
 	public void sikuli_clarTextField() {
 		try {
@@ -493,4 +491,14 @@ public class WebActions extends ReporterManager {
 		}
         return false;
     }
+
+	public void compareText(WebElement element, String expectedText) {
+		try {
+			String actualText = element.getText();
+			Assert.assertEquals(actualText, expectedText);
+			reportStep("Text matching with : Actual text: " + actualText + ", Expected text: " + expectedText, "PASS");
+		} catch (Exception e) {
+			reportStep("Actual Text do not matching with, Expected text: " + expectedText, "FAIL");
+		}
+	}
 }

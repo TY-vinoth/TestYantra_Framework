@@ -31,7 +31,6 @@ public class WebElementObjs extends BaseclassWeb {
 
     @FindBy(how = How.XPATH, using = "(.//input[@id='username'])")
     private WebElement eleUserName;
-
     public WebElementObjs enterUserName(String UserName) {
         enterText(eleUserName, UserName);
         return this;
