@@ -6,7 +6,7 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
-import webObjRepo.FlutterApps;
+import webObjRepo.ImageElementObjs;
 import webObjRepo.WebElementObjs;
 
 import java.io.File;
@@ -24,7 +24,7 @@ public class TC002_Flutter_Application extends BaseclassWeb {
 	private String platform = "";
 	private String osVersion = "";
 	private String deviceName = "";
-	private String desktop = "";
+	private String chrome = "";
 	private String windowsDevice = "";
 
 	@Parameters({ "fileName", "jsonFilePath", "jsonDirectory", "url",
@@ -44,15 +44,12 @@ public class TC002_Flutter_Application extends BaseclassWeb {
 		prop = new Properties();
 		try {
 			prop.load(new FileInputStream(new File("./src/main/resources/config.properties")));
-			/*uName = prop.getProperty("hrmUsername");
-			pWord = prop.getProperty("hrmPassword");*/
-
-			new FlutterApps(driver, test)
+			chrome = prop.getProperty("hrmUsername");
+			new ImageElementObjs(driver, test)
 					.clickssignin()
-					.compareImagesWithExisting();
-					/*.clicksettings()
+					.clicksettings()
 					.enterrenameValue("Vinoth")
-					.clickeok();*/
+					.clickeok();
 
 		} catch (FileNotFoundException e) {
 			hardFail();

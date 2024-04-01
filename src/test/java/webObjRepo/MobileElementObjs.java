@@ -23,7 +23,7 @@ public class MobileElementObjs extends BaseclassWeb {
     @FindBy(how = How.XPATH, using = "//input[@placeholder='Search by Project Id']")
     private WebElement elelaunchApp;
     public MobileElementObjs launchMobile_Apps(String platform, String deviceName, String OSVersion) {
-        driver=launchApp(platform,deviceName,OSVersion,"local","bs_app_path");
+        driver=launchApp(platform,deviceName,OSVersion,"local","");
         PageFactory.initElements(new AppiumFieldDecorator(driver, Duration.ofSeconds(10)),this);
         return this;
     }

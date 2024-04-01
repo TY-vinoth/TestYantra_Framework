@@ -20,7 +20,7 @@ public class TC001_Logo_is_clickable extends BaseclassWeb {
 	private String osVersion = "";
 	private String deviceName = "";
 	private String window = "";
-	//private String desktop = "";
+	private String chrome = "";
 	private String windowsDevice = "";
 
 	@Parameters({ "fileName", "jsonFilePath", "jsonDirectory", "url",
@@ -46,7 +46,7 @@ public class TC001_Logo_is_clickable extends BaseclassWeb {
 			window = prop.getProperty("desktop");
 			osVersion = prop.getProperty("OSVersion");
 			deviceName = prop.getProperty("deviceName");
-			//desktop = prop.getProperty("windowPlatform");
+			chrome = prop.getProperty("browser");
 			windowsDevice = prop.getProperty("windowsDeviceName");
 
 
@@ -61,7 +61,7 @@ public class TC001_Logo_is_clickable extends BaseclassWeb {
 					.clickprojecStatus()
 					.clickaddProject()
 					.entersearchProject(ProjectName)
-					.launchMobile_Apps(android,osVersion,deviceName)
+					.launchMobile_Apps(android,deviceName,osVersion)
 					.enterMobUsername(uName)
 					.enterMobPassword(pWord)
 					.clickMobsignIn()
@@ -71,14 +71,17 @@ public class TC001_Logo_is_clickable extends BaseclassWeb {
 					.launchDesktop(window, windowsDevice)
 					.enterDTUsername(uName)
 					.enterDTPassword(pWord)
-					.clickDTsignIn();
+					.clickDTsignIn()
+					.clickssignin()
+					.clicksettings()
+					.enterrenameValue("Vinoth")
+					.clickeok();
+
 
 		} catch (FileNotFoundException e) {
 			hardFail();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
-		} finally {
-			 //testTearDown();
 		}
 	}
 }

@@ -200,7 +200,7 @@ public class ReporterManager extends Initializers {
 	}
 
 	public void testTearDown() {
-		if (failAnalysisThread.get().size() > 0) {
+		if (!failAnalysisThread.get().isEmpty()) {
 			Assert.fail("Test Failed !! Look for above failures/exceptions and fix it !! ");
 		}
 

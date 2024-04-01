@@ -44,9 +44,9 @@ public class DesktopElementObjs extends BaseclassWeb {
 
     @FindBy(how = How.NAME, using = "Sign in")
     private WebElement eleDTsignIn;
-    public DesktopElementObjs clickDTsignIn() {
+    public ImageElementObjs clickDTsignIn() {
         hardWait(2000);
         click(eleDTsignIn);
-        return this;
+        return new ImageElementObjs(driver, test);
     }
 }

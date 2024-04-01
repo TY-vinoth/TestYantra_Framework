@@ -168,14 +168,14 @@ public class WebActions extends ReporterManager {
 		try {
 			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 			wait.until(ExpectedConditions.elementToBeClickable(ele));
-			if(platform == null){
+			if(browser!= null){
 				borderElement(ele);
 			}
 			ele.clear();
 			ele.sendKeys(data);
-			if (data.matches("^[\\w_*^)!]*$")){
+			/*if (data.matches("^[\\w_*^)!]*$")){
 				data = "****";
-			}
+			}*/
 			reportStep("The data: " + data + " entered successfully in field :" + "", "PASS");
 		} catch (InvalidElementStateException e) {
 		} catch (WebDriverException e) {
@@ -189,7 +189,7 @@ public class WebActions extends ReporterManager {
 		try {
 			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 			wait.until(ExpectedConditions.elementToBeClickable(ele));
-			if(platform == null){
+			if(browser!= null){
 				borderElement(ele);
 			}
 			text = ele.getText();
