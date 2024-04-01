@@ -61,7 +61,7 @@ public class TestListener extends ReporterManager implements IAnnotationTransfor
     }
 
     public void onTestFailure(ITestResult result) {
-        Map<String, Object> response = jira.createJiraTicket(result,testCaseName,testDescription);
+        Map<String, Object> response = jira.createJiraTicket(result, result.getName(), String.valueOf(result.getMethod().getTestClass()));
         System.out.println("JIRA Ticket Details:" + response);
         reportStep(testCaseName,"FAIL", false);
     }

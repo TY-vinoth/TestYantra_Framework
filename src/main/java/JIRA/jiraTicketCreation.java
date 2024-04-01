@@ -34,6 +34,7 @@ public class jiraTicketCreation implements ITestListener {
 
         }
         Map<String, Object> headers = new HashMap<>();
+
         headers.put("Content-Type", "application/json");
         headers.put("Accept", "application/json");
         String auth = new String(Base64.getEncoder().encode(new String(uName+":"+authToken).getBytes()));
@@ -43,10 +44,15 @@ public class jiraTicketCreation implements ITestListener {
 
         String body = "{\n" +
                 "    \"fields\": {\n" +
-                "       \"project\": { \"key\": \"" + projectKey + "\" },\n" +
+                "       \"project\":\n" +
+                "       {\n" +
+                "          \"key\": \"" + projectKey + "\"\n" +
+                "       },\n" +
                 "       \"summary\": \"" + bugSummary + "\",\n" +
                 "       \"description\": \"" + description + "\",\n" +
-                "       \"issuetype\": { \"name\": \"Task\" }\n" +
+                "       \"issuetype\": {\n" +
+                "          \"name\": \"Task\"\n" +
+                "       }\n" +
                 "   }\n" +
                 "}";
 
@@ -55,9 +61,9 @@ public class jiraTicketCreation implements ITestListener {
             RestAssured.baseURI = URI;
             RestAssured.useRelaxedHTTPSValidation();
             RequestSpecification requestSpecification = RestAssured.given().request().headers(headers).body(body);
-            Response response = requestSpecification.post("rest/api/2/issue/");
+            Response response = requestSpecification.post("rest/api/2/issue/").then().extract().response();
             responseMap = JsonFlattener.flattenAsMap(response.asString());
-            System.out.println("JIRA Ticket Created, Ticket ID: " + responseMap.get("self"));
+            System.out.println("JIRA Ticket Created, Ticket ID: " + responseMap.get("self").toString());
         } catch (Exception e) {
             System.out.println("Failed to create JIRA Ticket");
             e.printStackTrace();
