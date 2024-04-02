@@ -1,3 +1,5 @@
+![TestYantraLogo](https://www.testyantra.com/sites/default/files/tylog1.png)
+
 # Test Automation Instructions
 
 ## Table of Contents
@@ -40,7 +42,7 @@
 Rules:
 
 1. Always Execute Tests from Suite Level from the path src/test/resources/TestSuites
-2. Make sure to provide below parameters in Suite file, refer web.xml
+2. Make sure to provide below parameters in Suite file.
 
     <parameter name="browser" value=" "></parameter>
 		<parameter name="platform" value=" "></parameter>
@@ -89,7 +91,7 @@ Rules:
 
 ### TestReport
 
-1. Test Reports will be stored in locally src/test/resources/TestResults.
+1. Test Reports will be stored in locally C:\Users\USER1\Documents\{ Directory }\TestYantra_Framework\TestYantra_Framework\reports\result.html.
 2. Test Report can be identified with your suitename along with Run date and time.
 
 ### PullRequests
@@ -97,7 +99,6 @@ Rules:
 After creating a pull request, codepipeline will check that TestYantra and the automationframework library
 compile together.
 
-- If a new version number of the automationlibrary is published, modify this within the buildspec.yml.
 - If a change is required to be published in this library, first publish the change, then run git commit --amend, git
   push -f to retrigger the pipeline check (ensure git branch mode is 'simple' - git config --global push.default simple)
   to only push the current branch.
