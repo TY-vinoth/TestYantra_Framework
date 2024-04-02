@@ -31,6 +31,8 @@
 
 ### FrameworkStructure
 
+![TestYantra-Framework](src/main/resources/TestYantra AutomationArchitecture.jpg)
+
 ### AutomationTestSetupRules
 
 1. Clone Project from https://github.com/TY-vinoth/TestYantra_Framework.git
