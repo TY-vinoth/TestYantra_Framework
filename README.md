@@ -109,5 +109,5 @@ NA
 
 ## Contact
 
-Incase of any issues, Please reach out at bhaskar.marrikunta@touch2success.com
+Incase of any issues, Please reach out at vinothkumar.e@testyantra.com
 
