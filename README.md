@@ -31,7 +31,7 @@
 
 ### FrameworkStructure
 
-![TestYantra-Framework](src/main/resources/TestYantra AutomationArchitecture.jpg)
+![TestYantra-Framework](src/main/resources/TestYantra AutomationArchitecture_Updated.jpg)
 
 ### AutomationTestSetupRules
 
