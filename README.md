@@ -20,9 +20,9 @@
 |---------------------------|---------| ---	|	---	|	
 | Maven                     | 3.9.6   |    Build Tool    |    https://maven.apache.org/install.html |
 | Java                      | 17      |    Java JDK    |    https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html |
-| Selenium                  | 4.13.0  |    Core Web Automation libray    |    It will auto download through build.gradle |
-| testNg                    | 7.8.0   |    Core Libray to invoke Tests      |    It will auto download through build.gradle |
-| Extent Reports/aventstack | 4.1.7   |    To Generate Reports    |    It will auto download through build.gradle |
+| Selenium                  | 4.13.0  |    Core Web Automation libray    |    It will auto download through pom.xml |
+| testNg                    | 7.8.0   |    Core Libray to invoke Tests      |    It will auto download through pom.xml |
+| Extent Reports/aventstack | 4.1.7   |    To Generate Reports    |    It will auto download through pom.xml |
 | Eclipse/Intellij          | latest  |    IDE    |    https://www.jetbrains.com/idea/download/ |
 | Appium                    | 8.3.0   |    Mobile Automation    |    http://appium.io/ |
 | Android Studio            | 1.15.1  |    For Android SDK and To use emulator for Android Automation    |    https://developer.android.com/studio/install |
@@ -50,7 +50,7 @@ Rules:
 		<parameter name="url" value=" "></parameter>
 3. One JSON file per page
 4. One Page Class per JSON
-5. Include all Page class objects in ObjectsFactory class.
+5. Include all Page class objects in the respective class.
 
 ### LocatorPriorities
 
@@ -81,13 +81,13 @@ Rules:
 |    isEnabled    |    TRUE - if the element is Enabled<br><br>FALSE- if the element is NOT Enabled    |    FAIL - If element is NOT ENABLED<br> PASS - if element is ENABLED    |    Yes    |    Web,Mobile    |    To check if the element is enabled or not, also perform some actions only if element is enabled    |
 |    isSelected    |    TRUE - if the element is Selected<br><br>FALSE- if the element is NOT Selected    |    FAIL - If element is NOT SELECTED<br> PASS - if element is SELECTED    |    Yes    |    Web    |    To check if the dropdown value is selected or not, also perform some actions only if the element selected    |
 
-### UsageOfCodeGenerator
+### PageFactory
 
 |    Parameter    | Usage    |    Additional Instructions    |		
 |	---	|	---	| ---	|	
-|    elementRepoPath    |    Location of the folder where the JSON files are available.    |    Provide Only folder path    |	
+|    elementRepo    |    Location of the folder where the class files are available.    |    Provide Only folder path    |	
 |    javaClassPath    |    Location of the folder where the generated pages has to be stored.    |    NA    |	
-|    objFactoryPath    |    Location of the folder where the Object factory is generated.    |    NA    |	
+|    PageFactoryPath    |    Location of the folder where the Page factory is been configured.    |    NA    |	
 
 ### TestReport
 
