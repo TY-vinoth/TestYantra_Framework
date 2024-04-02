@@ -94,7 +94,7 @@ Rules:
 
 ### PullRequests
 
-After creating a pull request, codepipeline will check that t2s-Automationscript and the automationframework library
+After creating a pull request, codepipeline will check that TestYantra and the automationframework library
 compile together.
 
 - If a new version number of the automationlibrary is published, modify this within the buildspec.yml.
