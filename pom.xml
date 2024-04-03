@@ -172,7 +172,7 @@
                     <threadCount>2</threadCount>
                     <reuseForks>true</reuseForks>
                     <suiteXmlFiles>
-                        <suiteXmlFile>testng.xml</suiteXmlFile>
+                        <suiteXmlFile>TestSuite/testng.xml</suiteXmlFile>
                     </suiteXmlFiles>
                     <redirectTestOutputToFile>true</redirectTestOutputToFile>
                 </configuration>
