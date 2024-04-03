@@ -84,7 +84,7 @@ public class WebElementObjs extends BaseclassWeb {
         return this;
     }
 
-    @FindBy(how = How.XPATH, using = "(.//select[@name='status'])[2]")
+    @FindBy(how = How.XPATH, using = "!@#$(.//select[@name='status'])[2]")
     private WebElement eleprojecStatus;
 
     public WebElementObjs clickprojecStatus() {

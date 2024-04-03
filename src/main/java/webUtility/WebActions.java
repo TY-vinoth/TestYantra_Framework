@@ -41,7 +41,7 @@ import static org.testng.Assert.assertEquals;
 public class WebActions extends ReporterManager {
 
 	public WebDriver driver;
-	public String BSUserName, BSPassword, browser, URL, platform;
+	public String BSUserName, BSPassword, URL, platform;
 	public DesiredCapabilities caps;
 	private final Logger log = Logger.getLogger(this.getClass().getName());
 
@@ -168,7 +168,7 @@ public class WebActions extends ReporterManager {
 		try {
 			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 			wait.until(ExpectedConditions.elementToBeClickable(ele));
-			if(browser!= null){
+			if(platform==null){
 				borderElement(ele);
 			}
 			ele.clear();
@@ -189,7 +189,7 @@ public class WebActions extends ReporterManager {
 		try {
 			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 			wait.until(ExpectedConditions.elementToBeClickable(ele));
-			if(browser!= null){
+			if(platform==null){
 				borderElement(ele);
 			}
 			text = ele.getText();
