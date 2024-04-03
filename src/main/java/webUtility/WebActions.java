@@ -79,9 +79,9 @@ public class WebActions extends ReporterManager {
 		URL = "https://" + BSUserName + ":" + BSPassword + "@hub-cloud.browserstack.com/wd/hub";
 
 
-		/*execution_type = System.getProperty("execution_type","remote");
+		execution_type = System.getProperty("execution_type","remote");
 		browser = System.getProperty("browser_type","chrome");
-		platform = System.getProperty("platform_type","web");*/
+		platform = System.getProperty("platform_type","web");
 
 		switch (browser) {
 			case "chrome":
