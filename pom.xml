@@ -170,11 +170,11 @@
                 <configuration>
                     <parallel>tests</parallel>
                     <threadCount>2</threadCount>
-                    <!--<reuseForks>true</reuseForks>-->
+                    <reuseForks>true</reuseForks>
                     <suiteXmlFiles>
                         <suiteXmlFile>testng.xml</suiteXmlFile>
                     </suiteXmlFiles>
-                    <!--<redirectTestOutputToFile>true</redirectTestOutputToFile>-->
+                    <redirectTestOutputToFile>true</redirectTestOutputToFile>
                 </configuration>
             </plugin>
         </plugins>
