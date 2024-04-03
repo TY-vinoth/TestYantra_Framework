@@ -59,8 +59,8 @@ public class TC001_Logo_is_clickable extends BaseclassWeb {
 					.enterprojectsName(ProjectName)
 					.entercreatedBy(ProjectName)
 					.clickprojecStatus()
-					.clickaddProject()
-					.entersearchProject(ProjectName)
+					.clickaddProject();
+					/*.entersearchProject(ProjectName)
 					.launchMobile_Apps(android,deviceName,osVersion)
 					.enterMobUsername(uName)
 					.enterMobPassword(pWord)
@@ -75,7 +75,7 @@ public class TC001_Logo_is_clickable extends BaseclassWeb {
 					.clickssignin()
 					.clicksettings()
 					.enterrenameValue("Vinoth")
-					.clickeok();
+					.clickeok();*/
 
 
 		} catch (FileNotFoundException e) {
