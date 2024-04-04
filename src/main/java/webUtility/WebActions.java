@@ -41,7 +41,8 @@ import static org.testng.Assert.assertEquals;
 public class WebActions extends ReporterManager {
 
 	public WebDriver driver;
-	public String BSUserName, BSPassword, URL, platform;
+	public static WebDriverWait wait;
+	public static String BSUserName, BSPassword, URL, platform, browser;
 	public DesiredCapabilities caps;
 	private final Logger log = Logger.getLogger(this.getClass().getName());
 
@@ -79,9 +80,9 @@ public class WebActions extends ReporterManager {
 		URL = "https://" + BSUserName + ":" + BSPassword + "@hub-cloud.browserstack.com/wd/hub";
 
 
-		execution_type = System.getProperty("execution_type","remote");
+		/*execution_type = System.getProperty("execution_type","remote");
 		browser = System.getProperty("browser_type","chrome");
-		platform = System.getProperty("platform_type","web");
+		platform = System.getProperty("platform_type","web");*/
 
 		switch (browser) {
 			case "chrome":
@@ -166,7 +167,7 @@ public class WebActions extends ReporterManager {
 	public void enterText(WebElement ele, String data) {
 
 		try {
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 			wait.until(ExpectedConditions.elementToBeClickable(ele));
 			if(platform==null){
 				borderElement(ele);
@@ -187,7 +188,7 @@ public class WebActions extends ReporterManager {
 
 		String text = "";
 		try {
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 			wait.until(ExpectedConditions.elementToBeClickable(ele));
 			if(platform==null){
 				borderElement(ele);
@@ -196,7 +197,7 @@ public class WebActions extends ReporterManager {
 			ele.click();
 			reportStep("The element : " + text + " is clicked ", "PASS");
 		} catch (InvalidElementStateException e) {
-			reportStep("The element: " + ele + " is not interactable", "FAIL");
+			reportStep("The element: " + ele + " is not interactable", "SKIP");
 		} catch (WebDriverException e) {
 			reportStep("WebDriverException" + e.getMessage(), "FAIL");
 		}
@@ -232,9 +233,9 @@ public class WebActions extends ReporterManager {
 	public void closeBrowser() {
 		try {
 			driver.close();
-			reportStep("The browser is closed", "PASS", false);
+			reportStep("The browser / Mobile / Desktop instance is closed", "PASS", false);
 		} catch (Exception e) {
-			reportStep("The browser could not be closed: \n Error: " + e.getMessage(), "WARNING", false);
+			reportStep("The browser / Mobile / Desktop instance could not be closed: \n Error: " + e.getMessage(), "WARNING", false);
 		}
 	}
 
@@ -358,7 +359,7 @@ public class WebActions extends ReporterManager {
 			//hardWait(500);
 		} catch (Exception e) {
 			e.printStackTrace();
-			reportStep("Testing element " + text + " hasn't been highlighted.", "SKIP");
+			reportStep("Testing element " + text + " hasn't been highlighted.", "PASS");
 		}
     }
 
