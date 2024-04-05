@@ -1,6 +1,8 @@
 package listenerUtils;
 
 import java.io.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -38,13 +40,24 @@ public class ReporterManager extends Initializers {
 
 	public ExtentHtmlReporter html;
 	public String dataSheetName;
+	public static String folderPath;
 	public static ExtentReports extent;
 	public static ExtentTest test, suiteTest;
 	public String testCaseName, testNodes, testDescription, category, authors, imagePath;
 
 
 	public void startResult() {
-		html = new ExtentHtmlReporter(System.getProperty("user.dir") + "/reports/result.html");
+
+		LocalDateTime now = LocalDateTime.now();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy_HH-mm-ss");
+		String formattedDateTime = now.format(formatter);
+		folderPath = "reports/" + formattedDateTime + "/";
+		File folder = new File(folderPath);
+		if (!folder.exists()) {
+			folder.mkdirs();
+		}
+
+		html = new ExtentHtmlReporter(System.getProperty("user.dir") + "./"+folderPath+"result.html");
 		html.config().setEncoding("utf-8");
 		html.config().setProtocol(Protocol.HTTPS);
 		html.config().setDocumentTitle("Automation Report");
@@ -93,8 +106,9 @@ public class ReporterManager extends Initializers {
 			snapNumber = takeScreenShot();
 			try {
 				if (imagePath == null) {
-					img = MediaEntityBuilder.createScreenCaptureFromPath("./../reports/images/" + snapNumber + ".png")
+					img = MediaEntityBuilder.createScreenCaptureFromPath("./../"+folderPath+"/images/" + snapNumber + ".png")
 							.build();
+					System.out.println(img);
 				} else {
 					img = MediaEntityBuilder.createScreenCaptureFromPath(imagePath + "/" + snapNumber + ".png").build();
 				}

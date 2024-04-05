@@ -140,7 +140,7 @@ public class WebActions extends ReporterManager {
 		try {
 			File srcFiler = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
 			FileUtils.copyFile(srcFiler,
-					new File(System.getProperty("user.dir") + "/reports/images/" + number + ".png"));
+					new File(System.getProperty("user.dir") +"/"+folderPath+"/images/" + number + ".png"));
 		} catch (WebDriverException e) {
 			log.warning("The snapshot has been taken.");
 		} catch (IOException e) {
