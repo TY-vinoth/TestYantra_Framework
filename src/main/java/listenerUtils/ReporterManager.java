@@ -108,7 +108,6 @@ public class ReporterManager extends Initializers {
 				if (imagePath == null) {
 					img = MediaEntityBuilder.createScreenCaptureFromPath("./../"+folderPath+"/images/" + snapNumber + ".png")
 							.build();
-					System.out.println(img);
 				} else {
 					img = MediaEntityBuilder.createScreenCaptureFromPath(imagePath + "/" + snapNumber + ".png").build();
 				}
