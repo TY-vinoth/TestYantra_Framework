@@ -80,7 +80,7 @@ public class WebActions extends ReporterManager {
 
 	public WebDriver startApp(@Optional String fileName, @Optional String jsonFilePath, @Optional String jsonDirectory, @Optional String url,
 							  @Optional String browser, @Optional String osVersion, @Optional String browserVersion, @Optional String execution_type,
-							  @Optional String platform, @Optional String pipeline_execution) {
+							  @Optional String platform, @Optional String pipeline_execution,@Optional boolean headless) {
 
 		URL = "https://" + BSUserName + ":" + BSPassword + "@hub-cloud.browserstack.com/wd/hub";
 
@@ -94,7 +94,9 @@ public class WebActions extends ReporterManager {
 				try {
 					if (execution_type.equalsIgnoreCase("local")) {
 						ChromeOptions options = new ChromeOptions();
-						options.addArguments("--headless");
+						if(headless){
+							options.addArguments("--headless");
+						}
 						driver = new ChromeDriver(options);
 					} else if (execution_type.equalsIgnoreCase("remote")) {
 						try {
@@ -119,9 +121,13 @@ public class WebActions extends ReporterManager {
 				try {
 					if (execution_type.equalsIgnoreCase("local")) {
 						WebDriverManager.firefoxdriver().setup();
-						driver = new FirefoxDriver();
 						FirefoxOptions options = new FirefoxOptions();
 						options.addArguments("--remote-allow-origins=*");
+						if(headless){
+							options.addArguments("--headless=new");
+						}
+						driver = new FirefoxDriver();
+
 					} else {
 						//remoteExecution();
 					}

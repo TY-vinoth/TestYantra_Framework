@@ -6,9 +6,10 @@
 		<listener class-name="listenerUtils.TestListener"/>
 	</listeners>
 	<test name="Automation Sample Test">
-		<parameter name="browser" value="chrome"></parameter>
+		<parameter name="browser" value="firefox"></parameter>
 		<parameter name="platform" value="web"></parameter>
 		<parameter name="execution_type" value="local"></parameter>
+		<parameter name="headless" value="true"></parameter>
 		<parameter name="url" value="http://106.51.90.215:8084/"></parameter>
 		<classes>
 			<class name="projectTests.webTest.TC001_Logo_is_clickable"></class>
