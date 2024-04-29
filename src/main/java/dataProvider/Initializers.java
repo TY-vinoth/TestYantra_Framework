@@ -22,7 +22,6 @@ public class Initializers {
     public static ThreadLocal<ExtentTest> extentScenarioNode = new ThreadLocal<>();
     public static ThreadLocal<ExtentTest> extentMethodNode = new ThreadLocal<>();
     public static JDBCconnection db = new JDBCconnection();
-    public static TransactionSimulation simulation = new TransactionSimulation();
     public static jiraTicketCreation jira = new jiraTicketCreation();
     public static ThreadLocal<BufferedWriter> fw;
 }
