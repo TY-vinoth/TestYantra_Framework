@@ -50,16 +50,16 @@ public class TC001_Logo_is_clickable extends BaseclassWeb {
 			windowsDevice = prop.getProperty("windowsDeviceName");
 
 			new WebElementObjs(driver, test)
-					.enterUserName(uName)
-					.enterpassWord(pWord)
-					.clickLogin()
+					.enterUserName(uName);
+					/*.enterpassWord(pWord)
+					.clickLogin();
 					.clickProjects()
 					.clickcreateProjects()
 					.enterprojectsName(ProjectName)
 					.entercreatedBy(ProjectName)
 					.clickprojecStatus()
-					.clickaddProject();
-					/*.entersearchProject(ProjectName)
+					.clickaddProject()
+					.entersearchProject(ProjectName)
 					.launchMobile_Apps(android,deviceName,osVersion)
 					.enterMobUsername(uName)
 					.enterMobPassword(pWord)

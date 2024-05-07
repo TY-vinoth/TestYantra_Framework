@@ -9,6 +9,7 @@ import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import listenerUtils.ReporterManager;
 import org.apache.commons.io.FileUtils;
+import org.jsoup.select.Elements;
 import org.openqa.selenium.*;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -34,6 +35,10 @@ import java.time.Duration;
 import java.util.*;
 import java.util.List;
 import java.util.logging.Logger;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+
 
 import static io.restassured.RestAssured.given;
 import static org.testng.Assert.assertEquals;
@@ -205,11 +210,25 @@ public class WebActions extends ReporterManager {
 				borderElement(ele);
 			}
 			text = ele.getText();
+			System.out.println("2 ========"+ text);
 			ele.click();
 			reportStep("The element : " + text + " is clicked ", "PASS");
 		} catch (InvalidElementStateException e) {
 			reportStep("The element: " + ele + " is not interactable", "SKIP");
 		} catch (WebDriverException e) {
+			// Fallback mechanism if element cannot be clicked
+			System.out.println("Fallback mechanism triggered for element with text: " + text);
+			try {
+				WebElement fallback = driver.findElement(By.xpath("//button[contains(text(), '" + text + "')]"));
+				if(text.matches("^[A-Za-z.\\s_-]+$")){
+					fallback.click();
+				}
+				reportStep("The fallback element : " + text + " is clicked ", "PASS");
+			} catch (NoSuchElementException ex) {
+				reportStep("No fallback element found for text: " + text, "FAIL");
+			} catch (WebDriverException ex) {
+				reportStep("WebDriverException: " + e.getMessage(), "FAIL");
+			}
 			reportStep("WebDriverException" + e.getMessage(), "FAIL");
 		}
 	}
@@ -643,5 +662,29 @@ public class WebActions extends ReporterManager {
 		calendar.setTime(new Date());
 		calendar.add(Calendar.DAY_OF_MONTH, Integer.parseInt(offset));
 		return new SimpleDateFormat(format).format(calendar.getTime());
+	}
+
+	public void scrapData(String tagName){
+		String pageSource = driver.getPageSource();
+
+		Document doc = Jsoup.parse(pageSource);
+		Elements elements = doc.getAllElements();
+		for (Element element : elements) {
+			String xpath = getXPath(element);
+			if (xpath.contains(tagName)) {
+				System.out.println(xpath);
+			}
+		}
+	}
+
+	private static String getXPath(Element element) {
+		StringBuilder xpath = new StringBuilder("//");
+		xpath.append(element.tagName());
+		if (!element.attributes().isEmpty()) {
+			for (org.jsoup.nodes.Attribute attribute : element.attributes()) {
+				xpath.append("[@").append(attribute.getKey()).append("='").append(attribute.getValue()).append("']");
+			}
+		}
+		return xpath.toString();
 	}
 }

@@ -44,9 +44,8 @@ public class WebElementObjs extends BaseclassWeb {
         return this;
     }
 
-    @FindBy(how = How.XPATH, using = "(.//button[@class='btn btn-primary btn-lg btn-block'])")
+    @FindBy(how = How.XPATH, using = "(.//button[contains(text(),'Sign in')])")
     private WebElement eleLogin;
-
     public WebElementObjs clickLogin() {
         click(eleLogin);
         return this;
