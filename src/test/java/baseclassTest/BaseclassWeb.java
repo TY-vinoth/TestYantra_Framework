@@ -40,12 +40,6 @@ public class BaseclassWeb extends WebActions {
 		startApp(fileName, jsonFilePath, jsonDirectory, url,
 				browser, osVersion,  browserVersion, execution_type, platform, pipeline_execution,headless);
 
-		try{
-			setTestEnvironment(fileName, jsonFilePath, jsonDirectory, url,
-					 browser, osVersion,  browserVersion, execution_type, platform, pipeline_execution);
-		}catch (Exception e){
-
-		}
 	}
 
 

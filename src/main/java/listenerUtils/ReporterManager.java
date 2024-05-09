@@ -23,9 +23,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import dataProvider.Initializers;
 import dataProvider.bean.exceptions.ThrowableTypeAdapter;
-import dataProvider.bean.remoteenv.RemoteEnvPojo;
-import dataProvider.bean.testenv.TestEnv;
-import dataProvider.bean.testenv.TestEnvPojo;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -36,8 +33,6 @@ import org.testng.xml.XmlTest;
 
 public class ReporterManager extends Initializers {
 	private Logger log = Logger.getLogger(this.getClass().getName());
-	private static RemoteEnvPojo tre;
-
 	public ExtentHtmlReporter html;
 	public String dataSheetName;
 	public static String folderPath;
@@ -204,14 +199,6 @@ public class ReporterManager extends Initializers {
 		}
 	}
 
-	public void logStepAction(String message) {
-		if (extentScenarioNode.get() != null) {
-			extentScenarioNode.get().info("<span class=\"stepSpan\"> STEP : </span>" + message);
-		} else {
-			extentMethodNode.get().info("<span class=\"stepSpan\"> STEP : </span>" + message);
-		}
-	}
-
 	public void testTearDown() {
 		if (!failAnalysisThread.get().isEmpty()) {
 			Assert.fail("Test Failed !! Look for above failures/exceptions and fix it !! ");
@@ -257,123 +244,5 @@ public class ReporterManager extends Initializers {
 			captureException(e);
 		}
 		return rep;
-	}
-
-	public void setTestEnvironment(String fileName,String jsonFilePath,String jsonDirectory,String url,
-								   String browser,String osVersion,String browserVersion,String executionType,String platform, String pipeline_execution) {
-		try {
-			Gson pGson = new GsonBuilder().registerTypeAdapter(Throwable.class, new ThrowableTypeAdapter()).setPrettyPrinting().create();
-			JsonElement testEnvElement = null;
-			try {
-				if (fileName != null) {
-					testEnvElement = JsonParser.parseReader(new FileReader(fileName));
-				} else {
-					testEnvElement = JsonParser.parseReader(new FileReader("C:\\Users\\USER1\\Documents\\Vinoth_Docs\\TestYantra_Framework\\TestYantra_Framework\\tenv\\test-env.json"));
-				}
-			} catch (FileNotFoundException e) {
-				captureException(e);
-			}
-			JsonElement remoteEnvElement = JsonParser.parseReader(new FileReader("C:\\Users\\USER1\\Documents\\Vinoth_Docs\\TestYantra_Framework\\TestYantra_Framework\\tenv\\test-env.json"));
-			RemoteEnvPojo tRemoteEnv = pGson.fromJson(remoteEnvElement, RemoteEnvPojo.class);
-
-			TestEnvPojo tLocalEnv = pGson.fromJson(testEnvElement, TestEnvPojo.class);
-			envThreadLocal.set(new TestEnv());
-
-			tEnv().setExecution_type(tRemoteEnv.getExecution_type());
-			tEnv().setPipeline_execution(tRemoteEnv.getPipeline_execution());
-
-			if (tLocalEnv.getWeb() != null) {
-				tEnv().setWebSystemOS(tLocalEnv.getWeb().getSystemOs());
-				tEnv().setWebSystemOSVersion(tLocalEnv.getWeb().getSystemOsVersion());
-				tEnv().setWebBrowser(tLocalEnv.getWeb().getBrowser());
-				tEnv().setWebHeadless(tLocalEnv.getWeb().getHeadless());
-				tEnv().setWebBrowserVersion(tLocalEnv.getWeb().getBrowserVersion());
-				tEnv().setWebUrl(tLocalEnv.getWeb().getWebUrl());
-			}
-
-			if (tRemoteEnv.getDb_config() != null) {
-				tEnv().setDbHost(tRemoteEnv.getDb_config().get("dbHost").getAsString());
-				tEnv().setDbUserName(tRemoteEnv.getDb_config().get("dbUserName").getAsString());
-				tEnv().setDbPassword(tRemoteEnv.getDb_config().get("dbPassword").getAsString());
-				tEnv().setDbName(tRemoteEnv.getDb_config().get("dbName").getAsString());
-			}
-
-			if (browser != null) {
-				tEnv().setWebBrowser(browser);
-			}
-			if (executionType != null) {
-				tEnv().setExecution_type(executionType);
-			}
-			if (pipeline_execution != null) {
-				tEnv().setPipeline_execution(pipeline_execution);
-			}
-			if (browserVersion != null) {
-				tEnv().setWebBrowserVersion(browserVersion);
-			}
-			if (url != null) {
-				tEnv().setWebUrl(url);
-			}
-			if (jsonFilePath != null) {
-				log.info("JSON File Path Set to " + jsonFilePath);
-				tEnv().setJsonFilePath(jsonFilePath);
-			}
-			if (jsonDirectory != null) {
-				tEnv().setJsonDirectory(jsonDirectory);
-			} else {
-				tEnv().setJsonDirectory("src/test/resources/TestData");
-			}
-
-		} catch (Exception e) {
-			captureException(e);
-		}
-	}
-
-	@BeforeSuite(alwaysRun = true)
-	protected void suiteInitialization (ITestContext iTestContext, XmlTest xmlTest){
-		try {
-			log.info("Test Execution Started for Suite : " + iTestContext.getSuite().getName());
-			Gson pGson = new GsonBuilder().registerTypeAdapter(Throwable.class, new ThrowableTypeAdapter()).setPrettyPrinting().create();
-			JsonElement element1 = JsonParser.parseReader(new FileReader("C:\\Users\\USER1\\Documents\\Vinoth_Docs\\TestYantra_Framework\\TestYantra_Framework\\tenv\\remote-env.json"));
-			tre = pGson.fromJson(element1, RemoteEnvPojo.class);
-			executionType = tre.getExecution_type();
-			pipelineExecution = tre.getPipeline_execution();
-
-			if (executionType == null) {
-				executionType = "local";
-			}
-			if (extent != null) {
-				extent.setSystemInfo("testExecutionType", executionType);
-			}
-			try {
-				fw = new ThreadLocal<>();
-			} catch (Exception e) {
-				captureException(e);
-			}
-		} catch (FileNotFoundException fe) {
-			captureException(fe);
-		} catch (Exception e) {
-			captureException(e);
-		}
-	}
-
-	public void author_ScenarioName(String author, String scenario) {
-		try {
-			captureScenarioAndAuthor(author, scenario);
-		} catch (Exception e) {
-			captureException(e);
-		}
-	}
-
-	private void captureScenarioAndAuthor(String author, String scenario) {
-		if (extentMethodNode.get() != null) {
-			extentMethodNode.get().assignAuthor(author);
-			extentMethodNode.get().getModel().setDescription(scenario);
-			extentMethodNode.get().info("<span class=\"scenarioSpan\"> SCENARIO : </span>" + scenario);
-		}
-		if (extentScenarioNode.get() != null) {
-			extentScenarioNode.get().assignAuthor(author);
-			extentScenarioNode.get().getModel().setDescription(scenario);
-			extentScenarioNode.get().info("<span class=\"scenarioSpan\"> SCENARIO : </span>" + scenario);
-		}
 	}
 }
