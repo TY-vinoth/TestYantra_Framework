@@ -16,6 +16,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.DriverCommand;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -54,6 +55,7 @@ public class WebActions extends ReporterManager {
 	public static WebDriverWait wait;
 	public static String BSUserName, BSPassword, LTUserName, LTPassword, SLUserName, SLPassword, URL, platform, browser;
 	public DesiredCapabilities caps;
+	public ChromeOptions browserOptions;
 	private final Logger log = Logger.getLogger(this.getClass().getName());
 
 
@@ -76,74 +78,86 @@ public class WebActions extends ReporterManager {
 
 	public WebDriver startApp(@Optional String fileName, @Optional String jsonFilePath, @Optional String jsonDirectory, @Optional String url,
 							  @Optional String browser, @Optional String osVersion, @Optional String browserVersion, @Optional String execution_type,
-							  @Optional String platform, @Optional String pipeline_execution,@Optional boolean headless) {
+							  @Optional String platform, @Optional String pipeline_execution,@Optional boolean headless) throws MalformedURLException {
 
-		URL = "https://" + BSUserName + ":" + BSPassword + "@hub-cloud.browserstack.com/wd/hub";
 
+		switch (execution_type.toLowerCase()){
+			case "browserstack":
+				URL = "https://" + BSUserName + ":" + BSPassword + "@hub-cloud.browserstack.com/wd/hub";
+				break;
+			case "saucelabs":
+				URL = "https://" + SLUserName + ":" + SLPassword + "@ondemand.eu-central-1.saucelabs.com:443/wd/hub";
+				break;
+			case "lamdatest":
+				URL = "https://" + LTUserName + ":" + LTPassword + "@hub.lambdatest.com/wd/hub";
+				break;
+		}
 
 		/*execution_type = System.getProperty("execution_type","remote");
 		browser = System.getProperty("browser_type","chrome");
 		platform = System.getProperty("platform_type","web");*/
 
-		switch (browser) {
-			case "chrome":
-				try {
-					if (execution_type.equalsIgnoreCase("local")) {
-						ChromeOptions options = new ChromeOptions();
-						if(headless){
-							options.addArguments("--headless");
+		switch (execution_type.toLowerCase()) {
+			case "local":
+				switch (browser.toLowerCase()) {
+					case "chrome":
+						ChromeOptions chromeOptions = new ChromeOptions();
+						if (headless) {
+							chromeOptions.addArguments("--headless");
 						}
-						driver = new ChromeDriver(options);
-					} else if (execution_type.equalsIgnoreCase("remote")) {
-						try {
-							MutableCapabilities capabilities = new MutableCapabilities();
-							HashMap<String, Object> bstackOptions = new HashMap<String, Object>();
-							capabilities.setCapability("browserName", browser);
-							bstackOptions.put("os", "Windows");
-							bstackOptions.put("osVersion", "11");
-							bstackOptions.put("browserVersion", "latest");
-							bstackOptions.put("consoleLogs", "info");
-							capabilities.setCapability("bstack:options", bstackOptions);
-							driver = new RemoteWebDriver(new URL(URL), capabilities);
-							reportStep("[" + browser + "] session is connected with BrowserStack", "PASS");
-						} catch (Exception e) {
-							reportStep("[" + browser + "] session isn't connected with BrowserStack", "FAIL");
-						}
-					}
-					driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
-					log.warning("Launching URL --> " + url);
-					driver.get(url);
-					driver.manage().window().maximize();
-					reportStep("[" + browser + "] launched successfully", "PASS");
-				} catch (Exception e) {
-					reportStep("[" + browser + "]: could not be launched", "FAIL");
-					hardFail();
-				}
-				break;
-			case "firefox":
-				try {
-					if (execution_type.equalsIgnoreCase("local")) {
+						driver = new ChromeDriver(chromeOptions);
+						break;
+					case "firefox":
 						WebDriverManager.firefoxdriver().setup();
 						FirefoxOptions options = new FirefoxOptions();
-						options.addArguments("--remote-allow-origins=*");
-						if(headless){
-							options.addArguments("--headless=new");
+						if(headless) {
+							options.addArguments("--headless");
 						}
-						driver = new FirefoxDriver();
-
-					} else {
-						//remoteExecution();
-					}
-					driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
-					log.warning("Launching URL --> " + url);
-					driver.get(url);
-					driver.manage().window().maximize();
-					reportStep("[" + browser + "] launched successfully", "PASS");
-				} catch (Exception e) {
-					reportStep("[" + browser + "]: could not be launched", "FAIL");
-					//hardFail("Firefox Session Not created !!");
+						driver=new FirefoxDriver(options);
+						break;
 				}
 				break;
+			case "browserstack":
+				MutableCapabilities capabilities = new MutableCapabilities();
+				HashMap<String, Object> bstackOptions = new HashMap<>();
+				capabilities.setCapability("browserName", browser);
+				bstackOptions.put("os", "Windows");
+				bstackOptions.put("osVersion", "11");
+				bstackOptions.put("browserVersion", "latest");
+				bstackOptions.put("consoleLogs", "info");
+				capabilities.setCapability("bstack:options", bstackOptions);
+				driver = new RemoteWebDriver(new URL(URL), capabilities);
+				break;
+			case "lamdatest":
+				browserOptions = new ChromeOptions();
+				browserOptions.setPlatformName("Windows 11");
+				browserOptions.setBrowserVersion("124");
+				HashMap<String, Object> ltOptions = new HashMap<>();
+				ltOptions.put("project", "Test project");
+				ltOptions.put("name", testCaseName);
+				ltOptions.put("w3c", true);
+				browserOptions.setCapability("LT:Options", ltOptions);
+				driver = new RemoteWebDriver(new URL(URL), browserOptions);
+				break;
+			case "saucelabs":
+				browserOptions = new ChromeOptions();
+				browserOptions.setPlatformName("Windows 11");
+				browserOptions.setBrowserVersion("124");
+				Map<String, Object> sauceOptions = new HashMap<>();
+				sauceOptions.put("build", "<your build id>");
+				sauceOptions.put("name", testCaseName);
+				browserOptions.setCapability("sauce:options", sauceOptions);
+				driver = new RemoteWebDriver(new URL(URL), browserOptions);
+		}
+		try{
+			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
+			log.warning("Launching URL --> " + url);
+			driver.get(url);
+			driver.manage().window().maximize();
+			reportStep("[" + browser + "] launched successfully", "PASS");
+		} catch (Exception e) {
+			reportStep("[" + browser + "]: could not be launched", "FAIL");
+			//hardFail("Firefox Session Not created !!");
 		}
 		return driver;
 	}
