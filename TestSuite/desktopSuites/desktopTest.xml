@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Suite" parallel="tests" thread-count="1">
+
+	<test name="Windows Sample Test">
+		<parameter name="platform" value="Windows"></parameter>
+		<parameter name="runIn" value="local"></parameter>
+		<parameter name="deviceName" value="WindowsPC"></parameter>
+		<classes>
+			<class name="projectTests.mobileTest.desktopTests.TC001_Logo_Is_Clickable"></class>
+		</classes>
+	</test>
+
+</suite> <!-- Suite -->

@@ -17,9 +17,9 @@
 	</test>-->
 
 	<!--<test name="local Sample Test">
-		<parameter name="platform" value="Android"></parameter>
-		<parameter name="deviceName" value="emulator-5556"></parameter>
-		<parameter name="OSVersion" value="10.0"></parameter>
+		<parameter name="platform" value="android"></parameter>
+		<parameter name="deviceName" value="RZ8T50ZVKPE"></parameter>
+		<parameter name="OSVersion" value="14.0"></parameter>
 		<parameter name="runIn" value="local"></parameter>
 		<classes>
 			<class name="projectTests.mobileTest.appTests.TC001_Logo_Is_Clickable"></class>

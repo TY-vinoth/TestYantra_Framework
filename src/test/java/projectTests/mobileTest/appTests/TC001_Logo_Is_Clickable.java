@@ -3,6 +3,7 @@ package projectTests.mobileTest.appTests;
 import baseclassTest.BaseclassMob;
 import mobObjRepo.appPages.HrmLoginPage;
 import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
@@ -30,7 +31,7 @@ public class TC001_Logo_Is_Clickable extends BaseclassMob {
     }
 
     @Test(dataProvider = "fetchData")
-    public void hRMhomePage(String ProjectName) {
+    public void hRMhomePage(@Optional String columnData, String ProjectName) {
         prop = new Properties();
         try {
             prop.load(new FileInputStream(new File("./src/main/resources/config.properties")));

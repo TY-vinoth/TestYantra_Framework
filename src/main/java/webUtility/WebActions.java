@@ -52,7 +52,7 @@ public class WebActions extends ReporterManager {
 
 	public WebDriver driver;
 	public static WebDriverWait wait;
-	public static String BSUserName, BSPassword, URL, platform, browser;
+	public static String BSUserName, BSPassword, LTUserName, LTPassword, SLUserName, SLPassword, URL, platform, browser;
 	public DesiredCapabilities caps;
 	private final Logger log = Logger.getLogger(this.getClass().getName());
 
@@ -63,24 +63,15 @@ public class WebActions extends ReporterManager {
 			prop.load(new FileInputStream("./src/main/resources/config.properties"));
 			BSUserName = prop.getProperty("USERNAME");
 			BSPassword = prop.getProperty("ACCESS_KEY");
+			LTUserName = prop.getProperty("LUSERNAME");
+			LTPassword = prop.getProperty("LACCESS_KEY");
+			SLUserName = prop.getProperty("SLUSERNAME");
+			SLPassword = prop.getProperty("SLPASSWORD");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	private MutableCapabilities getCapabilities(String browser, String testCaseName) {
-		MutableCapabilities capabilities = new MutableCapabilities();
-		HashMap<String, Object> bstackOptions = new HashMap<>();
-		capabilities.setCapability("browserName", browser);
-		capabilities.setCapability("name", testCaseName);
-		bstackOptions.put("os", "Windows");
-		bstackOptions.put("osVersion", "11");
-		bstackOptions.put("browserVersion", "latest");
-		bstackOptions.put("consoleLogs", "info");
-		capabilities.setCapability("bstack:options", bstackOptions);
-		return capabilities;
 	}
 
 	public WebDriver startApp(@Optional String fileName, @Optional String jsonFilePath, @Optional String jsonDirectory, @Optional String url,
@@ -105,11 +96,18 @@ public class WebActions extends ReporterManager {
 						driver = new ChromeDriver(options);
 					} else if (execution_type.equalsIgnoreCase("remote")) {
 						try {
-							MutableCapabilities capabilities = getCapabilities(browser, testCaseName);
+							MutableCapabilities capabilities = new MutableCapabilities();
+							HashMap<String, Object> bstackOptions = new HashMap<String, Object>();
+							capabilities.setCapability("browserName", browser);
+							bstackOptions.put("os", "Windows");
+							bstackOptions.put("osVersion", "11");
+							bstackOptions.put("browserVersion", "latest");
+							bstackOptions.put("consoleLogs", "info");
+							capabilities.setCapability("bstack:options", bstackOptions);
 							driver = new RemoteWebDriver(new URL(URL), capabilities);
-							reportStep("[" + browser + "] launched successfully in BrowserStack", "PASS");
+							reportStep("[" + browser + "] session is connected with BrowserStack", "PASS");
 						} catch (Exception e) {
-							reportStep("[" + browser + "] hasn't launched successfully in BrowserStack", "FAIL");
+							reportStep("[" + browser + "] session isn't connected with BrowserStack", "FAIL");
 						}
 					}
 					driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
@@ -185,9 +183,9 @@ public class WebActions extends ReporterManager {
 		try {
 			wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 			wait.until(ExpectedConditions.elementToBeClickable(ele));
-			if(platform==null){
+			/*if(!Objects.equals(platform, "android")){
 				borderElement(ele);
-			}
+			}*/
 			ele.clear();
 			ele.sendKeys(data);
 			/*if (data.matches("^[\\w_*^)!]*$")){
@@ -206,29 +204,15 @@ public class WebActions extends ReporterManager {
 		try {
 			wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 			wait.until(ExpectedConditions.elementToBeClickable(ele));
-			if(platform==null){
+			/*if(!Objects.equals(platform, "android")){
 				borderElement(ele);
-			}
+			}*/
 			text = ele.getText();
-			System.out.println("2 ========"+ text);
 			ele.click();
 			reportStep("The element : " + text + " is clicked ", "PASS");
 		} catch (InvalidElementStateException e) {
 			reportStep("The element: " + ele + " is not interactable", "SKIP");
 		} catch (WebDriverException e) {
-			// Fallback mechanism if element cannot be clicked
-			System.out.println("Fallback mechanism triggered for element with text: " + text);
-			try {
-				WebElement fallback = driver.findElement(By.xpath("//button[contains(text(), '" + text + "')]"));
-				if(text.matches("^[A-Za-z.\\s_-]+$")){
-					fallback.click();
-				}
-				reportStep("The fallback element : " + text + " is clicked ", "PASS");
-			} catch (NoSuchElementException ex) {
-				reportStep("No fallback element found for text: " + text, "FAIL");
-			} catch (WebDriverException ex) {
-				reportStep("WebDriverException: " + e.getMessage(), "FAIL");
-			}
 			reportStep("WebDriverException" + e.getMessage(), "FAIL");
 		}
 	}
@@ -294,6 +278,135 @@ public class WebActions extends ReporterManager {
 
 	public WebDriver launchApp(@Optional String platform, @Optional String deviceName, @Optional String OSVersion, @Optional String runIn, @Optional String bs_app_path) {
 
+		caps = new DesiredCapabilities();
+
+		switch (runIn.toLowerCase()){
+			case "browserstack":
+				URL = "https://" + BSUserName + ":" + BSPassword + "@hub-cloud.browserstack.com/wd/hub";
+				break;
+			case "saucelabs":
+				URL = "https://" + SLUserName + ":" + SLPassword + "ondemand.us-west-1.saucelabs.com:443/wd/hub";
+				break;
+			case "lamdatest":
+				URL = "https://" + LTUserName + ":" + LTPassword + "@hub.lambdatest.com/wd/hub";
+				break;
+		}
+
+		try {
+			switch (runIn.toLowerCase()) {
+				case "local":
+					URL = "http://127.0.0.1:4723/wd/hub";
+					bs_app_path = "C:\\Users\\USER1\\Downloads\\NINZA HRM.apk";
+					caps.setCapability("app", bs_app_path);
+					if (platform.equalsIgnoreCase("windows")) {
+						caps.setCapability("automationName", "windows");
+						caps.setCapability("platformName", "windows");
+						bs_app_path = "C:\\Users\\USER1\\Documents\\TY\\hrm\\Ninza-HRM-win32-x64\\Ninza-HRM.exe";
+						caps.setCapability("app", bs_app_path);
+					}
+					break;
+				case "browserstack":
+					switch (platform.toLowerCase()) {
+						case "android":
+							caps.setCapability("platformName", platform);
+							caps.setCapability("platformVersion", OSVersion);
+							caps.setCapability("deviceName", deviceName);
+							caps.setCapability("project", "Mobile Application");
+							caps.setCapability("unicodeKeyboard", true);
+							caps.setCapability("resetKeyboard", true);
+							caps.setCapability("autoDismissAlerts", true);
+							caps.setCapability("autoGrantPermissions", true);
+							caps.setCapability("noReset", true);
+							caps.setCapability("name", testCaseName);
+							caps.setCapability("app", bs_app_path);
+							break;
+						case "ios":
+							caps.setCapability("platformName", platform);
+							caps.setCapability("deviceName", deviceName);
+							caps.setCapability("platformVersion", OSVersion);
+							caps.setCapability("automationName", "XCUITest");
+							caps.setCapability("connectHardwareKeyboard", true);
+							caps.setCapability("noReset", true);
+							caps.setCapability("name", testCaseName);
+							caps.setCapability("app", bs_app_path);
+							break;
+						// Add cases for other platforms if needed
+					}
+					break;
+				case "saucelabs":
+					if (platform.equalsIgnoreCase("android")) {
+						MutableCapabilities caps = new MutableCapabilities();
+						caps.setCapability("appium:platformName", platform);
+						caps.setCapability("appium:deviceName", deviceName);
+						caps.setCapability("appium:platformVersion", OSVersion);
+						MutableCapabilities sauceOptions = new MutableCapabilities();
+						sauceOptions.setCapability("name", testCaseName);
+						sauceOptions.setCapability("build", "<your build id>");
+						caps.setCapability("sauce:options", sauceOptions);
+
+					} else if (platform.equalsIgnoreCase("ios")) {
+						MutableCapabilities caps = new MutableCapabilities();
+						caps.setCapability("appium:platformName", platform);
+						caps.setCapability("appium:deviceName", deviceName);
+						caps.setCapability("appium:platformVersion", OSVersion);
+						MutableCapabilities sauceOptions = new MutableCapabilities();
+						sauceOptions.setCapability("name", testCaseName);
+						sauceOptions.setCapability("build", "<your build id>");
+						caps.setCapability("sauce:options", sauceOptions);
+						// Add cases for other platforms if needed
+					}
+					break;
+				case "lamdatest":
+					if (!platform.equalsIgnoreCase("android")) {
+						if (platform.equalsIgnoreCase("ios")) {
+							HashMap<String, Object> ltOptions = new HashMap<String, Object>();
+							ltOptions.put("w3c", true);
+							ltOptions.put("platformName", platform);
+							ltOptions.put("platformVersion", OSVersion);
+							ltOptions.put("deviceName", deviceName);
+							ltOptions.put("name", testCaseName);
+							ltOptions.put("automationName", "XCUITest");
+							ltOptions.put("connectHardwareKeyboard", true);
+							caps.setCapability("lt:options", ltOptions);
+							// Add cases for other platforms if needed
+						}
+					} else {
+						HashMap<String, Object> ltOptions = new HashMap<String, Object>();
+						ltOptions.put("platformName", platform);
+						ltOptions.put("platformVersion", OSVersion);
+						ltOptions.put("deviceName", deviceName);
+						ltOptions.put("isRealMobile", true);
+						ltOptions.put("unicodeKeyboard", true);
+						ltOptions.put("name", testCaseName);
+						ltOptions.put("resetKeyboard", true);
+						ltOptions.put("autoDismissAlerts", true);
+						ltOptions.put("autoGrantPermissions", true);
+						caps.setCapability("lt:options", ltOptions);
+					}
+					break;
+			}
+
+			switch (platform.toLowerCase()) {
+				case "android":
+					driver = new AndroidDriver(new URL(URL), caps);
+					break;
+				case "windows":
+					driver = new WindowsDriver(new URL(URL), caps);
+					break;
+				case "ios":
+					driver = new IOSDriver(new URL(URL), caps);
+					break;
+				// Add cases for other platforms if needed
+			}
+			reportStep("The Application package:" + deviceName + " launched successfully", "PASS");
+		} catch (MalformedURLException e) {
+			reportStep("The Application package:" + deviceName + " could not be launched", "FAIL");
+		}
+		return driver;
+	}
+
+	/*public WebDriver launchApp(@Optional String platform, @Optional String deviceName, @Optional String OSVersion, @Optional String runIn, @Optional String bs_app_path) {
+
 		URL = "https://" + BSUserName + ":" + BSPassword + "@hub-cloud.browserstack.com/wd/hub";
 
 		caps = new DesiredCapabilities();
@@ -308,10 +421,10 @@ public class WebActions extends ReporterManager {
 					caps.setCapability("platformName", "windows");
 					bs_app_path = "C:\\Users\\USER1\\Documents\\TY\\hrm\\Ninza-HRM-win32-x64\\Ninza-HRM.exe";
 
-				}/*else {
+				}*//*else {
                     caps.setCapability("appPackage",appPackage);
                     caps.setCapability("appActivity",appActivity);
-                }*/
+                }*//*
 
 			} else if (runIn.equalsIgnoreCase("remote")) {
 				if (platform.equalsIgnoreCase("Android")) {
@@ -348,7 +461,7 @@ public class WebActions extends ReporterManager {
 			reportStep("The Appication package:" + deviceName + " could not be launched", "FAIL");
 		}
 		return driver;
-	}
+	}*/
 
 	public boolean switchContext(String contextname) throws InterruptedException, MalformedURLException {
 		AndroidDriver android = new AndroidDriver(new URL(URL), caps);
@@ -664,20 +777,23 @@ public class WebActions extends ReporterManager {
 		return new SimpleDateFormat(format).format(calendar.getTime());
 	}
 
-	public void scrapData(String tagName){
-		String pageSource = driver.getPageSource();
+	public Map<String, String> getXPathMap(String tagName) {
+		Map<String, String> xpathMap = new HashMap<>();
 
+		String pageSource = driver.getPageSource();
 		Document doc = Jsoup.parse(pageSource);
-		Elements elements = doc.getAllElements();
+		Elements elements = doc.select(tagName);
+
 		for (Element element : elements) {
 			String xpath = getXPath(element);
-			if (xpath.contains(tagName)) {
-				System.out.println(xpath);
-			}
+			System.out.println("Tag Name: " + element.tagName() + ", XPath: " + xpath); // Print XPath
+			xpathMap.putIfAbsent(element.tagName(), xpath);
 		}
+
+		return xpathMap;
 	}
 
-	private static String getXPath(Element element) {
+	private String getXPath(Element element) {
 		StringBuilder xpath = new StringBuilder("//");
 		xpath.append(element.tagName());
 		if (!element.attributes().isEmpty()) {
