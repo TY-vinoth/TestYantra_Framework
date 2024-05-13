@@ -3,6 +3,8 @@ package dataProvider;
 import JIRA.jiraTicketCreation;
 import com.aventstack.extentreports.ExtentTest;
 import dBUtility.JDBCconnection;
+import gitLab.BugReporter;
+
 import java.io.BufferedWriter;
 import java.util.List;
 
@@ -15,5 +17,6 @@ public class Initializers {
 
     public static JDBCconnection db = new JDBCconnection();
     public static jiraTicketCreation jira = new jiraTicketCreation();
+    public static BugReporter gitlab = new BugReporter();
     public static ThreadLocal<BufferedWriter> fw;
 }
