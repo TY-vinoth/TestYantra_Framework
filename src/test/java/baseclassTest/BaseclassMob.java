@@ -40,7 +40,7 @@ public class BaseclassMob extends MobileActions {
         test = startTestCase(testNodes);
         test.assignCategory(category);
         test.assignAuthor(authors);
-        launchApp(platform, deviceName, OSVersion, runIn, bs_app_path, appPackage, appActivity);
+        launchApp(platform, deviceName, OSVersion, runIn, bs_app_path, appPackage, appActivity, testCaseName);
     }
 
 

@@ -28,6 +28,7 @@ public class MobileActions extends ReporterManager {
 
     public WebDriver driver;
     public DesiredCapabilities caps;
+    public MutableCapabilities W3C;
     public Properties prop;
     public static String BSUserName, BSPassword, LTUserName, LTPassword, SLUserName, SLPassword, URL, platform, browser;
 
@@ -48,7 +49,7 @@ public class MobileActions extends ReporterManager {
         }
     }
 
-    public void launchApp(@Optional String platform, @Optional String deviceName, @Optional String OSVersion, @Optional String runIn, @Optional String bs_app_path, @Optional String appPackage, @Optional String appActivity) {
+    public void launchApp(@Optional String platform, @Optional String deviceName, @Optional String OSVersion, @Optional String runIn, @Optional String bs_app_path, @Optional String appPackage, @Optional String appActivity, String testcaseName) {
 
         caps = new DesiredCapabilities();
 
@@ -80,16 +81,19 @@ public class MobileActions extends ReporterManager {
                 case "browserstack":
                     switch (platform.toLowerCase()) {
                         case "android":
+                            caps = new DesiredCapabilities();
+                            HashMap<String, Object> browserstackOptions = new HashMap<String, Object>();
                             caps.setCapability("platformName", platform);
                             caps.setCapability("platformVersion", OSVersion);
                             caps.setCapability("deviceName", deviceName);
-                            caps.setCapability("project", "Mobile Application");
+                            browserstackOptions.put("projectName", "Automation Test project");
+                            browserstackOptions.put("sessionName", "NINZA HRM");
+                            caps.setCapability("bstack:options", browserstackOptions);
                             caps.setCapability("unicodeKeyboard", true);
                             caps.setCapability("resetKeyboard", true);
                             caps.setCapability("autoDismissAlerts", true);
                             caps.setCapability("autoGrantPermissions", true);
                             caps.setCapability("noReset", true);
-                            caps.setCapability("name", testCaseName);
                             caps.setCapability("app", bs_app_path);
                             break;
                         case "ios":
@@ -107,25 +111,28 @@ public class MobileActions extends ReporterManager {
                     break;
                 case "saucelabs":
                     if (platform.equalsIgnoreCase("android")) {
-                        MutableCapabilities caps = new MutableCapabilities();
-                        caps.setCapability("appium:platformName", platform);
-                        caps.setCapability("appium:deviceName", deviceName);
-                        caps.setCapability("appium:platformVersion", OSVersion);
                         MutableCapabilities sauceOptions = new MutableCapabilities();
-                        sauceOptions.setCapability("name", testCaseName);
-                        caps.setCapability("appium:app", "storage:filename=NINZA HRM.apk");
-                        sauceOptions.setCapability("build", "appium-build-6H84B");
-                        caps.setCapability("sauce:options", sauceOptions);
+                        W3C = new MutableCapabilities();
+                        W3C.setCapability("platformName", platform);
+                        W3C.setCapability("appium:app", bs_app_path);  // The filename of the mobile app
+                        W3C.setCapability("appium:deviceName", deviceName);
+                        W3C.setCapability("appium:platformVersion", OSVersion);
+                        W3C.setCapability("appium:automationName", "UiAutomator2");
+                        sauceOptions.setCapability("appiumVersion", "latest");
+                        sauceOptions.setCapability("name", testcaseName);
+                        W3C.setCapability("sauce:options", sauceOptions);
+                        break;
 
                     } else if (platform.equalsIgnoreCase("ios")) {
-                        MutableCapabilities caps = new MutableCapabilities();
-                        caps.setCapability("appium:platformName", platform);
-                        caps.setCapability("appium:deviceName", deviceName);
-                        caps.setCapability("appium:platformVersion", OSVersion);
+                        W3C = new MutableCapabilities();
+                        W3C.setCapability("appium:platformName", platform);
+                        W3C.setCapability("appium:deviceName", deviceName);
+                        W3C.setCapability("appium:platformVersion", OSVersion);
                         MutableCapabilities sauceOptions = new MutableCapabilities();
                         sauceOptions.setCapability("name", testCaseName);
                         sauceOptions.setCapability("build", "<your build id>");
-                        caps.setCapability("sauce:options", sauceOptions);
+                        W3C.setCapability("sauce:options", sauceOptions);
+                        break;
                         // Add cases for other platforms if needed
                     }
                     break;
@@ -141,6 +148,7 @@ public class MobileActions extends ReporterManager {
                             ltOptions.put("automationName", "XCUITest");
                             ltOptions.put("connectHardwareKeyboard", true);
                             caps.setCapability("lt:options", ltOptions);
+                            break;
                             // Add cases for other platforms if needed
                         }
                     } else {
@@ -155,6 +163,7 @@ public class MobileActions extends ReporterManager {
                         ltOptions.put("autoDismissAlerts", true);
                         ltOptions.put("autoGrantPermissions", true);
                         caps.setCapability("lt:options", ltOptions);
+                        break;
                     }
                     break;
             }
@@ -176,63 +185,6 @@ public class MobileActions extends ReporterManager {
             reportStep("The Application package:" + deviceName + " could not be launched", "FAIL");
         }
     }
-
-    /*public void startApp(String platform, String deviceName, String OSVersion, String runIn, String bs_app_path,String testCaseName,String appPackage, String appActivity) {
-
-        URL = "https://"+userName+":"+accessKey+"@hub-cloud.browserstack.com/wd/hub";
-
-        caps = new DesiredCapabilities();
-
-        try {
-            if(runIn.equalsIgnoreCase("local")) {
-
-                URL = "http://127.0.0.1:4723/wd/hub";
-                bs_app_path= "C:\\Users\\USER1\\Documents\\TY\\hrm\\Ninza-HRM-win32-x64\\Ninza-HRM.exe";
-                //bs_app_path= "C:\\Users\\USER1\\Downloads\\NINZA HRM.apk";
-                if(platform.equalsIgnoreCase("Windows")){
-                    caps.setCapability("automationName", "windows");
-                    caps.setCapability("platformName", "windows");
-
-                }*//*else {
-                    caps.setCapability("appPackage",appPackage);
-                    caps.setCapability("appActivity",appActivity);
-                }*//*
-
-            } else if(runIn.equalsIgnoreCase("remote")) {
-                if (platform.equalsIgnoreCase("Android")){
-                    caps.setCapability("platformName", platform);
-                    caps.setCapability("platformVersion", OSVersion);
-                    caps.setCapability("project", "Mobile Application");
-                    caps.setCapability("unicodeKeyboard", true);
-                    caps.setCapability("resetKeyboard", true);
-                    caps.setCapability("autoDismissAlerts", true);
-                    caps.setCapability("autoGrantPermissions", true);
-                }
-                else {
-                    caps.setCapability("platformName", platform);
-                    caps.setCapability("platformVersion", OSVersion);
-                    caps.setCapability("automationName", "XCUITest");
-                    caps.setCapability("connectHardwareKeyboard", true);
-                }
-            }
-
-            caps.setCapability("noReset", true);
-            caps.setCapability("deviceName", deviceName);
-            caps.setCapability("name", testCaseName);
-            caps.setCapability("app", bs_app_path);
-
-            if(platform.equalsIgnoreCase("Android")) {
-                driver = new AndroidDriver(new URL(URL), caps);
-            } else if (platform.equalsIgnoreCase("windows")) {
-                driver = new WindowsDriver(new URL(URL), caps);
-            } else if (platform.equalsIgnoreCase("iOS")) {
-                driver = new IOSDriver(new URL(URL), caps);
-            }
-            reportStep("The Appication package:" + deviceName + " launched successfully", "PASS");
-        } catch (MalformedURLException e) {
-            reportStep("The Appication package:" + deviceName + " could not be launched", "FAIL");
-        }
-    }*/
 
     public void click(WebElement ele) {
         String text = "";
