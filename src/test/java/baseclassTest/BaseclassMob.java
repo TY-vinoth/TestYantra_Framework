@@ -40,7 +40,7 @@ public class BaseclassMob extends MobileActions {
         test = startTestCase(testNodes);
         test.assignCategory(category);
         test.assignAuthor(authors);
-        startApp(platform, deviceName, OSVersion, runIn, bs_app_path, appPackage, appActivity, testCaseName);
+        launchApp(platform, deviceName, OSVersion, runIn, bs_app_path, appPackage, appActivity);
     }
 
 
@@ -55,18 +55,14 @@ public class BaseclassMob extends MobileActions {
 		endResult();
 	}
 
-   /* @AfterSuite(alwaysRun = true)
+    @AfterSuite(alwaysRun = true)
     public void afterSuite(){
         endResult();
-    }*/
+    }
 
     @DataProvider(name="fetchData")
     public Object[][] getData(){
         return DataInputProvider.getSheet(dataSheetName);
     }
 
-    /*@DataProvider
-    public Object[][] fetchData() {
-        return new Object[][]{};
-    }*/
 }

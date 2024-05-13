@@ -14,7 +14,6 @@ public class TC001_Logo_is_clickable extends BaseclassWeb {
 
 	private String uName = "";
 	private String pWord = "";
-	public String execution_Type="";
 	private Properties prop;
 	private String android = "";
 	private String osVersion = "";
