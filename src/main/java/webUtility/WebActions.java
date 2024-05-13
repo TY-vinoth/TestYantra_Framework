@@ -193,13 +193,9 @@ public class WebActions extends ReporterManager {
 	}
 
 	public void enterText(WebElement ele, String data) {
-
 		try {
 			wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 			wait.until(ExpectedConditions.elementToBeClickable(ele));
-			/*if(!Objects.equals(platform, "android")){
-				borderElement(ele);
-			}*/
 			ele.clear();
 			ele.sendKeys(data);
 			/*if (data.matches("^[\\w_*^)!]*$")){
@@ -207,8 +203,10 @@ public class WebActions extends ReporterManager {
 			}*/
 			reportStep("The data: " + data + " entered successfully in field :" + "", "PASS");
 		} catch (InvalidElementStateException e) {
+			throw new InvalidElementStateException();
 		} catch (WebDriverException e) {
 			reportStep("WebDriverException" + e.getMessage(), "FAIL");
+			throw new InvalidElementStateException();
 		}
 	}
 

@@ -67,9 +67,9 @@ public class TestListener extends ReporterManager implements IAnnotationTransfor
         System.out.println("JIRA Ticket Details:" + response);
         reportStep(testCaseName,"FAIL", false);
 
-        /*Map<String, Object> response1 = BugReporter.createGitlabTicket(result,result.getName(), String.valueOf(result.getMethod().getTestClass()));
+        Map<String, Object> response1 = BugReporter.createGitlabTicket(result,result.getName(), String.valueOf(result.getMethod().getTestClass()));
         System.out.println("GitLab Ticket Details:" + response1);
-        reportStep(testCaseName,"FAIL", false);*/
+        reportStep(testCaseName,"FAIL", false);
     }
 
     public void onTestSkipped(ITestResult result) {
