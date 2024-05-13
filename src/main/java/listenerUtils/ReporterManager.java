@@ -17,19 +17,11 @@ import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
 import com.aventstack.extentreports.reporter.configuration.Protocol;
 import com.aventstack.extentreports.reporter.configuration.Theme;
 import com.github.wnameless.json.flattener.JsonFlattener;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import dataProvider.Initializers;
-import dataProvider.bean.exceptions.ThrowableTypeAdapter;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.testng.Assert;
-import org.testng.ITestContext;
-import org.testng.annotations.BeforeSuite;
-import org.testng.xml.XmlTest;
 
 public class ReporterManager extends Initializers {
 	private Logger log = Logger.getLogger(this.getClass().getName());
