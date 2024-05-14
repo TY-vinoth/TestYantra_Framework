@@ -22,6 +22,7 @@ import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.testng.Assert;
+import org.testng.annotations.Optional;
 
 public class ReporterManager extends Initializers {
 	private Logger log = Logger.getLogger(this.getClass().getName());
@@ -30,7 +31,7 @@ public class ReporterManager extends Initializers {
 	public static String folderPath;
 	public static ExtentReports extent;
 	public static ExtentTest test, suiteTest;
-	public String testCaseName, testNodes, testDescription, category, authors, imagePath;
+	public String testCaseName, category, authors, imagePath;
 
 
 	public void startResult() {

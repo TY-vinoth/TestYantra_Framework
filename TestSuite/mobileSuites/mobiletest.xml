@@ -21,6 +21,7 @@
 		<parameter name="deviceName" value="Samsung Galaxy S9"></parameter>
 		<parameter name="OSVersion" value="10"></parameter>
 		<parameter name="runIn" value="saucelabs"></parameter>
+		<parameter name="defectLog" value="gitLab"></parameter>
 		<parameter name="bs_app_path" value="storage:filename=NINZA HRM.apk"></parameter>
 		<classes>
 			<class name="projectTests.mobileTest.appTests.TC001_Logo_Is_Clickable"></class>

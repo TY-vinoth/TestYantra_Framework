@@ -21,26 +21,26 @@ public class BaseclassWeb extends WebActions {
 	}
 
 	@Parameters({ "fileName", "jsonFilePath", "jsonDirectory", "url",
-			"browser", "osVersion", "browserVersion", "execution_type", "platform", "pipeline_execution","headless" })
+			"browser", "osVersion", "browserVersion", "execution_type", "platform", "pipeline_execution","headless" , "defectLog"})
 	@BeforeClass(alwaysRun = true)
 	public void beforeClass(@Optional String fileName,@Optional String jsonFilePath,@Optional String jsonDirectory,@Optional String url,
 							@Optional String browser,@Optional String osVersion,@Optional String browserVersion,@Optional String execution_type,
-							@Optional String platform,@Optional String pipeline_execution,@Optional boolean headless){
+							@Optional String platform,@Optional String pipeline_execution,@Optional boolean headless, @Optional String defectLog){
 	}
 
 	@Parameters({ "fileName", "jsonFilePath", "jsonDirectory", "url",
-			"browser", "osVersion", "browserVersion", "execution_type", "platform", "pipeline_execution","headless" })
+			"browser", "osVersion", "browserVersion", "execution_type", "platform", "pipeline_execution","headless", "defectLog"})
 	@BeforeMethod(alwaysRun = true)
 	public void beforeMethod(@Optional String fileName,@Optional String jsonFilePath,@Optional String jsonDirectory,@Optional String url,
 							 @Optional String browser,@Optional String osVersion,@Optional String browserVersion,@Optional String execution_type,
-							 @Optional String platform, @Optional String pipeline_execution,@Optional boolean headless) throws MalformedURLException {
+							 @Optional String platform, @Optional String pipeline_execution,@Optional boolean headless, @Optional String defectLog) throws MalformedURLException {
 
 
 		test = startTestModule(testCaseName + " // [" + url + "] - [" + browser + " - " + platform + "]", testDescription);
 		test.assignCategory(runCategory);
 		test.assignAuthor(authors);
 		startApp(fileName, jsonFilePath, jsonDirectory, url,
-				browser, osVersion,  browserVersion, execution_type, platform, pipeline_execution,headless);
+				browser, osVersion,  browserVersion, execution_type, platform, pipeline_execution,headless, defectLog);
 
 	}
 

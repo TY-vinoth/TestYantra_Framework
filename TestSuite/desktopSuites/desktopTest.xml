@@ -6,6 +6,7 @@
 		<parameter name="platform" value="Windows"></parameter>
 		<parameter name="runIn" value="local"></parameter>
 		<parameter name="deviceName" value="WindowsPC"></parameter>
+		<parameter name="defectLog" value="gitLab"></parameter>
 		<classes>
 			<class name="projectTests.mobileTest.desktopTests.TC001_Logo_Is_Clickable"></class>
 		</classes>

@@ -53,7 +53,7 @@ public class WebActions extends ReporterManager {
 
 	public WebDriver driver;
 	public static WebDriverWait wait;
-	public static String BSUserName, BSPassword, LTUserName, LTPassword, SLUserName, SLPassword, URL, platform, browser;
+	public static String BSUserName, BSPassword, LTUserName, LTPassword, SLUserName, SLPassword, URL, platform, browser, defectLog;
 	public DesiredCapabilities caps;
 	public ChromeOptions browserOptions;
 	private final Logger log = Logger.getLogger(this.getClass().getName());
@@ -78,7 +78,7 @@ public class WebActions extends ReporterManager {
 
 	public WebDriver startApp(@Optional String fileName, @Optional String jsonFilePath, @Optional String jsonDirectory, @Optional String url,
 							  @Optional String browser, @Optional String osVersion, @Optional String browserVersion, @Optional String execution_type,
-							  @Optional String platform, @Optional String pipeline_execution,@Optional boolean headless) throws MalformedURLException {
+							  @Optional String platform, @Optional String pipeline_execution,@Optional boolean headless, @Optional String defectLog) throws MalformedURLException {
 
 
 		switch (execution_type.toLowerCase()){

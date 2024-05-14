@@ -19,7 +19,7 @@ public class TC001_Logo_Is_Clickable extends BaseclassMob {
     private String pWord = "";
     private Properties prop;
 
-    @Parameters({"platform", "deviceName", "OSVersion", "runIn", "bs_app_path"})
+    @Parameters({"platform", "deviceName", "OSVersion", "runIn", "bs_app_path","defectLog"})
     @BeforeTest(alwaysRun = true)
     public void setData() {
         testCaseName = "Homepage logo clickable";

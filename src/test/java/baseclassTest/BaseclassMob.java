@@ -19,19 +19,22 @@ public class BaseclassMob extends MobileActions {
         startResult();
     }
 
-    @Parameters({ "platform", "deviceName", "OSVersion", "runIn", "bs_app_path","appActivity","appPackage" })
+    @Parameters({ "platform", "deviceName", "OSVersion", "runIn", "bs_app_path","appActivity","appPackage","defectLog" })
     @BeforeClass(alwaysRun = true)
-    public void beforeClass( @Optional String platform,@Optional String deviceName,@Optional String OSVersion,@Optional String runIn,@Optional String bs_app_path,@Optional String appPackage,@Optional String appActivity){
+    public void beforeClass( @Optional String platform,@Optional String deviceName,@Optional String OSVersion,
+                             @Optional String runIn,@Optional String bs_app_path,@Optional String appPackage,@Optional String appActivity, @Optional String defectLog){
     }
 
-    @Parameters({ "platform", "deviceName", "OSVersion", "runIn", "bs_app_path","appActivity","appPackage"})
+    @Parameters({ "platform", "deviceName", "OSVersion", "runIn", "bs_app_path","appActivity","appPackage","defectLog"})
     @BeforeTest(alwaysRun = true)
-    public void beforeTest( @Optional String platform,@Optional String deviceName,@Optional String OSVersion,@Optional String runIn,@Optional String bs_app_path,@Optional String appPackage,@Optional String appActivity){
+    public void beforeTest( @Optional String platform,@Optional String deviceName,@Optional String OSVersion,
+                            @Optional String runIn,@Optional String bs_app_path,@Optional String appPackage,@Optional String appActivity, @Optional String defectLog){
     }
 
-    @Parameters({"platform", "deviceName", "OSVersion", "runIn", "bs_app_path","appActivity","appPackage"})
+    @Parameters({"platform", "deviceName", "OSVersion", "runIn", "bs_app_path","appActivity","appPackage","defectLog"})
     @BeforeMethod(alwaysRun = true)
-    public void beforeMethod(@Optional String platform,@Optional String deviceName,@Optional String OSVersion,@Optional String runIn,@Optional String bs_app_path,@Optional String appPackage,@Optional String appActivity){
+    public void beforeMethod(@Optional String platform,@Optional String deviceName,@Optional String OSVersion,
+                             @Optional String runIn,@Optional String bs_app_path,@Optional String appPackage,@Optional String appActivity, @Optional String defectLog){
         if(deviceName.equalsIgnoreCase("WindowsPC")){
             test = startTestModule(" [" + platform + " - " + deviceName + "]" + testCaseName, testDescription);
         }else {
