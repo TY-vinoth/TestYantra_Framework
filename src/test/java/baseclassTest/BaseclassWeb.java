@@ -2,18 +2,25 @@ package baseclassTest;
 
 import dataProvider.DataInputProvider;
 import org.testng.ITestContext;
+import org.testng.ITestResult;
 import org.testng.annotations.*;
 import org.testng.xml.XmlTest;
 import webUtility.WebActions;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Properties;
 
 public class BaseclassWeb extends WebActions {
 
 	public String browserName;
 	public String testDescription;
 	public String runCategory;
-	public String runGroup;
+	public String runGroup, WebhookUrl;
 
 	@BeforeSuite(alwaysRun = true)
 	public void beforeSuite() {
@@ -46,9 +53,17 @@ public class BaseclassWeb extends WebActions {
 
 
 	@AfterMethod(alwaysRun = true)
-	public void afterMethod() {
-		endResult();
+	public void afterMethod(ITestResult result) {
+		Properties prop = new Properties();
+		try{
+			prop.load(Files.newInputStream(Paths.get("./src/main/resources/config.properties")));
+			WebhookUrl = prop.getProperty("Webhook");
+		} catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        endResult();
 		closeBrowser();
+		sendSlackNotification(WebhookUrl, result.getMethod().getMethodName());
 	}
 
 	@AfterSuite()

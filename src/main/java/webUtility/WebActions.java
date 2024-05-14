@@ -8,6 +8,10 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import listenerUtils.ReporterManager;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
 import org.apache.commons.io.FileUtils;
 import org.jsoup.select.Elements;
 import org.openqa.selenium.*;
@@ -815,4 +819,22 @@ public class WebActions extends ReporterManager {
 		}
 		return xpath.toString();
 	}
+
+	public void sendSlackNotification(String webhookUrl, String message) {
+			OkHttpClient client = new OkHttpClient();
+			RequestBody body = new FormBody.Builder()
+					.add("text", message)
+					.build();
+			Request request = new Request.Builder()
+					.url(webhookUrl)
+					.post(body)
+					.build();
+
+			try {
+				okhttp3.Response response = client.newCall(request).execute();
+				System.out.println("Slack notification sent: " + response.isSuccessful());
+			} catch (IOException e) {
+				System.err.println("Failed to send Slack notification: " + e.getMessage());
+			}
+		}
 }
