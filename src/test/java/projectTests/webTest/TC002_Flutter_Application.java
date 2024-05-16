@@ -56,7 +56,7 @@ public class TC002_Flutter_Application extends BaseclassWeb {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		} finally {
-			//testTearDown();
+			testTearDown();
 		}
 	}
 }

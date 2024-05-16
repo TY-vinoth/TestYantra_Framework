@@ -63,7 +63,7 @@ public class BaseclassWeb extends WebActions {
         }
         endResult();
 		closeBrowser();
-		sendSlackNotification(WebhookUrl, result.getMethod().getMethodName());
+		//sendSlackNotification(WebhookUrl, result.getMethod().getMethodName());
 	}
 
 	@AfterSuite()

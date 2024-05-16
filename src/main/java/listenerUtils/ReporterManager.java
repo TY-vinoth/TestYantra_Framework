@@ -31,7 +31,7 @@ public class ReporterManager extends Initializers {
 	public static String folderPath;
 	public static ExtentReports extent;
 	public static ExtentTest test, suiteTest;
-	public String testCaseName, category, authors, imagePath;
+	public String testCaseName, testDescription, testNodes, category, authors, imagePath;
 
 
 	public void startResult() {
@@ -123,6 +123,21 @@ public class ReporterManager extends Initializers {
 		else if (status.equalsIgnoreCase("INFO")) {
 			test.info(desc);
 			test.log(Status.INFO, MarkupHelper.createLabel(" INFO ", ExtentColor.PINK));
+		}
+	}
+
+	public static void reportRequest(String desc, String status) {
+
+		MediaEntityModelProvider img = null;
+		if(status.equalsIgnoreCase("PASS")) {
+			test.pass(desc, img);
+		}else if(status.equalsIgnoreCase("FAIL")) {
+			test.fail(desc, img);
+			throw new RuntimeException();
+		}else if(status.equalsIgnoreCase("WARNING")) {
+			test.warning(desc, img);
+		}else {
+			test.info(desc);
 		}
 	}
 
