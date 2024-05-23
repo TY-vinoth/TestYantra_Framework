@@ -421,64 +421,6 @@ public class WebActions extends ReporterManager {
 		return driver;
 	}
 
-	/*public WebDriver launchApp(@Optional String platform, @Optional String deviceName, @Optional String OSVersion, @Optional String runIn, @Optional String bs_app_path) {
-
-		URL = "https://" + BSUserName + ":" + BSPassword + "@hub-cloud.browserstack.com/wd/hub";
-
-		caps = new DesiredCapabilities();
-
-		try {
-			if (runIn.equalsIgnoreCase("local")) {
-
-				URL = "http://127.0.0.1:4723/wd/hub";
-				bs_app_path = "C:\\Users\\USER1\\Downloads\\NINZA HRM.apk";
-				if (platform.equalsIgnoreCase("Windows")) {
-					caps.setCapability("automationName", "windows");
-					caps.setCapability("platformName", "windows");
-					bs_app_path = "C:\\Users\\USER1\\Documents\\TY\\hrm\\Ninza-HRM-win32-x64\\Ninza-HRM.exe";
-
-				}*//*else {
-                    caps.setCapability("appPackage",appPackage);
-                    caps.setCapability("appActivity",appActivity);
-                }*//*
-
-			} else if (runIn.equalsIgnoreCase("remote")) {
-				if (platform.equalsIgnoreCase("Android")) {
-					caps.setCapability("platformName", platform);
-					caps.setCapability("platformVersion", OSVersion);
-					caps.setCapability("project", "Mobile Application");
-					caps.setCapability("unicodeKeyboard", true);
-					caps.setCapability("resetKeyboard", true);
-					caps.setCapability("autoDismissAlerts", true);
-					caps.setCapability("autoGrantPermissions", true);
-				} else {
-					caps.setCapability("platformName", platform);
-					caps.setCapability("platformVersion", OSVersion);
-					caps.setCapability("automationName", "XCUITest");
-					caps.setCapability("connectHardwareKeyboard", true);
-				}
-			}
-
-			caps.setCapability("noReset", true);
-			caps.setCapability("deviceName", deviceName);
-			caps.setCapability("name", testCaseName);
-			caps.setCapability("app", bs_app_path);
-
-			if (platform.equalsIgnoreCase("Android")) {
-				driver = new AndroidDriver(new URL(URL), caps);
-			} else if (platform.equalsIgnoreCase("windows")) {
-				driver = new WindowsDriver(new URL(URL), caps);
-			} else if (platform.equalsIgnoreCase("iOS")) {
-				driver = new IOSDriver(new URL(URL), caps);
-			}
-
-			reportStep("The Appication package:" + deviceName + " launched successfully", "PASS");
-		} catch (MalformedURLException e) {
-			reportStep("The Appication package:" + deviceName + " could not be launched", "FAIL");
-		}
-		return driver;
-	}*/
-
 	public boolean switchContext(String contextname) throws InterruptedException, MalformedURLException {
 		AndroidDriver android = new AndroidDriver(new URL(URL), caps);
 		try {
