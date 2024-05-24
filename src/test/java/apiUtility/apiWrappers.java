@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import static listenerUtils.ReporterManager.reportRequest;
+
 public class apiWrappers extends BaseclassAPI {
 
     public static RequestSpecification setLogs() {

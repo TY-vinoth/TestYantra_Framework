@@ -34,26 +34,16 @@ public class WebElementObjs extends BaseclassWeb {
         PageFactory.initElements(driver, this);
     }
 
+    @FindBy(how = How.XPATH, using = "(.//label[@class='rdcntnr']//input)[2]")
+    private WebElement eletest;
+    public WebElementObjs clickDistribute() {
+        click(eletest);
+        return this;
+    }
+
     @FindBy(how = How.XPATH, using = "(.//input[@id='username'])")
     private WebElement eleUserName;
     public WebElementObjs enterUserName(String UserName) {
-        /*Map<String, String> xpathMap = getXPathMap("id");
-        List<String> xpathList = new ArrayList<>(xpathMap.values());
-        for (String xpath : xpathList) {
-            WebElement userNameElement = driver.findElement(By.xpath(xpath));
-            if(xpath.equalsIgnoreCase("username")){
-                System.out.println(xpath);
-                enterText(userNameElement, UserName);
-            }
-        }
-        String userNameXPath = xpathMap.get("input");
-        if (userNameXPath!= null) {
-            WebElement userNameElement = driver.findElement(By.xpath(userNameXPath));
-            //System.out.println(userNameElement);
-            enterText(userNameElement,"rmgy@9999");
-        } else {
-            System.out.println("XPath not found for input element.");
-        }*/
         enterText(eleUserName, UserName);
         return this;
     }
@@ -61,23 +51,6 @@ public class WebElementObjs extends BaseclassWeb {
     @FindBy(how = How.XPATH, using = "(.//input[@id='inputPassword'])")
     private WebElement elepassWord;
     public WebElementObjs enterpassWord(String PassWord) {
-        /*Map<String, String> xpathMap = getXPathMap("input");
-        List<String> xpathList = new ArrayList<>(xpathMap.values());
-        for (String xpath : xpathList) {
-            WebElement userNameElement = driver.findElement(By.xpath(xpath));
-            if(xpath.equalsIgnoreCase("Password")){
-                System.out.println(xpath);
-                enterText(userNameElement, PassWord);
-            }
-        }
-        String userNameXPath = xpathMap.get("input");
-        if (userNameXPath!= null) {
-            WebElement userNameElement = driver.findElement(By.xpath(userNameXPath));
-            //System.out.println(userNameElement);
-            enterText(userNameElement,"rmgy@9999");
-        } else {
-            System.out.println("XPath not found for input element.");
-        }*/
         enterText(elepassWord, PassWord);
         return this;
     }

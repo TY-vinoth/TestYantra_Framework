@@ -22,7 +22,6 @@ import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.testng.Assert;
-import org.testng.annotations.Optional;
 
 public class ReporterManager extends Initializers {
 	private Logger log = Logger.getLogger(this.getClass().getName());
@@ -31,7 +30,7 @@ public class ReporterManager extends Initializers {
 	public static String folderPath;
 	public static ExtentReports extent;
 	public static ExtentTest test, suiteTest;
-	public String testCaseName, testDescription, testNodes, category, authors, imagePath;
+	public String testCaseName,testDescription, testNodes, category, authors, imagePath;
 
 
 	public void startResult() {
@@ -45,7 +44,7 @@ public class ReporterManager extends Initializers {
 			folder.mkdirs();
 		}
 
-		html = new ExtentHtmlReporter(System.getProperty("user.dir") + "./"+folderPath+"result.html");
+		html = new ExtentHtmlReporter(System.getProperty("user.dir") + "/" + folderPath + "result.html");
 		html.config().setEncoding("utf-8");
 		html.config().setProtocol(Protocol.HTTPS);
 		html.config().setDocumentTitle("Automation Report");
@@ -62,8 +61,8 @@ public class ReporterManager extends Initializers {
 		return suiteTest;
 	}
 
-	public ExtentTest startTestCase(String testNodes) {
-		test = suiteTest.createNode(testNodes);
+	public ExtentTest startTestCase(String testNodes, String testDescription) {
+		test = suiteTest.createNode(testNodes, testDescription);
 		return test;
 	}
 
@@ -77,7 +76,7 @@ public class ReporterManager extends Initializers {
 
 		Properties prop = new Properties();
 		try {
-			prop.load(new FileInputStream(new File("./src/main/resources/config.properties")));
+			prop.load(new FileInputStream("./src/main/resources/config.properties"));
 
 			imagePath = prop.getProperty("Imagepath");
 
@@ -90,17 +89,16 @@ public class ReporterManager extends Initializers {
 		MediaEntityModelProvider img = null;
 		if (bSnap && !status.equalsIgnoreCase("INFO")) {
 
-			long snapNumber = 1000000L;
-			snapNumber = takeScreenShot();
+			long snapNumber = takeScreenShot();
 			try {
 				if (imagePath == null) {
-					img = MediaEntityBuilder.createScreenCaptureFromPath("./../"+folderPath+"/images/" + snapNumber + ".png")
+					img = MediaEntityBuilder.createScreenCaptureFromPath("./../" + folderPath + "images/" + snapNumber + ".png")
 							.build();
 				} else {
 					img = MediaEntityBuilder.createScreenCaptureFromPath(imagePath + "/" + snapNumber + ".png").build();
 				}
 			} catch (IOException e) {
-
+				log.warning("Error capturing screenshot: " + e.getMessage());
 			}
 		}
 
@@ -131,11 +129,14 @@ public class ReporterManager extends Initializers {
 		MediaEntityModelProvider img = null;
 		if(status.equalsIgnoreCase("PASS")) {
 			test.pass(desc, img);
+			test.log(Status.PASS, MarkupHelper.createLabel(" PASSED ", ExtentColor.GREEN));
 		}else if(status.equalsIgnoreCase("FAIL")) {
 			test.fail(desc, img);
+			test.log(Status.FAIL, MarkupHelper.createLabel(" FAILED ", ExtentColor.RED));
 			throw new RuntimeException();
 		}else if(status.equalsIgnoreCase("WARNING")) {
 			test.warning(desc, img);
+			test.log(Status.WARNING, MarkupHelper.createLabel(" WARNING ", ExtentColor.YELLOW));
 		}else {
 			test.info(desc);
 		}

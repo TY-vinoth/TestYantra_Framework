@@ -46,7 +46,7 @@ public class TC002_GetData_from_Excel extends BaseclassMob {
         } catch (IOException e) {
             throw new RuntimeException(e);
         } finally {
-            // testTearDown();
+            testTearDown();
         }
     }
 }

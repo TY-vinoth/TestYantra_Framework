@@ -4,8 +4,6 @@ import dataProvider.DataInputProvider;
 import mobUtility.MobileActions;
 import org.testng.annotations.*;
 
-import java.net.MalformedURLException;
-
 public class BaseclassMob extends MobileActions {
 
     public String testNodes;
@@ -40,7 +38,7 @@ public class BaseclassMob extends MobileActions {
         }else {
             test = startTestModule(" [" + platform + " - " + deviceName + " - "+ OSVersion  + "]" + testCaseName, testDescription);
         }
-        test = startTestCase(testNodes);
+        test = startTestCase(testNodes, testDescription);
         test.assignCategory(category);
         test.assignAuthor(authors);
         launchApp(platform, deviceName, OSVersion, runIn, bs_app_path, appPackage, appActivity, testCaseName);

@@ -1,7 +1,5 @@
 package listenerUtils;
 
-import JIRA.jiraTicketCreation;
-import gitLab.BugReporter;
 import listenerUtils.ReporterManager;
 import org.testng.*;
 import org.testng.annotations.ITestAnnotation;
@@ -65,17 +63,6 @@ public class TestListener extends ReporterManager implements IAnnotationTransfor
     }
 
     public void onTestFailure(ITestResult result) {
-
-        if(defectLog.equalsIgnoreCase("jira")) {
-            Map<String, Object> response = jira.createJiraTicket(result, result.getName(), String.valueOf(result.getMethod().getTestClass()));
-            System.out.println("JIRA Ticket Details:" + response);
-            reportStep(testCaseName, "FAIL", false);
-
-        } else {
-            Map<String, Object> response1 = BugReporter.createGitlabTicket(result, result.getName(), String.valueOf(result.getMethod().getTestClass()));
-            System.out.println("GitLab Ticket Details:" + response1);
-            reportStep(testCaseName, "FAIL", false);
-        }
     }
 
     public void onTestSkipped(ITestResult result) {
