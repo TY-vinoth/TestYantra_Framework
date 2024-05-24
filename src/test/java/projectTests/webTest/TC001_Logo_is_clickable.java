@@ -19,7 +19,6 @@ public class TC001_Logo_is_clickable extends BaseclassWeb {
 	private String osVersion = "";
 	private String deviceName = "";
 	private String window = "";
-	private String chrome = "";
 	private String windowsDevice = "";
 
 	@Parameters({ "fileName", "jsonFilePath", "jsonDirectory", "url",
@@ -45,21 +44,21 @@ public class TC001_Logo_is_clickable extends BaseclassWeb {
 			window = prop.getProperty("desktop");
 			osVersion = prop.getProperty("OSVersion");
 			deviceName = prop.getProperty("deviceName");
-			chrome = prop.getProperty("browser");
 			windowsDevice = prop.getProperty("windowsDeviceName");
 
 			new WebElementObjs(driver, test)
+					/*.clickDistribute();*/
 					.enterUserName(uName)
 					.enterpassWord(pWord)
-					.clickLogin();
-					/*.clickProjects()
+					.clickLogin()
+					.clickProjects()
 					.clickcreateProjects()
 					.enterprojectsName(ProjectName)
 					.entercreatedBy(ProjectName)
 					.clickprojecStatus()
 					.clickaddProject()
-					.entersearchProject(ProjectName)
-					.launchMobile_Apps(android,deviceName,osVersion)
+					.entersearchProject(ProjectName);
+					/*.launchMobile_Apps(android,deviceName,osVersion)
 					.enterMobUsername(uName)
 					.enterMobPassword(pWord)
 					.clickMobsignIn()

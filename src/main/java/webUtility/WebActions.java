@@ -39,6 +39,7 @@ import java.net.URL;
 import java.time.Duration;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -79,6 +80,7 @@ public class WebActions extends ReporterManager {
 			e.printStackTrace();
 		}
 	}
+
 
 	public WebDriver startApp(@Optional String fileName, @Optional String jsonFilePath, @Optional String jsonDirectory, @Optional String url,
 							  @Optional String browser, @Optional String osVersion, @Optional String browserVersion, @Optional String execution_type,
@@ -172,64 +174,141 @@ public class WebActions extends ReporterManager {
 		try {
 			File srcFiler = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
 			FileUtils.copyFile(srcFiler,
-					new File(System.getProperty("user.dir") +"/"+folderPath+"/images/" + number + ".png"));
+					new File(System.getProperty("user.dir") + "/" + folderPath + " images/" + number + ".png"));
 		} catch (WebDriverException e) {
-			log.warning("The snapshot has been taken.");
+			log.warning("The snapshot has been taken." + e.getMessage());
 		} catch (IOException e) {
-			log.warning("The snapshot has't been taken");
+			log.warning("The snapshot has't been taken" + e.getMessage());
 		}
 		return number;
 	}
 
 	public void switchToWindow(int index) {
+		String mainWindowHandle = "";
 		if (driver != null) {
 			try {
 				Set<String> allWindowHandles = driver.getWindowHandles();
 				List<String> allHandles = new ArrayList<>();
 				allHandles.addAll(allWindowHandles);
+				if (index >= allHandles.size()) {
+					reportStep("FAIL", "The given index is out of bounds: " + index);
+					return;
+				}
+				mainWindowHandle = driver.getWindowHandle();
 				driver.switchTo().window(allHandles.get(index));
 			} catch (NoSuchWindowException e) {
 				reportStep("FAIL", "The browser could not move to the given window by index " + index);
 			} catch (WebDriverException e) {
 				reportStep("FAIL", "WebDriverException : " + e.getMessage());
+			} finally {
+				Set<String> allWindowHandles = driver.getWindowHandles();
+				for (String handle : allWindowHandles) {
+					if (!handle.equals(mainWindowHandle)) {
+						driver.switchTo().window(handle);
+						driver.close();
+					}
+				}
+				driver.switchTo().window(mainWindowHandle);
 			}
 		}
 	}
 
+
 	public void enterText(WebElement ele, String data) {
 		try {
-			wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-			wait.until(ExpectedConditions.elementToBeClickable(ele));
-			ele.clear();
-			ele.sendKeys(data);
-			/*if (data.matches("^[\\w_*^)!]*$")){
-				data = "****";
-			}*/
-			reportStep("The data: " + data + " entered successfully in field :" + "", "PASS");
-		} catch (InvalidElementStateException e) {
-			throw new InvalidElementStateException();
+			if (ele != null) {
+				try {
+					if (ele.isEnabled()) {
+						WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+						wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(ele)));
+						ele.clear();
+						((JavascriptExecutor) driver).executeScript("arguments[0].style.border='4px solid red'", ele);
+						ele.sendKeys(data);
+					}
+				} catch (WebDriverException e) {
+					reportStep("Element NOT intractable Hence Scrolling" + ele.getText(),"INFO");
+					try {
+						((JavascriptExecutor) driver).executeScript("arguments[0].style.border='4px solid red'", ele);
+						hardWait(1000);
+						if (ele.isEnabled()) {
+							WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+							wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(ele)));
+							ele.clear();
+							ele.sendKeys(data);
+						}
+					} catch (WebDriverException e1) {
+						for (int b = 0; b < 10; b++) {
+							try {
+								JavascriptExecutor js = (JavascriptExecutor) driver;
+								js.executeScript("window.scrollBy(0,-450)", "");
+								ele.clear();
+								ele.sendKeys(data);
+								break;
+							} catch (WebDriverException e2) {
+								e2.printStackTrace();
+							}
+						}
+					}
+				}
+				reportStep("The data: " + data + " entered successfully in field: " + ele.getAttribute("name"), "PASS");
+			}
 		} catch (WebDriverException e) {
-			reportStep("WebDriverException" + e.getMessage(), "FAIL");
+			reportStep("WebDriverException: " + e.getMessage(), "FAIL");
 			throw new InvalidElementStateException();
 		}
 	}
+
 
 	public void click(WebElement ele) {
 
 		String text = "";
 		try {
-			wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-			wait.until(ExpectedConditions.elementToBeClickable(ele));
-			/*if(!Objects.equals(platform, "android")){
-				borderElement(ele);
-			}*/
-			text = ele.getText();
-			ele.click();
+			if (ele.isEnabled()) {
+				WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+				wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(ele)));
+				((JavascriptExecutor) driver).executeScript("arguments[0].style.border='4px solid red'", ele);
+				text = ele.getText();
+				ele.click();
+			}
 			reportStep("The element : " + text + " is clicked ", "PASS");
 		} catch (InvalidElementStateException e) {
-			reportStep("The element: " + ele + " is not interactable", "SKIP");
-		} catch (WebDriverException e) {
-			reportStep("WebDriverException" + e.getMessage(), "FAIL");
+			try {
+				reportStep("Element NOT intractable hence performing JavaScript Executor" + ele,"INFO");
+				WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+				wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(ele)));
+				((JavascriptExecutor) driver).executeScript("arguments[0].style.border='4px solid red'", ele);
+				((JavascriptExecutor) driver).executeScript("arguments[0].click();", ele);
+			} catch (Exception e3) {
+				try {
+					reportStep("Element NOT intractable Hence Scrolling" + ele,"INFO");
+					hardWait(1000);
+					if (ele.isEnabled()) {
+						((JavascriptExecutor) driver).executeScript("arguments[0].style.border='4px solid red'", ele);
+						WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+						wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(ele)));
+						((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", ele);
+						ele.click();
+					}
+				} catch (InvalidElementStateException e1) {
+					for (int b = 0; b < 10; b++) {
+						try {
+							JavascriptExecutor js = (JavascriptExecutor) driver;
+							js.executeScript("window.scrollBy(0,-450)", "");
+							if (ele.isEnabled()) {
+								((JavascriptExecutor) driver).executeScript("arguments[0].style.border='4px solid red'", ele);
+								WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+								wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(ele)));
+								ele.click();
+							}
+							break;
+						} catch (WebDriverException e2) {
+
+						}
+					}
+				}catch (WebDriverException e4) {
+					reportStep("WebDriverException" + e.getMessage(), "FAIL");
+				}
+			}
 		}
 	}
 
@@ -262,7 +341,7 @@ public class WebActions extends ReporterManager {
 
 	public void closeBrowser() {
 		try {
-			driver.close();
+			driver.quit();
 			reportStep("The browser / Mobile / Desktop instance is closed", "PASS", false);
 		} catch (Exception e) {
 			reportStep("The browser / Mobile / Desktop instance could not be closed: \n Error: " + e.getMessage(), "WARNING", false);
@@ -280,7 +359,7 @@ public class WebActions extends ReporterManager {
 					.statusCode(200)
 					.extract().response();
 			String projectname = response.jsonPath().getString("projectName");
-			System.out.println(response.asString());
+			System.out.println(response.prettyPrint());
 			if (projectname.contains(ProjectName)) {
 				System.out.println("Validating from API Project Name: " + ProjectName);
 				reportStep("API Response for Project Name", "PASS");
@@ -420,64 +499,6 @@ public class WebActions extends ReporterManager {
 		}
 		return driver;
 	}
-
-	/*public WebDriver launchApp(@Optional String platform, @Optional String deviceName, @Optional String OSVersion, @Optional String runIn, @Optional String bs_app_path) {
-
-		URL = "https://" + BSUserName + ":" + BSPassword + "@hub-cloud.browserstack.com/wd/hub";
-
-		caps = new DesiredCapabilities();
-
-		try {
-			if (runIn.equalsIgnoreCase("local")) {
-
-				URL = "http://127.0.0.1:4723/wd/hub";
-				bs_app_path = "C:\\Users\\USER1\\Downloads\\NINZA HRM.apk";
-				if (platform.equalsIgnoreCase("Windows")) {
-					caps.setCapability("automationName", "windows");
-					caps.setCapability("platformName", "windows");
-					bs_app_path = "C:\\Users\\USER1\\Documents\\TY\\hrm\\Ninza-HRM-win32-x64\\Ninza-HRM.exe";
-
-				}*//*else {
-                    caps.setCapability("appPackage",appPackage);
-                    caps.setCapability("appActivity",appActivity);
-                }*//*
-
-			} else if (runIn.equalsIgnoreCase("remote")) {
-				if (platform.equalsIgnoreCase("Android")) {
-					caps.setCapability("platformName", platform);
-					caps.setCapability("platformVersion", OSVersion);
-					caps.setCapability("project", "Mobile Application");
-					caps.setCapability("unicodeKeyboard", true);
-					caps.setCapability("resetKeyboard", true);
-					caps.setCapability("autoDismissAlerts", true);
-					caps.setCapability("autoGrantPermissions", true);
-				} else {
-					caps.setCapability("platformName", platform);
-					caps.setCapability("platformVersion", OSVersion);
-					caps.setCapability("automationName", "XCUITest");
-					caps.setCapability("connectHardwareKeyboard", true);
-				}
-			}
-
-			caps.setCapability("noReset", true);
-			caps.setCapability("deviceName", deviceName);
-			caps.setCapability("name", testCaseName);
-			caps.setCapability("app", bs_app_path);
-
-			if (platform.equalsIgnoreCase("Android")) {
-				driver = new AndroidDriver(new URL(URL), caps);
-			} else if (platform.equalsIgnoreCase("windows")) {
-				driver = new WindowsDriver(new URL(URL), caps);
-			} else if (platform.equalsIgnoreCase("iOS")) {
-				driver = new IOSDriver(new URL(URL), caps);
-			}
-
-			reportStep("The Appication package:" + deviceName + " launched successfully", "PASS");
-		} catch (MalformedURLException e) {
-			reportStep("The Appication package:" + deviceName + " could not be launched", "FAIL");
-		}
-		return driver;
-	}*/
 
 	public boolean switchContext(String contextname) throws InterruptedException, MalformedURLException {
 		AndroidDriver android = new AndroidDriver(new URL(URL), caps);
@@ -821,20 +842,20 @@ public class WebActions extends ReporterManager {
 	}
 
 	public void sendSlackNotification(String webhookUrl, String message) {
-			OkHttpClient client = new OkHttpClient();
-			RequestBody body = new FormBody.Builder()
-					.add("text", message)
-					.build();
-			Request request = new Request.Builder()
-					.url(webhookUrl)
-					.post(body)
-					.build();
+		OkHttpClient client = new OkHttpClient();
+		RequestBody body = new FormBody.Builder()
+				.add("text", message)
+				.build();
+		Request request = new Request.Builder()
+				.url(webhookUrl)
+				.post(body)
+				.build();
 
-			try {
-				okhttp3.Response response = client.newCall(request).execute();
-				System.out.println("Slack notification sent: " + response.isSuccessful());
-			} catch (IOException e) {
-				System.err.println("Failed to send Slack notification: " + e.getMessage());
-			}
+		try {
+			okhttp3.Response response = client.newCall(request).execute();
+			System.out.println("Slack notification sent: " + response.isSuccessful());
+		} catch (IOException e) {
+			System.err.println("Failed to send Slack notification: " + e.getMessage());
 		}
+	}
 }

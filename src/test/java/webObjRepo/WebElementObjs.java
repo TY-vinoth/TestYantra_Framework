@@ -34,26 +34,16 @@ public class WebElementObjs extends BaseclassWeb {
         PageFactory.initElements(driver, this);
     }
 
+    @FindBy(how = How.XPATH, using = "(.//label[@class='rdcntnr']//input)[2]")
+    private WebElement eletest;
+    public WebElementObjs clickDistribute() {
+        click(eletest);
+        return this;
+    }
+
     @FindBy(how = How.XPATH, using = "(.//input[@id='username'])")
     private WebElement eleUserName;
     public WebElementObjs enterUserName(String UserName) {
-        /*Map<String, String> xpathMap = getXPathMap("id");
-        List<String> xpathList = new ArrayList<>(xpathMap.values());
-        for (String xpath : xpathList) {
-            WebElement userNameElement = driver.findElement(By.xpath(xpath));
-            if(xpath.equalsIgnoreCase("username")){
-                System.out.println(xpath);
-                enterText(userNameElement, UserName);
-            }
-        }
-        String userNameXPath = xpathMap.get("input");
-        if (userNameXPath!= null) {
-            WebElement userNameElement = driver.findElement(By.xpath(userNameXPath));
-            //System.out.println(userNameElement);
-            enterText(userNameElement,"rmgy@9999");
-        } else {
-            System.out.println("XPath not found for input element.");
-        }*/
         enterText(eleUserName, UserName);
         return this;
     }
@@ -61,23 +51,6 @@ public class WebElementObjs extends BaseclassWeb {
     @FindBy(how = How.XPATH, using = "(.//input[@id='inputPassword'])")
     private WebElement elepassWord;
     public WebElementObjs enterpassWord(String PassWord) {
-        /*Map<String, String> xpathMap = getXPathMap("input");
-        List<String> xpathList = new ArrayList<>(xpathMap.values());
-        for (String xpath : xpathList) {
-            WebElement userNameElement = driver.findElement(By.xpath(xpath));
-            if(xpath.equalsIgnoreCase("Password")){
-                System.out.println(xpath);
-                enterText(userNameElement, PassWord);
-            }
-        }
-        String userNameXPath = xpathMap.get("input");
-        if (userNameXPath!= null) {
-            WebElement userNameElement = driver.findElement(By.xpath(userNameXPath));
-            //System.out.println(userNameElement);
-            enterText(userNameElement,"rmgy@9999");
-        } else {
-            System.out.println("XPath not found for input element.");
-        }*/
         enterText(elepassWord, PassWord);
         return this;
     }
@@ -154,116 +127,4 @@ public class WebElementObjs extends BaseclassWeb {
         }
         return new MobileElementObjs(driver, test);
     }
-
-    /*@FindBy(how = How.XPATH, using = "//input[@placeholder='Search by Project Id']")
-    private WebElement baseURI;
-    public WebElementObjs apiExtractProjectName(String ProjectName) {
-        try {
-            RestAssured.baseURI = "http://106.51.90.215:8084";
-            Response response = given()
-                    .contentType("application/json")
-                    .when()
-                    .get("/projects")
-                    .then()
-                    .statusCode(200)
-                    .extract().response();
-            String projectname = response.jsonPath().getString("projectName");
-
-            System.out.println(response.asString());
-
-            if (projectname.contains(ProjectName)) {
-                System.out.println("Validating from API Project Name: " + ProjectName);
-                reportStep("API Response for Project Name", "PASS");
-            } else {
-                System.out.println("Project Name was not present");
-            }
-        } catch (Exception e) {
-            reportStep("Project Name was not present", "FAIL");
-        }
-        return this;
-    }*/
-
-    /*@FindBy(how = How.XPATH, using = "//input[@placeholder='Search by Project Id']")
-    private WebElement elelaunchApp;
-    public WebElementObjs launchMobile_Apps() {
-        driver=launchApp("Android","RZ8T5144KRA","13.0","local","bs_app_path");
-        PageFactory.initElements(new AppiumFieldDecorator(driver, Duration.ofSeconds(10)),this);
-        return this;
-    }
-
-    @FindBy(how = How.XPATH, using ="//android.widget.EditText[@resource-id='com.tyss.rmgyantra:id/EmailAddress']")
-    private WebElement eleUsername;
-
-    public WebElementObjs enterMobUsername(String Username) {
-        enterText(eleUsername, Username);
-        return this;
-    }
-
-    @FindBy(how = How.XPATH, using ="//android.widget.EditText[@resource-id='com.tyss.rmgyantra:id/Password']")
-    private WebElement elePassword;
-    public WebElementObjs enterMobPassword(String Password) {
-        enterText(elePassword, Password);
-        return this;
-    }
-
-    @FindBy(how = How.XPATH, using ="//android.widget.Button[@resource-id='com.tyss.rmgyantra:id/signIn']")
-    private WebElement elesignIn;
-    public WebElementObjs clickMobsignIn() {
-        click(elesignIn);
-        return this;
-    }
-
-    @FindBy(how = How.ID, using ="com.tyss.rmgyantra:id/navigation_bar_item_small_label_view")
-    private WebElement eleMobprojects;
-    public WebElementObjs clickMobprojects() {
-        click(eleMobprojects);
-        return this;
-    }
-
-    @FindBy(how = How.ID, using ="com.tyss.rmgyantra:id/searchEditText")
-    private WebElement eleMobSearchprojects;
-    public WebElementObjs enterMobSearchprojects(String ProjectName) {
-        enterText(eleMobSearchprojects, ProjectName);
-        return this;
-    }
-
-    @FindBy(how = How.ID, using ="com.tyss.rmgyantra:id/projectNameTextView")
-    private WebElement eleMobVerifyprojects;
-    public WebElementObjs enterMobVerifyprojects(String ProjectName) {
-        enterText(eleMobVerifyprojects, ProjectName);
-        String str = eleMobVerifyprojects.getText();
-        Assert.assertEquals(str, ProjectName);
-        return this;
-    }*/
-
-    /*@FindBy(how = How.XPATH, using = "//input[@placeholder='Search by Project Id']")
-    private WebElement elelaunchDesktop;
-    public WebElementObjs launchDesktop() {
-        driver=launchApp("Windows","WindowsPC","","local","");
-        PageFactory.initElements(new AppiumFieldDecorator(driver, Duration.ofSeconds(10)),this);
-        return this;
-    }
-    @FindBy(how = How.XPATH, using = "//*[@AutomationId='username']")
-    private WebElement eleDTUsername;
-    public WebElementObjs enterDTUsername(String Username) {
-        hardWait(2000);
-        enterText(eleDTUsername, Username);
-        return this;
-    }
-
-    @FindBy(how = How.XPATH, using = "//*[@AutomationId='inputPassword']")
-    private WebElement eleDTPassword;
-    public WebElementObjs enterDTPassword(String Password) {
-        hardWait(2000);
-        enterText(eleDTPassword, Password);
-        return this;
-    }
-
-    @FindBy(how = How.NAME, using = "Sign in")
-    private WebElement eleDTsignIn;
-    public WebElementObjs clickDTsignIn() {
-        hardWait(2000);
-        click(eleDTsignIn);
-        return this;
-    }*/
 }

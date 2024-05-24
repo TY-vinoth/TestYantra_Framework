@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Suite" parallel="tests" thread-count="1">
+
+	<listeners>
+		<listener class-name="listenerUtils.TestListener"/>
+	</listeners>
+	<test name="Automation Sample Test">
+		<classes>
+			<class name="projectTests.apiTest.TC001_ApiTesting"></class>
+		</classes>
+	</test>
+ </suite> <!-- Suite -->
