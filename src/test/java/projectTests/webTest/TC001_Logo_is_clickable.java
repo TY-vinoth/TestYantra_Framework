@@ -31,6 +31,7 @@ public class TC001_Logo_is_clickable extends BaseclassWeb {
 		authors = "Vinoth";
 		browserName = "chrome";
 		runGroup = "Automation";
+		testNodes = "Testing";
 	}
 
 	@Test(dataProvider = "fetchData")
@@ -46,8 +47,7 @@ public class TC001_Logo_is_clickable extends BaseclassWeb {
 			deviceName = prop.getProperty("deviceName");
 			windowsDevice = prop.getProperty("windowsDeviceName");
 
-			new WebElementObjs(driver, test)
-					/*.clickDistribute();*/
+			new WebElementObjs(test)
 					.enterUserName(uName)
 					.enterpassWord(pWord)
 					.clickLogin()

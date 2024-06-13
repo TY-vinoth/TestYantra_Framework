@@ -1,6 +1,7 @@
 package projectTests.apiTest;
 
 import apiUtility.apiWrappers;
+import baseclassTest.BaseclassAPI;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.testng.annotations.BeforeTest;
@@ -10,7 +11,7 @@ import java.io.File;
 
 import static io.restassured.RestAssured.given;
 
-public class TC001_ApiTesting extends apiWrappers {
+public class TC001_ApiTesting extends BaseclassAPI {
 
     @BeforeTest//Reporting
     public void setValues() {

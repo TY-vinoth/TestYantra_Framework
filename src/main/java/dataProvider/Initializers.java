@@ -1,8 +1,7 @@
 package dataProvider;
 
+import apiUtility.apiWrappers;
 import dBUtility.JDBCconnection;
-import dataProvider.bean.TestEnv;
-
 import java.io.BufferedWriter;
 import java.util.List;
 
@@ -14,4 +13,5 @@ public class Initializers {
 
     public static JDBCconnection db = new JDBCconnection();
     public static ThreadLocal<BufferedWriter> fw;
+    public static apiWrappers api = new apiWrappers();
 }

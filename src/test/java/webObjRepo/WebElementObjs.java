@@ -28,8 +28,7 @@ import static io.restassured.RestAssured.given;
 
 public class WebElementObjs extends BaseclassWeb {
 
-    public WebElementObjs(WebDriver driver, ExtentTest test) {
-        this.driver = driver;
+    public WebElementObjs(ExtentTest test) {
         this.test = test;
         PageFactory.initElements(driver, this);
     }

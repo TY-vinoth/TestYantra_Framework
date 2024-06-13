@@ -66,8 +66,4 @@ public class BaseclassAPI extends ReporterManager {
         }
 
     }
-
-    public long takeSnap() {
-        return 0;
-    }
 }

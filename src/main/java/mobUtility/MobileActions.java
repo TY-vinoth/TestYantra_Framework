@@ -26,7 +26,7 @@ public class MobileActions extends ReporterManager {
 
     private Logger log = Logger.getLogger(this.getClass().getName());
 
-    public WebDriver driver;
+    public static WebDriver driver;
     public DesiredCapabilities caps;
     public MutableCapabilities W3C;
     public Properties prop;

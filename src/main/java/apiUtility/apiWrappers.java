@@ -1,6 +1,5 @@
 package apiUtility;
 
-import baseclassTest.BaseclassAPI;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
@@ -8,6 +7,7 @@ import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.RequestLogSpecification;
 import io.restassured.specification.RequestSpecification;
+import listenerUtils.ReporterManager;
 import org.json.simple.JSONObject;
 
 import java.io.File;
@@ -18,9 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import static listenerUtils.ReporterManager.reportRequest;
-
-public class apiWrappers extends BaseclassAPI {
+public class apiWrappers extends ReporterManager {
 
     public static RequestSpecification setLogs() {
         Properties prob = new Properties();

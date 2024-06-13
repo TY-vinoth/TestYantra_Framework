@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ConcurrentModificationException;
+import java.util.Date;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -17,6 +19,7 @@ import com.aventstack.extentreports.markuputils.CodeLanguage;
 import com.aventstack.extentreports.markuputils.ExtentColor;
 import com.aventstack.extentreports.markuputils.MarkupHelper;
 import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
+import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 import com.aventstack.extentreports.reporter.configuration.Protocol;
 import com.aventstack.extentreports.reporter.configuration.Theme;
 import dataProvider.Initializers;
@@ -27,15 +30,16 @@ public class ReporterManager extends Initializers {
 	private Logger log = Logger.getLogger(this.getClass().getName());
 	protected static boolean exceptionStatus = false;
 
-	public ExtentHtmlReporter html;
+	public ExtentSparkReporter html;
 	public static ExtentReports extent;
 	public static ExtentTest test;
 	public ExtentTest suiteTest;
-	public String testCaseName, testNodes, testDescription, category, authors, imagePath;
+	public String dataSheetName, testCaseName, testNodes, testDescription, category, authors, imagePath;
 
 
 	public void startResult() {
-		html = new ExtentHtmlReporter(System.getProperty("user.dir") + "/reports/result.html");
+		String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
+		html = new ExtentSparkReporter(System.getProperty("user.dir") + "/reports/Extent Report_" + timeStamp +".html");
 		html.config().setEncoding("utf-8");
 		html.config().setProtocol(Protocol.HTTPS);
 		html.config().setDocumentTitle("Automation Report");

@@ -36,7 +36,7 @@ public class TC002_GetData_from_Excel extends BaseclassMob {
             prop.load(new FileInputStream(new File("./src/main/resources/config.properties")));
             uName = prop.getProperty("hrmUsername");
             pWord = prop.getProperty("hrmPassword");
-            new HrmLoginPage(driver, test)
+            new HrmLoginPage(test)
                     .enterUsername(uName)
                     .enterPassword(pWord)
                     .clicksignIn()
@@ -46,7 +46,7 @@ public class TC002_GetData_from_Excel extends BaseclassMob {
         } catch (IOException e) {
             throw new RuntimeException(e);
         } finally {
-            testTearDown();
+            //testTearDown();
         }
     }
 }

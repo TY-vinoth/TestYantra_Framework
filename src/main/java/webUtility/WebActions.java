@@ -56,7 +56,7 @@ import java.util.*;
 
 public class WebActions extends ReporterManager {
 
-	public WebDriver driver;
+	public static WebDriver driver;
 	public static WebDriverWait wait;
 	public static String BSUserName, BSPassword, LTUserName, LTPassword, SLUserName, SLPassword, URL, platform, browser, defectLog;
 	public DesiredCapabilities caps;
@@ -174,13 +174,19 @@ public class WebActions extends ReporterManager {
 		try {
 			File srcFiler = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
 			FileUtils.copyFile(srcFiler,
-					new File(System.getProperty("user.dir") + "/" + folderPath + " images/" + number + ".png"));
+					new File(System.getProperty("user.dir") + "/reports/images/" + number + ".png"));
 		} catch (WebDriverException e) {
-			log.warning("The snapshot has been taken." + e.getMessage());
+			log.warning("The snapshot has been taken.");
 		} catch (IOException e) {
-			log.warning("The snapshot has't been taken" + e.getMessage());
+			log.warning("The snapshot has't been taken");
 		}
 		return number;
+	}
+
+	public static String getScreenshot(WebDriver driver)
+	{
+		TakesScreenshot ts = (TakesScreenshot) driver;
+		return ts.getScreenshotAs(OutputType.BASE64);
 	}
 
 	public void switchToWindow(int index) {
@@ -219,7 +225,7 @@ public class WebActions extends ReporterManager {
 			if (ele != null) {
 				try {
 					if (ele.isEnabled()) {
-						WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+						wait = new WebDriverWait(driver, Duration.ofSeconds(5));
 						wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(ele)));
 						ele.clear();
 						((JavascriptExecutor) driver).executeScript("arguments[0].style.border='4px solid red'", ele);
@@ -231,7 +237,7 @@ public class WebActions extends ReporterManager {
 						((JavascriptExecutor) driver).executeScript("arguments[0].style.border='4px solid red'", ele);
 						hardWait(1000);
 						if (ele.isEnabled()) {
-							WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+							wait = new WebDriverWait(driver, Duration.ofSeconds(5));
 							wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(ele)));
 							ele.clear();
 							ele.sendKeys(data);
@@ -264,7 +270,7 @@ public class WebActions extends ReporterManager {
 		String text = "";
 		try {
 			if (ele.isEnabled()) {
-				WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+				wait = new WebDriverWait(driver, Duration.ofSeconds(5));
 				wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(ele)));
 				((JavascriptExecutor) driver).executeScript("arguments[0].style.border='4px solid red'", ele);
 				text = ele.getText();
@@ -274,7 +280,7 @@ public class WebActions extends ReporterManager {
 		} catch (InvalidElementStateException e) {
 			try {
 				reportStep("Element NOT intractable hence performing JavaScript Executor" + ele,"INFO");
-				WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+				wait = new WebDriverWait(driver, Duration.ofSeconds(5));
 				wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(ele)));
 				((JavascriptExecutor) driver).executeScript("arguments[0].style.border='4px solid red'", ele);
 				((JavascriptExecutor) driver).executeScript("arguments[0].click();", ele);
@@ -284,7 +290,7 @@ public class WebActions extends ReporterManager {
 					hardWait(1000);
 					if (ele.isEnabled()) {
 						((JavascriptExecutor) driver).executeScript("arguments[0].style.border='4px solid red'", ele);
-						WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+						wait = new WebDriverWait(driver, Duration.ofSeconds(5));
 						wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(ele)));
 						((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", ele);
 						ele.click();
@@ -296,7 +302,7 @@ public class WebActions extends ReporterManager {
 							js.executeScript("window.scrollBy(0,-450)", "");
 							if (ele.isEnabled()) {
 								((JavascriptExecutor) driver).executeScript("arguments[0].style.border='4px solid red'", ele);
-								WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+								wait = new WebDriverWait(driver, Duration.ofSeconds(5));
 								wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(ele)));
 								ele.click();
 							}
@@ -498,24 +504,6 @@ public class WebActions extends ReporterManager {
 			reportStep("The Application package:" + deviceName + " could not be launched", "FAIL");
 		}
 		return driver;
-	}
-
-	public boolean switchContext(String contextname) throws InterruptedException, MalformedURLException {
-		AndroidDriver android = new AndroidDriver(new URL(URL), caps);
-		try {
-			Set<String> contexts = android.getContextHandles();
-			android.execute(DriverCommand.SET_TIMEOUT, ImmutableMap.of("ms", 10000, "type", "script"));
-			System.out.println(contexts);
-			for (String contextName : contexts) {
-				if (contextName.contains("NATIVE_APP"))
-					android.context(contextName);
-				System.out.println(contextName);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			reportStep("The Context could not be switched", "FAIL");
-		}
-		return true;
 	}
 
 	public void borderElement(WebElement ele) {

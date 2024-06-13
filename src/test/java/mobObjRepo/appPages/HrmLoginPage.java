@@ -17,8 +17,7 @@ import org.openqa.selenium.support.PageFactory;
 
 public class HrmLoginPage extends BaseclassMob {
 
-    public HrmLoginPage(WebDriver driver, ExtentTest test) {
-        this.driver = driver;
+    public HrmLoginPage(ExtentTest test) {
         this.test = test;
         PageFactory.initElements(driver, this);
     }

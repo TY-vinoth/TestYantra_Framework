@@ -38,7 +38,7 @@ public class TC003_Json_Creator extends BaseclassWeb {
 			prop.load(new FileInputStream(new File("./src/main/resources/config.properties")));
 			uName = prop.getProperty("hrmUsername");
 			pWord = prop.getProperty("hrmPassword");
-			new WebElementObjs(driver, test)
+			new WebElementObjs(test)
 					.enterUserName(uName)
 					.enterpassWord(pWord)
 					.clickLogin();
