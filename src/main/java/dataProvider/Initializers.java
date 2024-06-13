@@ -1,13 +1,12 @@
 package dataProvider;
 
 import dBUtility.JDBCconnection;
-
+import dataProvider.bean.TestEnv;
 
 import java.io.BufferedWriter;
 import java.util.List;
 
 public class Initializers {
-
     protected static ThreadLocal<List<String>> failAnalysisThread = new ThreadLocal<>();
     protected static String executionType = "local";
     protected static String defectLog = "";

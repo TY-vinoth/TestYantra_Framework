@@ -1,9 +1,11 @@
 package listenerUtils;
 
-import java.io.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ConcurrentModificationException;
+import java.util.Properties;
 import java.util.logging.Logger;
 
 import com.aventstack.extentreports.ExtentReports;
@@ -11,40 +13,29 @@ import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.MediaEntityBuilder;
 import com.aventstack.extentreports.MediaEntityModelProvider;
 import com.aventstack.extentreports.Status;
+import com.aventstack.extentreports.markuputils.CodeLanguage;
 import com.aventstack.extentreports.markuputils.ExtentColor;
 import com.aventstack.extentreports.markuputils.MarkupHelper;
 import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
 import com.aventstack.extentreports.reporter.configuration.Protocol;
 import com.aventstack.extentreports.reporter.configuration.Theme;
-import com.github.wnameless.json.flattener.JsonFlattener;
 import dataProvider.Initializers;
-import io.restassured.RestAssured;
-import io.restassured.response.Response;
-import io.restassured.specification.RequestSpecification;
 import org.testng.Assert;
 
 public class ReporterManager extends Initializers {
+	public static ThreadLocal<ExtentTest> extentMethodNode = new ThreadLocal<>();
 	private Logger log = Logger.getLogger(this.getClass().getName());
+	protected static boolean exceptionStatus = false;
+
 	public ExtentHtmlReporter html;
-	public String dataSheetName;
-	public static String folderPath;
 	public static ExtentReports extent;
-	public static ExtentTest test, suiteTest;
-	public String testCaseName,testDescription, testNodes, category, authors, imagePath;
+	public static ExtentTest test;
+	public ExtentTest suiteTest;
+	public String testCaseName, testNodes, testDescription, category, authors, imagePath;
 
 
 	public void startResult() {
-
-		LocalDateTime now = LocalDateTime.now();
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy_HH-mm-ss");
-		String formattedDateTime = now.format(formatter);
-		folderPath = "reports/" + formattedDateTime + "/";
-		File folder = new File(folderPath);
-		if (!folder.exists()) {
-			folder.mkdirs();
-		}
-
-		html = new ExtentHtmlReporter(System.getProperty("user.dir") + "/" + folderPath + "result.html");
+		html = new ExtentHtmlReporter(System.getProperty("user.dir") + "/reports/result.html");
 		html.config().setEncoding("utf-8");
 		html.config().setProtocol(Protocol.HTTPS);
 		html.config().setDocumentTitle("Automation Report");
@@ -61,22 +52,20 @@ public class ReporterManager extends Initializers {
 		return suiteTest;
 	}
 
-	public ExtentTest startTestCase(String testNodes, String testDescription) {
-		test = suiteTest.createNode(testNodes, testDescription);
+	public ExtentTest startTestCase(String testNodes) {
+		test = suiteTest.createNode(testNodes);
 		return test;
 	}
 
+    public long takeScreenShot() {
+        return 0;
+    }
 
-
-	public long takeScreenShot() {
-		return 0;
-	}
-
-	public void reportStep(String desc, String status, boolean bSnap) {
+    public void reportStep(String desc, String status, boolean bSnap) {
 
 		Properties prop = new Properties();
 		try {
-			prop.load(new FileInputStream("./src/main/resources/config.properties"));
+			prop.load(new FileInputStream(new File("./src/main/resources/config.properties")));
 
 			imagePath = prop.getProperty("Imagepath");
 
@@ -89,16 +78,17 @@ public class ReporterManager extends Initializers {
 		MediaEntityModelProvider img = null;
 		if (bSnap && !status.equalsIgnoreCase("INFO")) {
 
-			long snapNumber = takeScreenShot();
+			long snapNumber = 1000000L;
+			snapNumber = takeScreenShot();
 			try {
 				if (imagePath == null) {
-					img = MediaEntityBuilder.createScreenCaptureFromPath("./../" + folderPath + "images/" + snapNumber + ".png")
+					img = MediaEntityBuilder.createScreenCaptureFromPath("./../reports/images/" + snapNumber + ".png")
 							.build();
 				} else {
 					img = MediaEntityBuilder.createScreenCaptureFromPath(imagePath + "/" + snapNumber + ".png").build();
 				}
 			} catch (IOException e) {
-				log.warning("Error capturing screenshot: " + e.getMessage());
+
 			}
 		}
 
@@ -124,26 +114,8 @@ public class ReporterManager extends Initializers {
 		}
 	}
 
-	public static void reportRequest(String desc, String status) {
-
-		MediaEntityModelProvider img = null;
-		if(status.equalsIgnoreCase("PASS")) {
-			test.pass(desc, img);
-			test.log(Status.PASS, MarkupHelper.createLabel(" PASSED ", ExtentColor.GREEN));
-		}else if(status.equalsIgnoreCase("FAIL")) {
-			test.fail(desc, img);
-			test.log(Status.FAIL, MarkupHelper.createLabel(" FAILED ", ExtentColor.RED));
-			throw new RuntimeException();
-		}else if(status.equalsIgnoreCase("WARNING")) {
-			test.warning(desc, img);
-			test.log(Status.WARNING, MarkupHelper.createLabel(" WARNING ", ExtentColor.YELLOW));
-		}else {
-			test.info(desc);
-		}
-	}
-
 	public void reportStep(String desc, String status) {
-		System.out.println("Elements ---->  : " + desc + " " + status);
+		System.out.println("Mobile Application : " + desc + " " + status);
 		reportStep(desc, status, true);
 	}
 
@@ -162,6 +134,25 @@ public class ReporterManager extends Initializers {
 		}
 	}
 
+	public static void reportRequest(String desc, String status) {
+
+		MediaEntityModelProvider img = null;
+		if(status.equalsIgnoreCase("PASS")) {
+			test.pass(desc, img);
+			test.log(Status.PASS, MarkupHelper.createLabel(" PASSED ", ExtentColor.GREEN));
+		}else if(status.equalsIgnoreCase("FAIL")) {
+			test.fail(desc, img);
+			test.log(Status.FAIL, MarkupHelper.createLabel(" FAILED ", ExtentColor.RED));
+			throw new RuntimeException();
+		}else if(status.equalsIgnoreCase("WARNING")) {
+			test.warning(desc, img);
+			test.log(Status.WARNING, MarkupHelper.createLabel(" WARNING ", ExtentColor.YELLOW));
+		}else {
+			test.info(desc);
+		}
+	}
+
+
 	public void endTestcase(){
 		extent.removeTest(test);
 	}
@@ -171,15 +162,8 @@ public class ReporterManager extends Initializers {
 		if (dbResponse == null) {
 			dbResponse = "No Data found or returned null";
 		}
-		if (extent != null) {
-			System.out.println("############ DB Response ###########"+ dbResponse);
-			String m = "<details><summary><font color=\"green\"><b>Database Response</b></font></summary> " +
-					MarkupHelper.createCodeBlock(dbResponse).getMarkup() +
-					"</details>";
-			test.info(m);
-		} else {
-			System.out.println("ExtentTest object is null. Cannot add database response to the report.");
-		}
+		String m = "<details><summary><font color=\"green\"><b>DBQuery</b></font></summary> " + MarkupHelper.createCodeBlock(query, CodeLanguage.valueOf(dbResponse)).getMarkup() + "</details>";
+		extentMethodNode.get().info(m);
 	}
 
 	protected void captureException(Exception e) {
@@ -206,52 +190,5 @@ public class ReporterManager extends Initializers {
 		} catch (InterruptedException e) {
 			captureException(e);
 		}
-	}
-
-	public void testTearDown() {
-		if (!failAnalysisThread.get().isEmpty()) {
-			Assert.fail("Test Failed !! Look for above failures/exceptions and fix it !! ");
-		}
-
-	}
-
-	public Map<String, Object> jiraTicket(String result, String bugSummary, String description) {
-
-		String URI = "https://vinothkumar-e.atlassian.net";
-		Map<String, Object> headers = new HashMap<>();
-
-		headers.put("Content-Type", "application/json");
-		headers.put("Accept", "application/json");
-		headers.put("Authorization", "ATATT3xFfGF0T9qkJVd4y0M2GT9HbrBRNoBIKYM1XYc7CMyBqkSU4QKCupodFJ32hby4Hkpj2CbKQELzoexz5ArS6GNp1MLrqz7Z7F7bK--dVKjYXMhwrJAQn4omhIEvf2rE5mCH0yLEYgdw5CodZIbhRD5KZXF1nYbJbZhTJFMonbR98UnogZw=BFE37C7D");
-
-		String projectId = "TES";
-
-		String body = "{\n" +
-				"    \"fields\": {\n" +
-				"       \"project\":\n" +
-				"       {\n" +
-				"          \"key\": \"" + projectId + "\"\n" +
-				"       },\n" +
-				"       \"summary\": \"" + bugSummary + "\",\n" +
-				"       \"description\": \"" + description + "\",\n" +
-				"       \"issuetype\": {\n" +
-				"          \"name\": \"Task\"\n" +
-				"       }\n" +
-				"   }\n" +
-				"}";
-		Map<String, Object> rep = new HashMap<>();
-		try {
-			RestAssured.baseURI = URI;
-			RestAssured.useRelaxedHTTPSValidation();
-			RequestSpecification requestSpecification = RestAssured.given().request().headers(headers).body(body);
-			Response response = requestSpecification.post("rest/api/2/issue/").then().extract().response();
-			rep = JsonFlattener.flattenAsMap(response.asString());
-			System.out.println(("Jira Ticket Created , TicketID : " + rep.get("self").toString()));
-			failAnalysisThread.get().add("JIRA ID: +" + rep.get("self").toString() + "");
-		} catch (Exception e) {
-			System.out.println("Failed to create Jira Ticket");
-			captureException(e);
-		}
-		return rep;
 	}
 }
