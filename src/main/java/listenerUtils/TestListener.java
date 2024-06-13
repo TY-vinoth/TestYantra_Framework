@@ -1,12 +1,20 @@
 package listenerUtils;
 
+import JIRA.jiraTicketCreation;
+import gitLab.BugReporter;
 import listenerUtils.ReporterManager;
 import org.testng.*;
 import org.testng.annotations.ITestAnnotation;
+import org.testng.annotations.Parameters;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Map;
 import java.util.Set;
+
+import static webUtility.WebActions.defectLog;
+
 
 public class TestListener extends ReporterManager implements IAnnotationTransformer, ITestListener, IRetryAnalyzer {
 
@@ -16,17 +24,18 @@ public class TestListener extends ReporterManager implements IAnnotationTransfor
     public boolean retry(ITestResult result) {
 
         if (counter < retryLimit) {
+            System.out.println("******************************************************************************************");
+            System.out.println("Retrying test Execution has applied : " + result.getName() + " with " + result.getMethod().getTestClass() + "status " + " for the " + (retryLimit+1) + " time(s).");
+            System.out.println("******************************************************************************************");
             counter++;
             return true;
         }
         return false;
     }
 
-
     public void transform(ITestAnnotation annotation, Class testClass, Constructor testConstructor, Method testMethod) {
         annotation.setRetryAnalyzer(TestListener.class);
     }
-
 
     public void onFinish(ITestContext context) {
         Set<ITestResult> failedTests = context.getFailedTests().getAllResults();
@@ -56,6 +65,17 @@ public class TestListener extends ReporterManager implements IAnnotationTransfor
     }
 
     public void onTestFailure(ITestResult result) {
+
+        if(defectLog.equalsIgnoreCase("jira")) {
+            Map<String, Object> response = jira.createJiraTicket(result, result.getName(), String.valueOf(result.getMethod().getTestClass()));
+            System.out.println("JIRA Ticket Details:" + response);
+            reportStep(testCaseName, "FAIL", false);
+
+        } else {
+            Map<String, Object> response1 = BugReporter.createGitlabTicket(result, result.getName(), String.valueOf(result.getMethod().getTestClass()));
+            System.out.println("GitLab Ticket Details:" + response1);
+            reportStep(testCaseName, "FAIL", false);
+        }
     }
 
     public void onTestSkipped(ITestResult result) {

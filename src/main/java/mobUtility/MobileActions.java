@@ -1,21 +1,15 @@
 package mobUtility;
 
-import io.appium.java_client.AppiumDriver;
-import io.appium.java_client.PerformsTouchActions;
-import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
-import io.appium.java_client.remote.MobileCapabilityType;
-import io.appium.java_client.touch.offset.PointOption;
 import io.appium.java_client.windows.WindowsDriver;
 import listenerUtils.ReporterManager;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
-import org.openqa.selenium.interactions.PointerInput;
-import org.openqa.selenium.interactions.Sequence;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.Optional;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,8 +18,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
-import java.util.List;
-import java.util.Objects;
+import java.util.HashMap;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -33,19 +26,22 @@ public class MobileActions extends ReporterManager {
 
     private Logger log = Logger.getLogger(this.getClass().getName());
 
-    public AppiumDriver driver;
+    public WebDriver driver;
     public DesiredCapabilities caps;
+    public MutableCapabilities W3C;
     public Properties prop;
-    public static String userName = "";
-    public static String accessKey = "";
-    public String URL;
+    public static String BSUserName, BSPassword, LTUserName, LTPassword, SLUserName, SLPassword, URL, platform, browser;
 
     public MobileActions() {
         prop = new Properties();
         try {
-            prop.load(new FileInputStream(".\\src\\main\\resources\\config.properties"));
-            userName = prop.getProperty("USERNAME");
-            accessKey = prop.getProperty("ACCESS_KEY");
+            prop.load(new FileInputStream("./src/main/resources/config.properties"));
+            BSUserName = prop.getProperty("USERNAME");
+            BSPassword = prop.getProperty("ACCESS_KEY");
+            LTUserName = prop.getProperty("LUSERNAME");
+            LTPassword = prop.getProperty("LACCESS_KEY");
+            SLUserName = prop.getProperty("SLUSERNAME");
+            SLPassword = prop.getProperty("SLPASSWORD");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -53,51 +49,140 @@ public class MobileActions extends ReporterManager {
         }
     }
 
-    public void startApp(String platform, String deviceName, String OSVersion, String runIn, String bs_app_path,String testCaseName,String appPackage, String appActivity) throws MalformedURLException {
-
-        URL = "https://"+userName+":"+accessKey+"@hub-cloud.browserstack.com/wd/hub";
+    public void launchApp(@Optional String platform, @Optional String deviceName, @Optional String OSVersion, @Optional String runIn, @Optional String bs_app_path, @Optional String appPackage, @Optional String appActivity, String testcaseName) {
 
         caps = new DesiredCapabilities();
 
+        switch (runIn.toLowerCase()){
+            case "browserstack":
+                URL = "https://" + BSUserName + ":" + BSPassword + "@hub-cloud.browserstack.com/wd/hub";
+                break;
+            case "saucelabs":
+                URL = "https://" + SLUserName + ":" + SLPassword + "ondemand.eu-central-1.saucelabs.com:443/wd/hub";
+                break;
+            case "lamdatest":
+                URL = "https://" + LTUserName + ":" + LTPassword + "mobile-hub.lambdatest.com/wd/hub ";
+                break;
+        }
+
         try {
-            if(runIn.equalsIgnoreCase("local")) {
+            switch (runIn.toLowerCase()) {
+                case "local":
+                    URL = "http://127.0.0.1:4723/wd/hub";
+                    bs_app_path = "C:\\Users\\USER1\\Downloads\\NINZA HRM.apk";
+                    caps.setCapability("app", bs_app_path);
+                    if (platform.equalsIgnoreCase("windows")) {
+                        caps.setCapability("automationName", "windows");
+                        caps.setCapability("platformName", "windows");
+                        bs_app_path = "C:\\Users\\USER1\\Documents\\TY\\hrm\\Ninza-HRM-win32-x64\\Ninza-HRM.exe";
+                        caps.setCapability("app", bs_app_path);
+                    }
+                    break;
+                case "browserstack":
+                    switch (platform.toLowerCase()) {
+                        case "android":
+                            caps = new DesiredCapabilities();
+                            HashMap<String, Object> browserstackOptions = new HashMap<String, Object>();
+                            caps.setCapability("platformName", platform);
+                            caps.setCapability("platformVersion", OSVersion);
+                            caps.setCapability("deviceName", deviceName);
+                            browserstackOptions.put("projectName", "Automation Test project");
+                            browserstackOptions.put("sessionName", "NINZA HRM");
+                            caps.setCapability("bstack:options", browserstackOptions);
+                            caps.setCapability("unicodeKeyboard", true);
+                            caps.setCapability("resetKeyboard", true);
+                            caps.setCapability("autoDismissAlerts", true);
+                            caps.setCapability("autoGrantPermissions", true);
+                            caps.setCapability("noReset", true);
+                            caps.setCapability("app", bs_app_path);
+                            break;
+                        case "ios":
+                            caps.setCapability("platformName", platform);
+                            caps.setCapability("deviceName", deviceName);
+                            caps.setCapability("platformVersion", OSVersion);
+                            caps.setCapability("automationName", "XCUITest");
+                            caps.setCapability("connectHardwareKeyboard", true);
+                            caps.setCapability("noReset", true);
+                            caps.setCapability("name", testCaseName);
+                            caps.setCapability("app", bs_app_path);
+                            break;
+                        // Add cases for other platforms if needed
+                    }
+                    break;
+                case "saucelabs":
+                    if (platform.equalsIgnoreCase("android")) {
+                        MutableCapabilities sauceOptions = new MutableCapabilities();
+                        W3C = new MutableCapabilities();
+                        W3C.setCapability("platformName", platform);
+                        W3C.setCapability("appium:app", bs_app_path);  // The filename of the mobile app
+                        W3C.setCapability("appium:deviceName", deviceName);
+                        W3C.setCapability("appium:platformVersion", OSVersion);
+                        W3C.setCapability("appium:automationName", "UiAutomator2");
+                        sauceOptions.setCapability("appiumVersion", "latest");
+                        sauceOptions.setCapability("name", testcaseName);
+                        W3C.setCapability("sauce:options", sauceOptions);
+                        break;
 
-                URL = "http://127.0.0.1:4723/wd/hub";
-                bs_app_path= "C:\\Users\\USER1\\Downloads\\in.medibuddy_2024-02-24.apk";
-
-                /*caps.setCapability("appPackage",appPackage);
-                caps.setCapability("appActivity",appActivity);*/
-
-            } else if(runIn.equalsIgnoreCase("remote")) {
-                caps.setCapability("project", "Mobile Application");
-                caps.setCapability("unicodeKeyboard", true);
-                caps.setCapability("resetKeyboard", true);
-                caps.setCapability("autoDismissAlerts", true);
-                caps.setCapability("autoGrantPermissions", true);
-
-                if (platform.equals("iOS")) {
-                    caps.setCapability("automationName", "XCUITest");
-                    caps.setCapability("connectHardwareKeyboard", true);
-                }
+                    } else if (platform.equalsIgnoreCase("ios")) {
+                        W3C = new MutableCapabilities();
+                        W3C.setCapability("appium:platformName", platform);
+                        W3C.setCapability("appium:deviceName", deviceName);
+                        W3C.setCapability("appium:platformVersion", OSVersion);
+                        MutableCapabilities sauceOptions = new MutableCapabilities();
+                        sauceOptions.setCapability("name", testCaseName);
+                        sauceOptions.setCapability("build", "<your build id>");
+                        W3C.setCapability("sauce:options", sauceOptions);
+                        break;
+                        // Add cases for other platforms if needed
+                    }
+                    break;
+                case "lamdatest":
+                    if (!platform.equalsIgnoreCase("android")) {
+                        if (platform.equalsIgnoreCase("ios")) {
+                            HashMap<String, Object> ltOptions = new HashMap<String, Object>();
+                            ltOptions.put("w3c", true);
+                            ltOptions.put("platformName", platform);
+                            ltOptions.put("platformVersion", OSVersion);
+                            ltOptions.put("deviceName", deviceName);
+                            ltOptions.put("name", testCaseName);
+                            ltOptions.put("automationName", "XCUITest");
+                            ltOptions.put("connectHardwareKeyboard", true);
+                            caps.setCapability("lt:options", ltOptions);
+                            break;
+                            // Add cases for other platforms if needed
+                        }
+                    } else {
+                        HashMap<String, Object> ltOptions = new HashMap<String, Object>();
+                        ltOptions.put("platformName", platform);
+                        ltOptions.put("platformVersion", OSVersion);
+                        ltOptions.put("deviceName", deviceName);
+                        ltOptions.put("isRealMobile", true);
+                        ltOptions.put("unicodeKeyboard", true);
+                        ltOptions.put("name", testCaseName);
+                        ltOptions.put("resetKeyboard", true);
+                        ltOptions.put("autoDismissAlerts", true);
+                        ltOptions.put("autoGrantPermissions", true);
+                        caps.setCapability("lt:options", ltOptions);
+                        break;
+                    }
+                    break;
             }
 
-            caps.setCapability("platformName", platform);
-            caps.setCapability("platformVersion", OSVersion);
-            caps.setCapability("deviceName", deviceName);
-            caps.setCapability("name", testCaseName);
-            caps.setCapability("noReset", false);
-            caps.setCapability("app", bs_app_path);
-
-            if(platform.equalsIgnoreCase("Android")) {
-                driver = new AndroidDriver(new URL(URL), caps);
-            } else if (platform.equalsIgnoreCase("windows")) {
-                driver = new WindowsDriver(new URL(URL), caps);
-            } else if (platform.equalsIgnoreCase("iOS")) {
-                driver = new IOSDriver(new URL(URL), caps);
+            switch (platform.toLowerCase()) {
+                case "android":
+                    driver = new AndroidDriver(new URL(URL), caps);
+                    break;
+                case "windows":
+                    driver = new WindowsDriver(new URL(URL), caps);
+                    break;
+                case "ios":
+                    driver = new IOSDriver(new URL(URL), caps);
+                    break;
+                // Add cases for other platforms if needed
             }
-            reportStep("The Appication package:" + deviceName + " launched successfully", "PASS");
+            reportStep("The Application package:" + deviceName + " launched successfully", "PASS");
         } catch (MalformedURLException e) {
-            reportStep("The Appication package:" + deviceName + " could not be launched", "FAIL");
+            reportStep("The Application package:" + deviceName + " could not be launched", "FAIL");
         }
     }
 
@@ -140,9 +225,9 @@ public class MobileActions extends ReporterManager {
             wait.until(ExpectedConditions.elementToBeClickable(ele));
             ele.clear();
             ele.sendKeys(data);
-			if (data.matches("^[\\w_*^)!]*$")){
-				data = "****";
-			}
+            if (data.matches("^[\\w_*^)!]*$")){
+                data = "****";
+            }
             reportStep("The data: " + data + " entered successfully in field :", "PASS");
         } catch (InvalidElementStateException e) {
             throw new InvalidElementStateException();
@@ -150,38 +235,5 @@ public class MobileActions extends ReporterManager {
             reportStep("WebDriverException" + e.getMessage(), "FAIL");
             throw new InvalidElementStateException();
         }
-    }
-
-    public void swipe(AppiumDriver driver, SwipeDirection direction) {
-        Dimension size = driver.manage().window().getSize();
-        int startX = size.width / 2;
-        int startY = size.height / 2;
-        int endX = startX;
-        int endY = startY;
-
-        switch (direction) {
-            case UP:
-                endY = (int) (size.height * 0.2);
-                break;
-            case DOWN:
-                endY = (int) (size.height * 0.8);
-                break;
-            case LEFT:
-                endX = (int) (size.width * 0.2);
-                break;
-            case RIGHT:
-                endX = (int) (size.width * 0.8);
-                break;
-        }
-
-        TouchAction touchAction = new TouchAction((PerformsTouchActions) driver);
-        touchAction.press(PointOption.point(startX, startY))
-                .moveTo(PointOption.point(endX, endY))
-                .release()
-                .perform();
-    }
-
-    public enum SwipeDirection {
-        UP, DOWN, LEFT, RIGHT
     }
 }

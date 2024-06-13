@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Suite" parallel="tests" thread-count="1">
+
+	<listeners>
+		<listener class-name="listenerUtils.TestListener"/>
+	</listeners>
+	<!--<test name="Remote Sample Test">
+		<parameter name="platform" value="Android"></parameter>
+		<parameter name="deviceName" value="Samsung Galaxy S10e"></parameter>
+		<parameter name="OSVersion" value="9.0"></parameter>
+		<parameter name="runIn" value="browserstack"></parameter>
+		<parameter name="bs_app_path" value="bs://42fe5be314879eddf9d584db62f03bcbccde202a"></parameter>
+		<classes>
+			<class name="projectTests.mobileTest.appTests.TC001_Logo_Is_Clickable"></class>
+		</classes>
+	</test>-->
+
+	<test name="Remote Sample Test">
+		<parameter name="platform" value="Android"></parameter>
+		<parameter name="deviceName" value="Samsung Galaxy S9"></parameter>
+		<parameter name="OSVersion" value="10"></parameter>
+		<parameter name="runIn" value="saucelabs"></parameter>
+		<parameter name="defectLog" value="gitLab"></parameter>
+		<parameter name="bs_app_path" value="storage:filename=NINZA HRM.apk"></parameter>
+		<classes>
+			<class name="projectTests.mobileTest.appTests.TC001_Logo_Is_Clickable"></class>
+		</classes>
+	</test>
+
+	<!--<test name="Remote Sample Test">
+		<parameter name="platform" value="Android"></parameter>
+		<parameter name="deviceName" value="Samsung Galaxy S9"></parameter>
+		<parameter name="OSVersion" value="10"></parameter>
+		<parameter name="runIn" value="saucelabs"></parameter>
+		<parameter name="bs_app_path" value="storage:filename=NINZA HRM.apk"></parameter>
+		<classes>
+			<class name="projectTests.mobileTest.appTests.TC001_Logo_Is_Clickable"></class>
+		</classes>
+	</test>-->
+
+	<!--<test name="local Sample Test">
+		<parameter name="platform" value="android"></parameter>
+		<parameter name="deviceName" value="RZ8T50ZVKPE"></parameter>
+		<parameter name="OSVersion" value="14.0"></parameter>
+		<parameter name="runIn" value="local"></parameter>
+		<classes>
+			<class name="projectTests.mobileTest.appTests.TC001_Logo_Is_Clickable"></class>
+		</classes>
+	</test>-->
+
+	<!--<test name="Windows Sample Test">
+		<parameter name="platform" value="Windows"></parameter>
+		<parameter name="runIn" value="local"></parameter>
+		<parameter name="deviceName" value="WindowsPC"></parameter>
+		<classes>
+			<class name="projectTests.mobileTest.desktopTests.TC001_Logo_Is_Clickable"></class>
+		</classes>
+	</test>-->
+
+	<!--<test name="Windows Sample Test">
+		<parameter name="platform" value="Windows"></parameter>
+		<parameter name="runIn" value="local"></parameter>
+		<parameter name="deviceName" value="WindowsPC"></parameter>
+		<classes>
+			<class name="projectTests.mobileTest.desktopTests.TC002_GetData_from_Excel"></class>
+		</classes>
+	</test>-->
+
+</suite> <!-- Suite -->

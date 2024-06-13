@@ -2,16 +2,16 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="Suite" parallel="tests" thread-count="1">
 
-	<!--<listeners>
+	<listeners>
 		<listener class-name="listenerUtils.TestListener"/>
-	</listeners>-->
+	</listeners>
 	<test name="Automation Sample Test">
 		<parameter name="browser" value="chrome"></parameter>
-		<parameter name="platform" value="win10"></parameter>
-		<parameter name="executionType" value="remote"></parameter>
-		<parameter name="url" value="https://www.google.co.in/"></parameter>
+		<parameter name="platform" value="web"></parameter>
+		<parameter name="execution_type" value="local"></parameter>
+		<parameter name="url" value="http://49.249.29.5:8091/"></parameter>
 		<classes>
-			<class name="projectTests.webTest.TC001_Logo_is_clickable"></class>
+			<class name="projectTests.webTest.TC003_Json_Creator"></class>
 		</classes>
 	</test>
  </suite> <!-- Suite -->

@@ -1,5 +1,6 @@
 package baseclassTest;
 
+import dataProvider.DataInputProvider;
 import mobUtility.MobileActions;
 import org.testng.annotations.*;
 
@@ -10,6 +11,7 @@ public class BaseclassMob extends MobileActions {
     public String testNodes;
     public String category;
     public String testCaseName;
+    public String dataSheetName;
     public String testDescription;
 
     @BeforeSuite(alwaysRun = true)
@@ -17,24 +19,31 @@ public class BaseclassMob extends MobileActions {
         startResult();
     }
 
-    @Parameters({ "platform", "deviceName", "OSVersion", "runIn", "bs_app_path","appActivity","appPackage" })
+    @Parameters({ "platform", "deviceName", "OSVersion", "runIn", "bs_app_path","appActivity","appPackage","defectLog" })
     @BeforeClass(alwaysRun = true)
-    public void beforeClass( @Optional String platform,@Optional String deviceName,@Optional String OSVersion,@Optional String runIn,@Optional String bs_app_path,@Optional String appPackage,@Optional String appActivity){
+    public void beforeClass( @Optional String platform,@Optional String deviceName,@Optional String OSVersion,
+                             @Optional String runIn,@Optional String bs_app_path,@Optional String appPackage,@Optional String appActivity, @Optional String defectLog){
     }
 
-    @Parameters({ "platform", "deviceName", "OSVersion", "runIn", "bs_app_path","appActivity","appPackage"})
+    @Parameters({ "platform", "deviceName", "OSVersion", "runIn", "bs_app_path","appActivity","appPackage","defectLog"})
     @BeforeTest(alwaysRun = true)
-    public void beforeTest( @Optional String platform,@Optional String deviceName,@Optional String OSVersion,@Optional String runIn,@Optional String bs_app_path,@Optional String appPackage,@Optional String appActivity){
+    public void beforeTest( @Optional String platform,@Optional String deviceName,@Optional String OSVersion,
+                            @Optional String runIn,@Optional String bs_app_path,@Optional String appPackage,@Optional String appActivity, @Optional String defectLog){
     }
 
-    @Parameters({"platform", "deviceName", "OSVersion", "runIn", "bs_app_path","appActivity","appPackage"})
+    @Parameters({"platform", "deviceName", "OSVersion", "runIn", "bs_app_path","appActivity","appPackage","defectLog"})
     @BeforeMethod(alwaysRun = true)
-    public void beforeMethod(@Optional String platform,@Optional String deviceName,@Optional String OSVersion,@Optional String runIn,@Optional String bs_app_path,@Optional String appPackage,@Optional String appActivity) throws MalformedURLException{
-        test = startTestModule(" [" + platform + " - " + deviceName + " - "+ OSVersion  + "]" + testCaseName, testDescription);
+    public void beforeMethod(@Optional String platform,@Optional String deviceName,@Optional String OSVersion,
+                             @Optional String runIn,@Optional String bs_app_path,@Optional String appPackage,@Optional String appActivity, @Optional String defectLog){
+        if(deviceName.equalsIgnoreCase("WindowsPC")){
+            test = startTestModule(" [" + platform + " - " + deviceName + "]" + testCaseName, testDescription);
+        }else {
+            test = startTestModule(" [" + platform + " - " + deviceName + " - "+ OSVersion  + "]" + testCaseName, testDescription);
+        }
         test = startTestCase(testNodes);
         test.assignCategory(category);
         test.assignAuthor(authors);
-        startApp(platform, deviceName, OSVersion, runIn, bs_app_path, appPackage, appActivity, testCaseName);
+        launchApp(platform, deviceName, OSVersion, runIn, bs_app_path, appPackage, appActivity, testCaseName);
     }
 
 
@@ -49,13 +58,14 @@ public class BaseclassMob extends MobileActions {
 		endResult();
 	}
 
-   /* @AfterSuite(alwaysRun = true)
+    @AfterSuite(alwaysRun = true)
     public void afterSuite(){
         endResult();
-    }*/
+    }
 
-    /*@DataProvider(name="fetchData")
+    @DataProvider(name="fetchData")
     public Object[][] getData(){
         return DataInputProvider.getSheet(dataSheetName);
-    }*/
+    }
+
 }
