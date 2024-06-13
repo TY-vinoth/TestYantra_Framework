@@ -29,7 +29,8 @@ public class ReporterManager extends Initializers {
 
 	public ExtentHtmlReporter html;
 	public static ExtentReports extent;
-	public ExtentTest test, suiteTest;
+	public static ExtentTest test;
+	public ExtentTest suiteTest;
 	public String testCaseName, testNodes, testDescription, category, authors, imagePath;
 
 
@@ -132,7 +133,26 @@ public class ReporterManager extends Initializers {
 			}
 		}
 	}
-	
+
+	public static void reportRequest(String desc, String status) {
+
+		MediaEntityModelProvider img = null;
+		if(status.equalsIgnoreCase("PASS")) {
+			test.pass(desc, img);
+			test.log(Status.PASS, MarkupHelper.createLabel(" PASSED ", ExtentColor.GREEN));
+		}else if(status.equalsIgnoreCase("FAIL")) {
+			test.fail(desc, img);
+			test.log(Status.FAIL, MarkupHelper.createLabel(" FAILED ", ExtentColor.RED));
+			throw new RuntimeException();
+		}else if(status.equalsIgnoreCase("WARNING")) {
+			test.warning(desc, img);
+			test.log(Status.WARNING, MarkupHelper.createLabel(" WARNING ", ExtentColor.YELLOW));
+		}else {
+			test.info(desc);
+		}
+	}
+
+
 	public void endTestcase(){
 		extent.removeTest(test);
 	}

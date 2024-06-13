@@ -1,12 +1,7 @@
 package baseclassTest;
 
-import dataProvider.ExcelDataProvider;
-import org.testng.ITestResult;
 import org.testng.annotations.*;
 import webUtility.WebActions;
-
-import java.io.IOException;
-import java.lang.reflect.Method;
 
 public class BaseclassWeb extends WebActions {
 
