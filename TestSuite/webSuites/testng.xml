@@ -6,7 +6,7 @@
 		<listener class-name="listenerUtils.TestListener"/>
 	</listeners>-->
 	<test name="Automation Sample Test">
-		<parameter name="browser" value="firefox"></parameter>
+		<parameter name="browser" value="chrome"></parameter>
 		<parameter name="execution_type" value="local"></parameter>
 		<parameter name="headless" value="false"></parameter>
 		<parameter name="url" value="http://106.51.90.215:8084/"></parameter>

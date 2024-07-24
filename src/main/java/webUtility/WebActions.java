@@ -1,6 +1,8 @@
 package webUtility;
 
 import com.google.common.collect.ImmutableMap;
+import com.microsoft.playwright.*;
+import com.microsoft.playwright.options.WaitForSelectorState;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.windows.WindowsDriver;
@@ -62,6 +64,9 @@ public class WebActions extends ReporterManager {
 	public DesiredCapabilities caps;
 	public ChromeOptions browserOptions;
 	private final Logger log = Logger.getLogger(this.getClass().getName());
+	private static Page playwrightPage;
+	private static Browser playwrightBrowser;
+	private static Playwright playwright;
 
 
 	public WebActions() {
@@ -108,6 +113,7 @@ public class WebActions extends ReporterManager {
 				switch (browser.toLowerCase()) {
 					case "chrome":
 						ChromeOptions chromeOptions = new ChromeOptions();
+						chromeOptions.addArguments("--remote-debugging-port=9222");
 						if (headless) {
 							chromeOptions.addArguments("--headless");
 						}
@@ -160,6 +166,11 @@ public class WebActions extends ReporterManager {
 			log.warning("Launching URL --> " + url);
 			driver.get(url);
 			driver.manage().window().maximize();
+
+			playwright = Playwright.create();
+			playwrightBrowser = playwright.chromium().connectOverCDP("http://localhost:9222");
+			playwrightPage = playwrightBrowser.contexts().get(0).pages().get(0);
+
 			reportStep("[" + browser + "] launched successfully", "PASS");
 		} catch (Exception e) {
 			reportStep("[" + browser + "]: could not be launched", "FAIL");
@@ -221,8 +232,9 @@ public class WebActions extends ReporterManager {
 
 
 	public void enterText(WebElement ele, String data) {
+		String selector = getSelectorFromWebElement(ele);
 		try {
-			if (ele != null) {
+			if (ele!= null) {
 				try {
 					if (ele.isEnabled()) {
 						wait = new WebDriverWait(driver, Duration.ofSeconds(5));
@@ -232,7 +244,18 @@ public class WebActions extends ReporterManager {
 						ele.sendKeys(data);
 					}
 				} catch (WebDriverException e) {
-					reportStep("Element NOT intractable Hence Scrolling" + ele.getText(),"INFO");
+					System.out.println("Element not found with Selenium, switching to Playwright.");
+					try {
+						Locator locator = playwrightPage.locator(convertSelector(selector));
+						locator.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE).setTimeout(5000));
+						// Debugging information
+						System.out.println("Element found with Playwright: " + locator.innerText());
+						locator.fill(data); // Fill the text
+						System.out.println("Action performed using Playwright.");
+					} catch (PlaywrightException ex) {
+						System.err.println("Failed to perform action with Playwright: " + ex.getMessage());
+						ex.printStackTrace();
+					}
 					try {
 						((JavascriptExecutor) driver).executeScript("arguments[0].style.border='4px solid red'", ele);
 						hardWait(1000);
@@ -266,7 +289,7 @@ public class WebActions extends ReporterManager {
 
 
 	public void click(WebElement ele) {
-
+		String selector = getSelectorFromWebElement(ele);
 		String text = "";
 		try {
 			if (ele.isEnabled()) {
@@ -278,6 +301,16 @@ public class WebActions extends ReporterManager {
 			}
 			reportStep("The element : " + text + " is clicked ", "PASS");
 		} catch (InvalidElementStateException e) {
+			System.out.println("Element not found with Selenium, switching to Playwright.");
+			try {
+				Locator locator = playwrightPage.locator(convertSelector(selector));
+				locator.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE).setTimeout(5000));
+				locator.click();
+				System.out.println("Action performed using Playwright.");
+			} catch (PlaywrightException ex) {
+				System.err.println("Failed to perform action with Playwright: " + ex.getMessage());
+				ex.printStackTrace();
+			}
 			try {
 				reportStep("Element NOT intractable hence performing JavaScript Executor" + ele,"INFO");
 				wait = new WebDriverWait(driver, Duration.ofSeconds(5));
@@ -318,36 +351,51 @@ public class WebActions extends ReporterManager {
 		}
 	}
 
-
-	public WebElement locateElement(String locator, String locValue) {
-		try {
-			switch (locator) {
-
-				case ("id"):
-					return driver.findElement(By.id(locValue));
-				case ("link"):
-					return driver.findElement(By.linkText(locValue));
-				case ("xpath"):
-					return driver.findElement(By.xpath(locValue));
-				case ("name"):
-					return driver.findElement(By.name(locValue));
-				case ("class"):
-					return driver.findElement(By.className(locValue));
-				case ("tag"):
-					return driver.findElement(By.tagName(locValue));
-			}
-		} catch (NoSuchElementException e) {
-			reportStep("The element with locator " + locator + " and with value " + locValue + " not found.", "FAIL");
-			throw new RuntimeException();
-		} catch (WebDriverException e) {
-			reportStep("WebDriverException", "FAIL");
+	private String getSelectorFromWebElement(WebElement ele) {
+		String selector = "";
+		if (ele.getAttribute("id") != null && !ele.getAttribute("id").isEmpty()) {
+			selector = "id=" + ele.getAttribute("id");
+		} else if (ele.getAttribute("name") != null && !ele.getAttribute("name").isEmpty()) {
+			selector = "name=" + ele.getAttribute("name");
+		} else if (ele.getAttribute("xpath") != null && !ele.getAttribute("xpath").isEmpty()) {
+			selector = "xpath=" + ele.getAttribute("xpath");
 		}
-		return null;
+		return selector;
+	}
+
+	private String convertSelector(String selector) {
+		if (selector.startsWith("xpath=")) {
+			return selector.substring(6).replace("[", "\\[").replace("]", "\\]");
+		} else if (selector.startsWith("id=")) {
+			return "#" + selector.substring(3);
+		} else if (selector.startsWith("name=")) {
+			return "[name='" + selector.substring(5) + "']";
+		} else if (selector.startsWith("css=")) {
+			return selector.substring(4);
+		} else {
+			return selector;
+		}
 	}
 
 	public void closeBrowser() {
 		try {
-			driver.quit();
+			if (driver != null) {
+				driver.quit();
+			}
+			if (playwrightBrowser != null) {
+				try {
+					playwrightBrowser.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			if (playwright != null) {
+				try {
+					playwright.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
 			reportStep("The browser / Mobile / Desktop instance is closed", "PASS", false);
 		} catch (Exception e) {
 			reportStep("The browser / Mobile / Desktop instance could not be closed: \n Error: " + e.getMessage(), "WARNING", false);

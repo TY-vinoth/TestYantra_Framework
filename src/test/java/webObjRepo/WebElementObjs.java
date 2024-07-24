@@ -40,21 +40,21 @@ public class WebElementObjs extends BaseclassWeb {
         return this;
     }
 
-    @FindBy(how = How.XPATH, using = "(.//input[@id='username'])")
+    @FindBy(how = How.XPATH, using = "//input[@id='username']")
     private WebElement eleUserName;
     public WebElementObjs enterUserName(String UserName) {
         enterText(eleUserName, UserName);
         return this;
     }
 
-    @FindBy(how = How.XPATH, using = "(.//input[@id='inputPassword'])")
+    @FindBy(how = How.XPATH, using = "//input[@id='inputPassword']")
     private WebElement elepassWord;
     public WebElementObjs enterpassWord(String PassWord) {
         enterText(elepassWord, PassWord);
         return this;
     }
 
-    @FindBy(how = How.XPATH, using = "(.//button[contains(text(),'Sign in')])")
+    @FindBy(how = How.XPATH, using = "//button[contains(text(),'Sign in')]")
     private WebElement eleLogin;
     public WebElementObjs clickLogin() {
         click(eleLogin);
